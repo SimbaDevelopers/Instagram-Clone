@@ -6,6 +6,7 @@ import './Home.dart';
 import 'Activity.dart';
 import './Profile.dart';
 import './Search.dart';
+import 'Screens/Login_Screen.dart';
 import 'Screens/SignupScreen.dart';
 import 'Screens/login_or_signup.dart';
 
@@ -29,6 +30,7 @@ class MyAppState extends State<MyApp> {
       routes: {
         SignUpScreen.routeName: (context) => SignUpScreen(),
         LoginOrSignup.routeName: (context) => LoginOrSignup(),
+        Login_Screen.routName: (context) => Login_Screen(),
         MainScreen.routeName: (context) => MainScreen(),
       },
     );

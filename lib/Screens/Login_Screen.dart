@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:instagram/Screens/MainScreen.dart';
-import './LoginScreen.dart';
-import 'Login_Screen.dart';
+import './SignupScreen.dart';
+import 'MainScreen.dart';
 
-class SignUpScreen extends StatelessWidget {
-  static const routeName = '/Signup';
+class Login_Screen extends StatelessWidget {
+  static const routName = '/LoginScreen';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
           child: Container(
+            margin: EdgeInsets.symmetric(vertical: 135),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: 130, bottom: 40),
-                  child: Text(
-                    "Instagram",
-                    style: TextStyle(fontSize: 60, fontFamily: 'Billabong'),
-                  ),
+                Text(
+                  "Instagram",
+                  style: TextStyle(fontSize: 60, fontFamily: 'Billabong'),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 25, right: 25),
+                  margin: EdgeInsets.only(left: 25, right: 25, top: 45),
                   decoration: BoxDecoration(
                     color: Colors.black38,
                     borderRadius: BorderRadius.circular(5),
@@ -80,28 +79,28 @@ class SignUpScreen extends StatelessWidget {
                       Navigator.of(context).pushNamed(MainScreen.routeName);
                     },
                     child: Text(
-                      "Sign up",
+                      "Login",
                     ),
                   ),
                 ),
-                Container(
+                Center(
+                  // alignment: Alignment.center,
+                  // margin: EdgeInsets.only(left: 25, right: 25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Alreaady have a account? ',
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
+                        'Forgotten your login details?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                       GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(Login_Screen.routName);
-                        },
+                        onTap: () {},
                         child: Text(
-                          ' Login.',
+                          '  Get help with signing in.',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -109,6 +108,53 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Row(children: <Widget>[
+                    Expanded(
+                        child: Divider(
+                      color: Colors.grey,
+                    )),
+                    Text(
+                      "  OR  ",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Expanded(
+                        child: Divider(
+                      color: Colors.grey,
+                    )),
+                  ]),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Don't have a account?",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(SignUpScreen.routeName);
+                      },
+                      child: Text(
+                        '  Sign up.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

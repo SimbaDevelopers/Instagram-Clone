@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './LoginScreen.dart';
 import './SignupScreen.dart';
+import 'Login_Screen.dart';
 
 class LoginOrSignup extends StatelessWidget {
   static const routeName = '/LoginOrSignup';
@@ -41,7 +42,7 @@ class LoginOrSignup extends StatelessWidget {
                 ),
                 FlatButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(LoginScreen.routName);
+                    Navigator.of(context).pushNamed(Login_Screen.routName);
                   },
                   child: Text(
                     "Log in",
