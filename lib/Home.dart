@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
+  static const routeName = '/HomePage';
   State<StatefulWidget> createState() {
     return MyAppState();
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instagram/Screens/MainScreen.dart';
+import 'package:instagram/Screens/usernameScreen.dart';
 import './LoginScreen.dart';
 import 'Login_Screen.dart';
 
@@ -77,7 +78,7 @@ class SignUpScreen extends StatelessWidget {
                     padding: EdgeInsets.all(15),
                     splashColor: Colors.blueAccent,
                     onPressed: () {
-                      Navigator.of(context).pushNamed(MainScreen.routeName);
+                      Navigator.of(context).pushNamed(UsernameScreen.routeName);
                     },
                     child: Text(
                       "Sign up",

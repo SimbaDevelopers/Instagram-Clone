@@ -28,11 +28,14 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.white,
         backgroundColor: Colors.black,
         iconSize: 30,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(
+                Icons.home,
+              ),
               title: Text(''),
               backgroundColor: Colors.white),
           BottomNavigationBarItem(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 void main() => runApp(ActivityPage());
 
 class ActivityPage extends StatelessWidget {
+  static const routeName = '/ActivityPage';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
