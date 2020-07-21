@@ -8,7 +8,8 @@ import 'Home.dart';
 import 'Profile.dart';
 import 'Screens/Login_Screen.dart';
 import 'Screens/SignupScreen.dart';
-import 'Screens/login_or_signup.dart';
+import 'Screens/SignupScreen.dart';
+import 'Screens/startupscreen.dart';
 import 'Screens/UsernameScreen.dart';
 import 'Search.dart';
 
@@ -28,7 +29,7 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: LoginOrSignup(),
+      home: SignUpScreen(),
       routes: {
         SignUpScreen.routeName: (context) => SignUpScreen(),
         LoginOrSignup.routeName: (context) => LoginOrSignup(),
