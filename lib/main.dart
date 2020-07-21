@@ -3,16 +3,16 @@ import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
 
-import 'Activity.dart';
-import 'Add.dart';
-import 'Home.dart';
-import 'Profile.dart';
+import 'Pages/Activity.dart';
+import 'Pages/Add.dart';
+import 'Pages/Home.dart';
+import 'Pages/Profile.dart';
 import 'Screens/Login_Screen.dart';
 import 'Screens/SignupScreen.dart';
 import 'Screens/SignupScreen.dart';
 import 'Screens/startupscreen.dart';
 import 'Screens/UsernameScreen.dart';
-import 'Search.dart';
+import 'Pages/Search.dart';
 
 void main() {
   runApp(MyApp());

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../Activity.dart';
-import '../Add.dart';
-import '../Home.dart';
-import '../Profile.dart';
-import '../Search.dart';
+import '../Pages/Activity.dart';
+import '../Pages/Add.dart';
+import '../Pages/Home.dart';
+import '../Pages/Profile.dart';
+import '../Pages/Search.dart';
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/MainScreen';
