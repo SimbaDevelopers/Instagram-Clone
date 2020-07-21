@@ -10,6 +10,7 @@ import 'Pages/Profile.dart';
 import 'Screens/Login_Screen.dart';
 import 'Screens/SignupScreen.dart';
 import 'Screens/SignupScreen.dart';
+import 'Screens/SplashScreen.dart';
 import 'Screens/startupscreen.dart';
 import 'Screens/UsernameScreen.dart';
 import 'Pages/Search.dart';
@@ -42,6 +43,7 @@ class MyAppState extends State<MyApp> {
         AddPage.routeName: (ctx) => AddPage(),
         ActivityPage.routeName: (ctx) => ActivityPage(),
         ProfilePage.routeName: (ctx) => ProfilePage(),
+        SplashScreen.routeName: (ctx) => SplashScreen()
       },
     );
   }
