@@ -46,7 +46,7 @@ class MyAppState extends State<HomePage> {
                     ),
                     Text(
                       'Instagram',
-                      style: TextStyle(fontSize: 20.0),
+                      style: TextStyle(fontSize: 30.0),
                     ),
                     IconButton(
                       icon: Icon(Icons.message),
