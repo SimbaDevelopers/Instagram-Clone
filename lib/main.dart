@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
+import 'package:instagram/authenticate.dart';
 
 import 'Activity.dart';
 import 'Add.dart';
@@ -29,11 +30,11 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: SignUpScreen(),
+      home: Authenticate(),
       routes: {
-        SignUpScreen.routeName: (context) => SignUpScreen(),
+        // SignUpScreen.routeName: (context) => SignUpScreen(),
         LoginOrSignup.routeName: (context) => LoginOrSignup(),
-        Login_Screen.routName: (context) => Login_Screen(),
+        // Login_Screen.routName: (context) => Login_Screen(),
         MainScreen.routeName: (context) => MainScreen(),
         UsernameScreen.routeName: (context) => UsernameScreen(),
         HomePage.routeName: (ctx) => HomePage(),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram/authenticate.dart';
+import 'package:instagram/services/auth.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
@@ -10,6 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class MyAppState extends State<HomePage> {
+  AuthMethod authMethod = new AuthMethod();
   File _image;
   Future getImage(bool isCamera) async {
     File image;
@@ -62,6 +65,27 @@ class MyAppState extends State<HomePage> {
                   ],
                 ),
               ),
+            ),
+          ),
+        ),
+        body: Container(
+          child: FlatButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colors.blue)),
+            color: Colors.blue,
+            textColor: Colors.white,
+            disabledColor: Colors.grey,
+            disabledTextColor: Colors.black,
+            padding: EdgeInsets.all(15),
+            splashColor: Colors.blueAccent,
+            onPressed: () {
+              authMethod.signOut();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Authenticate()));
+            },
+            child: Text(
+              "Sign Out",
             ),
           ),
         ),

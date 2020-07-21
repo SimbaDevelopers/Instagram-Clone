@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import './SignupScreen.dart';
 import 'MainScreen.dart';
 
-class Login_Screen extends StatelessWidget {
+class Login_Screen extends StatefulWidget {
   static const routName = '/LoginScreen';
+  final Function toggle;
+  Login_Screen(this.toggle);
 
+  @override
+  _Login_ScreenState createState() => _Login_ScreenState();
+}
+
+class _Login_ScreenState extends State<Login_Screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,7 +149,8 @@ class Login_Screen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(SignUpScreen.routeName);
+                        //  Navigator.of(context).pushNamed(SignUpScreen.routeName);
+                        widget.toggle();
                       },
                       child: Text(
                         '  Sign up.',
