@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/usernameScreen.dart';
 import 'package:instagram/services/auth.dart';
+import 'package:instagram/services/database.dart';
 
 import 'Login_Screen.dart';
 
@@ -18,6 +19,8 @@ class _SignUpState extends State<SignUpScreen> {
   bool isLoading = false;
   AuthMethod authMethod = new AuthMethod();
   final formkey = GlobalKey<FormState>();
+  DatabaseMethod databaseMethod = new DatabaseMethod();
+
   TextEditingController usernameTexteditingcontroller =
       new TextEditingController();
   TextEditingController emailTexteditingcontroller =
@@ -27,6 +30,11 @@ class _SignUpState extends State<SignUpScreen> {
 
   signMeUp() {
     if (formkey.currentState.validate()) {
+      Map<String, String> userInfoMap = {
+        "username": usernameTexteditingcontroller.text,
+        "email": emailTexteditingcontroller.text
+      };
+
       setState(() {
         isLoading = true;
       });
@@ -35,6 +43,8 @@ class _SignUpState extends State<SignUpScreen> {
               passwordTexteditingcontroller.text)
           .then((val) {
         print("$val.uid");
+
+        databaseMethod.uploadUserInfo(userInfoMap);
 
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainScreen()));

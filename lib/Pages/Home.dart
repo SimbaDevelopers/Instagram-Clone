@@ -37,7 +37,7 @@ class MyAppState extends State<HomePage> {
             child: Container(
               color: Colors.black,
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -49,7 +49,7 @@ class MyAppState extends State<HomePage> {
                     ),
                     Text(
                       'Instagram',
-                      style: TextStyle(fontSize: 30.0),
+                      style: TextStyle(fontSize: 30.0, fontFamily: 'Billabong'),
                     ),
                     IconButton(
                       icon: Icon(Icons.message),
