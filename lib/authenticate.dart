@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screens/Login_Screen.dart';
+import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/SignupScreen.dart';
+import 'package:instagram/Screens/SplashScreen.dart';
 
 class Authenticate extends StatefulWidget {
   @override
@@ -17,10 +20,21 @@ class _AuthenticateState extends State<Authenticate> {
 
   @override
   Widget build(BuildContext context) {
-    if (showSignIn) {
-      return Login_Screen(toggleView);
-    } else {
-      return SignUpScreen(toggleView);
-    }
+    return StreamBuilder(
+      stream: FirebaseAuth.instance.onAuthStateChanged,
+      builder: (ctx, usersnapshot) {
+        if (usersnapshot.connectionState == ConnectionState.waiting) {
+          return SplashScreen();
+        }
+        if (usersnapshot.hasData) {
+          return MainScreen();
+        }
+        if (showSignIn) {
+          return Login_Screen(toggleView);
+        } else {
+          return SignUpScreen(toggleView);
+        }
+      },
+    );
   }
 }

@@ -57,7 +57,11 @@ class _MainScreenState extends State<MainScreen> {
         ],
         onTap: (index) {
           setState(() {
-            _currentIndex = index;
+            if (index == 2) {
+              Navigator.of(context).pushNamed(AddPage.routeName);
+            } else {
+              _currentIndex = index;
+            }
           });
         },
       ),

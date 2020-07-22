@@ -94,11 +94,11 @@ class _SignUpState extends State<SignUpScreen> {
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: TextFormField(
-                              validator: (val) {
-                                return val.isEmpty || val.length > 4
-                                    ? "Hi"
-                                    : null;
-                              },
+                              // validator: (val) {
+                              //   return val.isEmpty || val.length > 4
+                              //       ? "Hi"
+                              //       : null;
+                              // },
                               controller: usernameTexteditingcontroller,
                               decoration: new InputDecoration(
                                 labelText: 'username',
