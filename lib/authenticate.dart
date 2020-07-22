@@ -26,9 +26,9 @@ class _AuthenticateState extends State<Authenticate> {
         if (usersnapshot.connectionState == ConnectionState.waiting) {
           return SplashScreen();
         }
-        if (usersnapshot.hasData) {
-          return MainScreen();
-        }
+        // if (usersnapshot.hasData) {
+        //   return MainScreen();
+        // }
         if (showSignIn) {
           return Login_Screen(toggleView);
         } else {

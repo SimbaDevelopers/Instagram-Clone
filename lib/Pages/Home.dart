@@ -10,6 +10,7 @@ import 'package:instagram/authenticate.dart';
 import 'package:instagram/constants.dart';
 import 'package:instagram/helpfunction.dart';
 import 'package:instagram/services/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
@@ -80,16 +81,11 @@ class MyAppState extends State<HomePage> {
                     IconButton(
                       icon: Icon(Icons.send),
                       onPressed: () {
-                        FirebaseAuth.instance.signOut();
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => Authenticate()));
                       },
-                    ),
-                    Text(
-                      'Instagram',
-                      style: TextStyle(fontSize: 30.0, fontFamily: 'Billabong'),
                     ),
                     IconButton(
                       icon: Icon(Icons.message),
