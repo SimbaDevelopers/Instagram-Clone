@@ -2,8 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+
 import 'package:instagram/widgets/PostHomeScreen.dart';
 import 'package:instagram/widgets/storybar.dart';
+
+import 'package:instagram/authenticate.dart';
+import 'package:instagram/constants.dart';
+import 'package:instagram/helpfunction.dart';
+import 'package:instagram/services/auth.dart';
+
 
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
@@ -13,6 +20,19 @@ class HomePage extends StatefulWidget {
 }
 
 class MyAppState extends State<HomePage> {
+
+  AuthMethod authMethod = new AuthMethod();
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
+
+  getUserInfo() async {
+    Constants.myName = await HelperFunction.getusernameSharedPreferecne();
+    setState(() {});
+  }
+
+
   File _image;
   Future getImage(bool isCamera) async {
     File image;
@@ -38,7 +58,9 @@ class MyAppState extends State<HomePage> {
               color: Colors.black,
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(4.0),
+
+                padding: const EdgeInsets.all(10.0),
+                
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -66,13 +88,23 @@ class MyAppState extends State<HomePage> {
                         FirebaseAuth.instance.signOut();
                       },
                     ),
-                    // _image == null
-                    //     ? Container()
-                    //     : Image.file(
-                    //         _image,
-                    //         height: 300.0,
-                    //         width: 300.0,
-                    //       ),
+
+                    Text(
+                      'Instagram',
+                      style: TextStyle(fontSize: 30.0, fontFamily: 'Billabong'),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.message),
+                      onPressed: () {},
+                    ),
+                    _image == null
+                        ? Container()
+                        : Image.file(
+                            _image,
+                            height: 300.0,
+                            width: 300.0,
+                          ),
+
                   ],
                 ),
               ),

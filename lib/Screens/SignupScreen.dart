@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/usernameScreen.dart';
+import 'package:instagram/helpfunction.dart';
 import 'package:instagram/services/auth.dart';
+import 'package:instagram/services/database.dart';
 
 import 'Login_Screen.dart';
 
@@ -16,8 +19,11 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpState extends State<SignUpScreen> {
   bool isLoading = false;
+
   AuthMethod authMethod = new AuthMethod();
   final formkey = GlobalKey<FormState>();
+  DatabaseMethod databaseMethod = new DatabaseMethod();
+
   TextEditingController usernameTexteditingcontroller =
       new TextEditingController();
   TextEditingController emailTexteditingcontroller =
@@ -27,6 +33,15 @@ class _SignUpState extends State<SignUpScreen> {
 
   signMeUp() {
     if (formkey.currentState.validate()) {
+      Map<String, String> userInfoMap = {
+        "username": usernameTexteditingcontroller.text,
+        "email": emailTexteditingcontroller.text
+      };
+      HelperFunction.saveusernameSharedPreferecne(
+          usernameTexteditingcontroller.text);
+      HelperFunction.saveuseremailSharedPreferecne(
+          emailTexteditingcontroller.text);
+
       setState(() {
         isLoading = true;
       });
@@ -36,6 +51,13 @@ class _SignUpState extends State<SignUpScreen> {
           .then((val) {
         print("$val.uid");
 
+        String _userId;
+        FirebaseAuth.instance.currentUser().then((user) {
+          _userId = user.uid;
+        });
+
+        databaseMethod.uploadUserInfo(userInfoMap, _userId);
+        HelperFunction.saveuserloggedinSharedPreferecne(true);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainScreen()));
       });
