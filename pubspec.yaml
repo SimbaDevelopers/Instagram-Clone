@@ -59,7 +59,7 @@ flutter:
     - assets/images/profile.jpeg
     - assets/images/logo.png
 
-     - assets/images/search.png
+    - assets/images/search.png
 
   #   - images/a_dot_ham.jpeg
 

@@ -11,7 +11,6 @@ import 'package:instagram/constants.dart';
 import 'package:instagram/helpfunction.dart';
 import 'package:instagram/services/auth.dart';
 
-
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
   State<StatefulWidget> createState() {
@@ -20,7 +19,6 @@ class HomePage extends StatefulWidget {
 }
 
 class MyAppState extends State<HomePage> {
-
   AuthMethod authMethod = new AuthMethod();
   void initState() {
     getUserInfo();
@@ -31,7 +29,6 @@ class MyAppState extends State<HomePage> {
     Constants.myName = await HelperFunction.getusernameSharedPreferecne();
     setState(() {});
   }
-
 
   File _image;
   Future getImage(bool isCamera) async {
@@ -58,9 +55,7 @@ class MyAppState extends State<HomePage> {
               color: Colors.black,
               width: double.infinity,
               child: Padding(
-
                 padding: const EdgeInsets.all(10.0),
-                
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -86,9 +81,12 @@ class MyAppState extends State<HomePage> {
                       icon: Icon(Icons.send),
                       onPressed: () {
                         FirebaseAuth.instance.signOut();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Authenticate()));
                       },
                     ),
-
                     Text(
                       'Instagram',
                       style: TextStyle(fontSize: 30.0, fontFamily: 'Billabong'),
@@ -104,7 +102,6 @@ class MyAppState extends State<HomePage> {
                             height: 300.0,
                             width: 300.0,
                           ),
-
                   ],
                 ),
               ),
