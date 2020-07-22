@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
+import 'package:instagram/helpfunction.dart';
 
 import 'Pages/Activity.dart';
 import 'Pages/Add.dart';
@@ -26,11 +28,28 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  bool userIsLoggedIn;
+  @override
+  void initState() {
+    getLoggedInState();
+    super.initState();
+  }
+
+  getLoggedInState() async {
+    await HelperFunction.getuserloggedinSharedPreferecne().then((value) {
+      setState(() {
+        userIsLoggedIn = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: Authenticate(),
+      home: userIsLoggedIn != null
+          ? userIsLoggedIn ? MainScreen() : Authenticate()
+          : Authenticate(),
       routes: {
         // SignUpScreen.routeName: (context) => SignUpScreen(),
         LoginOrSignup.routeName: (context) => LoginOrSignup(),
@@ -44,5 +63,17 @@ class MyAppState extends State<MyApp> {
         ProfilePage.routeName: (ctx) => ProfilePage(),
       },
     );
+  }
+}
+
+class blank extends StatefulWidget {
+  @override
+  _blankState createState() => _blankState();
+}
+
+class _blankState extends State<blank> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

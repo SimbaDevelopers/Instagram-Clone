@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/services/auth.dart';
+import 'package:instagram/services/database.dart';
+import '../helpfunction.dart';
 import './SignupScreen.dart';
 import 'MainScreen.dart';
 
@@ -11,7 +15,49 @@ class Login_Screen extends StatefulWidget {
   _Login_ScreenState createState() => _Login_ScreenState();
 }
 
+// ignore: camel_case_types
 class _Login_ScreenState extends State<Login_Screen> {
+  AuthMethod authMethod = new AuthMethod();
+  DatabaseMethod databaseMethod = new DatabaseMethod();
+  final formKey = GlobalKey<FormState>();
+  TextEditingController emailTexteditingcontroller =
+      new TextEditingController();
+  TextEditingController passwordTexteditingcontroller =
+      new TextEditingController();
+
+  bool isLoading = false;
+  QuerySnapshot snapshotuserinfo;
+  signIn() {
+    if (formKey.currentState.validate()) {
+      HelperFunction.saveuseremailSharedPreferecne(
+          emailTexteditingcontroller.text);
+
+      databaseMethod
+          .getUserByUserEmail(emailTexteditingcontroller.text)
+          .then((val) {
+        snapshotuserinfo = val;
+        HelperFunction.saveusernameSharedPreferecne(
+            snapshotuserinfo.documents[0].data["username"]);
+        print("${snapshotuserinfo.documents[0].data["username"]}zzzzzzzzzzzz");
+      });
+
+      setState(() {
+        isLoading = true;
+      });
+
+      authMethod
+          .signinwithemailandpassword(emailTexteditingcontroller.text,
+              passwordTexteditingcontroller.text)
+          .then((val) {
+        if (val != null) {
+          HelperFunction.saveuserloggedinSharedPreferecne(true);
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => MainScreen()));
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,47 +72,61 @@ class _Login_ScreenState extends State<Login_Screen> {
                   "Instagram",
                   style: TextStyle(fontSize: 60, fontFamily: 'Billabong'),
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 25, right: 25, top: 45),
-                  decoration: BoxDecoration(
-                    color: Colors.black38,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: TextField(
-                    decoration: new InputDecoration(
-                      labelText: 'Email address',
-                      labelStyle: TextStyle(color: Colors.white),
-                      fillColor: Colors.grey,
-                      focusColor: Colors.grey,
-                      contentPadding: EdgeInsets.all(15),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2.0),
+                Form(
+                  key: formKey,
+                  child: Column(children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 25, right: 25, top: 45),
+                      decoration: BoxDecoration(
+                        color: Colors.black38,
+                        borderRadius: BorderRadius.circular(5),
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 25, right: 25, top: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.black38,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: TextField(
-                    decoration: new InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: TextStyle(color: Colors.white),
-                      contentPadding: EdgeInsets.all(15),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                      child: TextFormField(
+                        validator: (val) {
+                          return val.isEmpty || val.length < 4 ? "Hi" : null;
+                        },
+                        controller: emailTexteditingcontroller,
+                        decoration: new InputDecoration(
+                          labelText: 'Email address',
+                          labelStyle: TextStyle(color: Colors.white),
+                          fillColor: Colors.grey,
+                          focusColor: Colors.grey,
+                          contentPadding: EdgeInsets.all(15),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 2.0),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    Container(
+                      margin: EdgeInsets.only(left: 25, right: 25, top: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.black38,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: TextFormField(
+                        controller: passwordTexteditingcontroller,
+                        decoration: new InputDecoration(
+                          labelText: 'Password',
+                          labelStyle: TextStyle(color: Colors.white),
+                          contentPadding: EdgeInsets.all(15),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 2.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]),
                 ),
                 Container(
                   width: double.infinity,
@@ -83,7 +143,8 @@ class _Login_ScreenState extends State<Login_Screen> {
                     padding: EdgeInsets.all(15),
                     splashColor: Colors.blueAccent,
                     onPressed: () {
-                      Navigator.of(context).pushNamed(MainScreen.routeName);
+                      // Navigator.of(context).pushNamed(MainScreen.routeName);
+                      signIn();
                     },
                     child: Text(
                       "Login",

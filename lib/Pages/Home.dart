@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/authenticate.dart';
+import 'package:instagram/constants.dart';
+import 'package:instagram/helpfunction.dart';
 import 'package:instagram/services/auth.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,6 +15,16 @@ class HomePage extends StatefulWidget {
 
 class MyAppState extends State<HomePage> {
   AuthMethod authMethod = new AuthMethod();
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
+
+  getUserInfo() async {
+    Constants.myName = await HelperFunction.getusernameSharedPreferecne();
+    setState(() {});
+  }
+
   File _image;
   Future getImage(bool isCamera) async {
     File image;
