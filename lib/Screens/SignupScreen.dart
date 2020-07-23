@@ -94,11 +94,11 @@ class _SignUpState extends State<SignUpScreen> {
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: TextFormField(
-                              // validator: (val) {
-                              //   return val.isEmpty || val.length > 4
-                              //       ? "Hi"
-                              //       : null;
-                              // },
+                              validator: (val) {
+                                return val.isEmpty || val.length < 4
+                                    ? "Hi"
+                                    : null;
+                              },
                               controller: usernameTexteditingcontroller,
                               decoration: new InputDecoration(
                                 labelText: 'username',
@@ -176,13 +176,13 @@ class _SignUpState extends State<SignUpScreen> {
                         child: FlatButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
-                              side: BorderSide(color: Colors.blue)),
-                          color: Colors.blue,
+                              side: BorderSide(color: Colors.deepPurple[400])),
+                          color: Colors.deepPurple[400],
                           textColor: Colors.white,
                           disabledColor: Colors.grey,
                           disabledTextColor: Colors.black,
                           padding: EdgeInsets.all(15),
-                          splashColor: Colors.blueAccent,
+                          splashColor: Colors.deepPurpleAccent,
                           onPressed: () {
                             signMeUp();
                             // Navigator.of(context).pushNamed(UsernameScreen.routeName);

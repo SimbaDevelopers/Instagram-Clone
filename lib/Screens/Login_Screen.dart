@@ -38,7 +38,7 @@ class _Login_ScreenState extends State<Login_Screen> {
         snapshotuserinfo = val;
         HelperFunction.saveusernameSharedPreferecne(
             snapshotuserinfo.documents[0].data["username"]);
-        print("${snapshotuserinfo.documents[0].data["username"]}zzzzzzzzzzzz");
+        print("${snapshotuserinfo.documents[0].data["username"]}");
       });
 
       setState(() {
@@ -135,13 +135,13 @@ class _Login_ScreenState extends State<Login_Screen> {
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
-                        side: BorderSide(color: Colors.blue)),
-                    color: Colors.blue,
+                        side: BorderSide(color: Colors.deepPurple[400])),
+                    color: Colors.deepPurple[400],
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
                     disabledTextColor: Colors.black,
                     padding: EdgeInsets.all(15),
-                    splashColor: Colors.blueAccent,
+                    splashColor: Colors.deepPurpleAccent,
                     onPressed: () {
                       // Navigator.of(context).pushNamed(MainScreen.routeName);
                       signIn();

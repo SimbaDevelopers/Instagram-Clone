@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram/Screens/Login_Screen.dart';
+import 'package:instagram/Screens/startupscreen.dart';
 
 import 'package:instagram/widgets/PostHomeScreen.dart';
 import 'package:instagram/widgets/storybar.dart';
@@ -10,7 +12,7 @@ import 'package:instagram/authenticate.dart';
 import 'package:instagram/constants.dart';
 import 'package:instagram/helpfunction.dart';
 import 'package:instagram/services/auth.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
@@ -20,7 +22,6 @@ class HomePage extends StatefulWidget {
 }
 
 class MyAppState extends State<HomePage> {
-
   AuthMethod authMethod = new AuthMethod();
   void initState() {
     getUserInfo();
@@ -31,7 +32,6 @@ class MyAppState extends State<HomePage> {
     Constants.myName = await HelperFunction.getusernameSharedPreferecne();
     setState(() {});
   }
-
 
   File _image;
   Future getImage(bool isCamera) async {
@@ -58,9 +58,7 @@ class MyAppState extends State<HomePage> {
               color: Colors.black,
               width: double.infinity,
               child: Padding(
-
                 padding: const EdgeInsets.all(10.0),
-                
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -84,27 +82,19 @@ class MyAppState extends State<HomePage> {
                     ),
                     IconButton(
                       icon: Icon(Icons.send),
-                      onPressed: () {
-                        FirebaseAuth.instance.signOut();
+                      onPressed: () async {
+                        // SharedPreferences preferences =
+                        //     await SharedPreferences.getInstance();
+                        // await preferences.clear();
+
+                        // FirebaseAuth.instance.signOut();
+
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (ctx) => Authenticate()));
                       },
                     ),
-
-                    Text(
-                      'Instagram',
-                      style: TextStyle(fontSize: 30.0, fontFamily: 'Billabong'),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.message),
-                      onPressed: () {},
-                    ),
-                    _image == null
-                        ? Container()
-                        : Image.file(
-                            _image,
-                            height: 300.0,
-                            width: 300.0,
-                          ),
-
                   ],
                 ),
               ),
