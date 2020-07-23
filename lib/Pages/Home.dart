@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:instagram/Screens/Login_Screen.dart';
+import 'package:instagram/Screens/SignInScreen.dart';
 import 'package:instagram/Screens/startupscreen.dart';
 
 import 'package:instagram/widgets/PostHomeScreen.dart';
@@ -81,13 +81,13 @@ class MyAppState extends State<HomePage> {
                       ],
                     ),
 
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Authenticate()));
-                      },
-                    ),
+                    // onPressed: () {
+                    //   Navigator.pushReplacement(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (context) => Authenticate()));
+                    // },
+                    // ),
                     IconButton(
                       icon: Icon(Icons.message),
                       onPressed: () {},
@@ -99,7 +99,6 @@ class MyAppState extends State<HomePage> {
                             height: 300.0,
                             width: 300.0,
                           ),
-
                   ],
                 ),
               ),

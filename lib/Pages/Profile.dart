@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -84,16 +83,16 @@ class _ProfilePageState extends State<ProfilePage> {
           title: userName == null ? Text('usename') : new Text(userName),
         ),
         endDrawer: SettingsDrawer(),
-        body: SingleChildScrollView(
-          physics: ScrollPhysics(),
-          child: Column(
-            children: <Widget>[
-              InfoAtProfile(),
-              StoryHighights(),
-              PostAtProfile(),
-            ],
-          ),
-        ),
+        // body: SingleChildScrollView(
+        //   physics: ScrollPhysics(),
+        //   child: Column(
+        //     children: <Widget>[
+        //       InfoAtProfile(),
+        //       StoryHighights(),
+        //       PostAtProfile(),
+        //     ],
+        //   ),
+        // ),
         body: Container(
           child: FlatButton(
             color: Colors.blue,

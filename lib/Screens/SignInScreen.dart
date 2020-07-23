@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram/services/auth.dart';
 import 'package:instagram/services/database.dart';
 import '../helpfunction.dart';
-import './SignupScreen.dart';
+import 'SignupScreen.dart';
 import 'MainScreen.dart';
 
 class Login_Screen extends StatefulWidget {
@@ -61,6 +61,7 @@ class _Login_ScreenState extends State<Login_Screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Center(
           child: Container(

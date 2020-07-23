@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram/Screens/Login_Screen.dart';
+import 'package:instagram/Screens/SignInScreen.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/SignupScreen.dart';
 import 'package:instagram/Screens/SplashScreen.dart';
