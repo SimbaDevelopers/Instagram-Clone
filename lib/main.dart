@@ -4,6 +4,7 @@ import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
 import 'package:instagram/helpfunction.dart';
+import 'package:instagram/widgets/EditProfile.dart';
 
 import 'Pages/Activity.dart';
 import 'Pages/Add.dart';
@@ -62,7 +63,8 @@ class MyAppState extends State<MyApp> {
         AddPage.routeName: (ctx) => AddPage(),
         ActivityPage.routeName: (ctx) => ActivityPage(),
         ProfilePage.routeName: (ctx) => ProfilePage(),
-        SplashScreen.routeName: (ctx) => SplashScreen()
+        SplashScreen.routeName: (ctx) => SplashScreen(),
+        EditProfile.routeName: (ctx) => EditProfile(),
       },
     );
   }

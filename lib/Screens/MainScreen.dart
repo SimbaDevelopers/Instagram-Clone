@@ -47,11 +47,11 @@ class _MainScreenState extends State<MainScreen> {
               title: Text(''),
               backgroundColor: Colors.white),
           BottomNavigationBarItem(
-              icon: Icon(Icons.work),
+              icon: Icon(Icons.favorite),
               title: Text(''),
               backgroundColor: Colors.white),
           BottomNavigationBarItem(
-              icon: Icon(Icons.landscape),
+              icon: Icon(Icons.supervised_user_circle),
               title: Text(''),
               backgroundColor: Colors.white),
         ],

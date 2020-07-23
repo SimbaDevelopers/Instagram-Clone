@@ -11,6 +11,7 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
+  final _auth = FirebaseAuth.instance;
   bool showSignIn = true;
   void toggleView() {
     setState(() {
@@ -21,11 +22,12 @@ class _AuthenticateState extends State<Authenticate> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseAuth.instance.onAuthStateChanged,
+      stream: _auth.onAuthStateChanged,
       builder: (ctx, usersnapshot) {
         if (usersnapshot.connectionState == ConnectionState.waiting) {
           return SplashScreen();
         }
+
         // if (usersnapshot.hasData) {
         //   return MainScreen();
         // }
