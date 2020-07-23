@@ -80,21 +80,26 @@ class MyAppState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () async {
-                        // SharedPreferences preferences =
-                        //     await SharedPreferences.getInstance();
-                        // await preferences.clear();
 
-                        // FirebaseAuth.instance.signOut();
-
-                        // Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (ctx) => Authenticate()));
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Authenticate()));
                       },
                     ),
+                    IconButton(
+                      icon: Icon(Icons.message),
+                      onPressed: () {},
+                    ),
+                    _image == null
+                        ? Container()
+                        : Image.file(
+                            _image,
+                            height: 300.0,
+                            width: 300.0,
+                          ),
+
                   ],
                 ),
               ),
