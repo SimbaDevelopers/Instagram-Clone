@@ -30,6 +30,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  bool ischecking = true;
   bool userIsLoggedIn;
   @override
   void initState() {
@@ -40,6 +41,7 @@ class MyAppState extends State<MyApp> {
   getLoggedInState() async {
     await HelperFunction.getuserloggedinSharedPreferecne().then((value) {
       setState(() {
+        ischecking = false;
         userIsLoggedIn = value;
       });
     });
@@ -49,9 +51,11 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: userIsLoggedIn != null
-          ? userIsLoggedIn ? MainScreen() : Authenticate()
-          : Authenticate(),
+      home: ischecking
+          ? SplashScreen()
+          : userIsLoggedIn != null
+              ? userIsLoggedIn ? MainScreen() : Authenticate()
+              : Authenticate(),
       routes: {
         // SignUpScreen.routeName: (context) => SignUpScreen(),
         LoginOrSignup.routeName: (context) => LoginOrSignup(),

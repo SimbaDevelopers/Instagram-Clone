@@ -12,7 +12,12 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  final formkey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
+  TextEditingController phoneNoController = TextEditingController();
+  TextEditingController websiteController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
+
   File _image;
 
   void pickImage() async {
@@ -139,11 +144,22 @@ class _EditProfileState extends State<EditProfile> {
                 Divider(color: Colors.grey),
                 SizedBox(height: 8),
                 Text('Phone Number', style: TextStyle(color: Colors.grey)),
-                SizedBox(
-                  height: 4,
+                TextFormField(
+                  validator: (value) {
+                    return value.length == 10 ? null : 'Enter Phone Number';
+                  },
+                  decoration: InputDecoration(
+                    focusedBorder: new UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                    labelStyle: TextStyle(color: Colors.grey),
+                  ),
+                  keyboardType: TextInputType.number,
+                  controller: phoneNoController..text = '9081004787',
                 ),
-                Text('+91 9081004787'),
-                Divider(color: Colors.grey),
                 SizedBox(height: 8),
                 Text('Gender', style: TextStyle(color: Colors.grey)),
                 SizedBox(

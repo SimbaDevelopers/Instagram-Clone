@@ -90,12 +90,14 @@ class _InfoAtProfileState extends State<InfoAtProfile> {
                   textColor: Colors.white,
                   disabledColor: Colors.grey,
                   disabledTextColor: Colors.black,
-                  padding: EdgeInsets.all(7),
                   splashColor: Colors.blueAccent,
                   onPressed: () {
                     followingButtonPressed(context);
                   },
-                  child: Text(' Following ▼ '),
+                  child: Text(
+                    ' Following ▼ ',
+                    style: TextStyle(fontSize: 13),
+                  ),
                 ),
               ),
               SizedBox(
@@ -113,7 +115,10 @@ class _InfoAtProfileState extends State<InfoAtProfile> {
                   padding: EdgeInsets.all(7),
                   splashColor: Colors.blueAccent,
                   onPressed: () {},
-                  child: Text(' Message '),
+                  child: Text(
+                    ' Message ',
+                    style: TextStyle(fontSize: 13),
+                  ),
                 ),
               ),
             ],
@@ -131,7 +136,10 @@ class _InfoAtProfileState extends State<InfoAtProfile> {
             onPressed: () {
               Navigator.of(context).pushNamed(EditProfile.routeName);
             },
-            child: Text(' Edit Profile '),
+            child: Text(
+              ' Edit Profile ',
+              style: TextStyle(fontSize: 13),
+            ),
           ),
         ],
       ),

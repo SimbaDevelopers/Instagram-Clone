@@ -83,36 +83,16 @@ class _ProfilePageState extends State<ProfilePage> {
           title: userName == null ? Text('usename') : new Text(userName),
         ),
         endDrawer: SettingsDrawer(),
-        // body: SingleChildScrollView(
-        //   physics: ScrollPhysics(),
-        //   child: Column(
-        //     children: <Widget>[
-        //       InfoAtProfile(),
-        //       StoryHighights(),
-        //       PostAtProfile(),
-        //     ],
-        //   ),
-        // ),
-        body: Container(
-          child: FlatButton(
-            color: Colors.blue,
-            textColor: Colors.white,
-            disabledColor: Colors.grey,
-            disabledTextColor: Colors.black,
-            padding: EdgeInsets.all(15),
-            splashColor: Colors.blueAccent,
-            onPressed: () async {
-              FirebaseAuth.instance.signOut();
-              SharedPreferences preferences =
-                  await SharedPreferences.getInstance();
-              await preferences.clear();
 
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => Authenticate()));
-            },
-            child: Text(
-              "Log Out",
-            ),
+        body: SingleChildScrollView(
+          physics: ScrollPhysics(),
+          child: Column(
+            children: <Widget>[
+              InfoAtProfile(),
+              StoryHighights(),
+              PostAtProfile(),
+            ],
+
           ),
         ),
       ),
