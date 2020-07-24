@@ -83,6 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
           title: userName == null ? Text('usename') : new Text(userName),
         ),
         endDrawer: SettingsDrawer(),
+
         body: SingleChildScrollView(
           physics: ScrollPhysics(),
           child: Column(
@@ -91,6 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
               StoryHighights(),
               PostAtProfile(),
             ],
+
           ),
         ),
       ),

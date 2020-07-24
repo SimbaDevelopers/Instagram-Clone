@@ -6,7 +6,7 @@ import 'package:instagram/helpfunction.dart';
 import 'package:instagram/services/auth.dart';
 import 'package:instagram/services/database.dart';
 
-import 'Login_Screen.dart';
+import 'SignInScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
   static const routeName = '/Signup';

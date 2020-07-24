@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:instagram/Screens/Login_Screen.dart';
+import 'package:instagram/Screens/SignInScreen.dart';
 import 'package:instagram/Screens/startupscreen.dart';
 
 import 'package:instagram/widgets/PostHomeScreen.dart';
@@ -51,6 +51,7 @@ class MyAppState extends State<HomePage> {
     return MaterialApp(
       theme: ThemeData.dark(),
       home: Scaffold(
+
         appBar: AppBar(
           title: Row(
             children: <Widget>[
@@ -62,6 +63,8 @@ class MyAppState extends State<HomePage> {
               ),
               SizedBox(
                 width: 15,
+
+       
               ),
               Text(
                 'Instagram',

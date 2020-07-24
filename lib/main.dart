@@ -10,7 +10,7 @@ import 'Pages/Activity.dart';
 import 'Pages/Add.dart';
 import 'Pages/Home.dart';
 import 'Pages/Profile.dart';
-import 'Screens/Login_Screen.dart';
+import 'Screens/SignInScreen.dart';
 import 'Screens/SignupScreen.dart';
 import 'Screens/SignupScreen.dart';
 import 'Screens/SplashScreen.dart';
