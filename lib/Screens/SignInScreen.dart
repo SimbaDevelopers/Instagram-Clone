@@ -29,6 +29,9 @@ class _Login_ScreenState extends State<Login_Screen> {
   QuerySnapshot snapshotuserinfo;
   signIn() {
     if (formKey.currentState.validate()) {
+      setState(() {
+        isLoading = true;
+      });
       HelperFunction.saveuseremailSharedPreferecne(
           emailTexteditingcontroller.text);
 
@@ -39,10 +42,6 @@ class _Login_ScreenState extends State<Login_Screen> {
         HelperFunction.saveusernameSharedPreferecne(
             snapshotuserinfo.documents[0].data["username"]);
         print("${snapshotuserinfo.documents[0].data["username"]}");
-      });
-
-      setState(() {
-        isLoading = true;
       });
 
       authMethod
@@ -147,9 +146,11 @@ class _Login_ScreenState extends State<Login_Screen> {
                       // Navigator.of(context).pushNamed(MainScreen.routeName);
                       signIn();
                     },
-                    child: Text(
-                      "Login",
-                    ),
+                    child: isLoading
+                        ? CircularProgressIndicator()
+                        : Text(
+                            "Login",
+                          ),
                   ),
                 ),
                 Center(
