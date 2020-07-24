@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Chats extends StatefulWidget {
@@ -13,7 +12,6 @@ class _ChatsState extends State<Chats> {
       appBar: AppBar(
         title: Text("Chats"),
       ),
-      body: Text("hello world"),
     );
   }
 }
