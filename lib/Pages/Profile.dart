@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -92,28 +91,6 @@ class _ProfilePageState extends State<ProfilePage> {
               StoryHighights(),
               PostAtProfile(),
             ],
-          ),
-        ),
-        body: Container(
-          child: FlatButton(
-            color: Colors.blue,
-            textColor: Colors.white,
-            disabledColor: Colors.grey,
-            disabledTextColor: Colors.black,
-            padding: EdgeInsets.all(15),
-            splashColor: Colors.blueAccent,
-            onPressed: () async {
-              FirebaseAuth.instance.signOut();
-              SharedPreferences preferences =
-                  await SharedPreferences.getInstance();
-              await preferences.clear();
-
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => Authenticate()));
-            },
-            child: Text(
-              "Log Out",
-            ),
           ),
         ),
       ),

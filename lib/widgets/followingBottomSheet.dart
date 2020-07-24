@@ -10,7 +10,7 @@ class _FollowingBottmSheetState extends State<FollowingBottmSheet> {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Center(
@@ -37,9 +37,9 @@ class _FollowingBottmSheetState extends State<FollowingBottmSheet> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 InkWell(
@@ -51,9 +51,12 @@ class _FollowingBottmSheetState extends State<FollowingBottmSheet> {
                       children: <Widget>[
                         Text(
                           'Add to Close Friend List',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 16),
                         ),
-                        Icon(Icons.stars),
+                        Icon(
+                          Icons.stars,
+                          size: 25,
+                        ),
                       ],
                     ),
                   ),
@@ -67,9 +70,12 @@ class _FollowingBottmSheetState extends State<FollowingBottmSheet> {
                       children: <Widget>[
                         Text(
                           'Notofications',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 16),
                         ),
-                        Icon(Icons.arrow_forward_ios),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 20,
+                        ),
                       ],
                     ),
                   ),
@@ -83,9 +89,12 @@ class _FollowingBottmSheetState extends State<FollowingBottmSheet> {
                       children: <Widget>[
                         Text(
                           'Mute',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 16),
                         ),
-                        Icon(Icons.arrow_forward_ios),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 20,
+                        ),
                       ],
                     ),
                   ),
@@ -99,9 +108,12 @@ class _FollowingBottmSheetState extends State<FollowingBottmSheet> {
                       children: <Widget>[
                         Text(
                           'Restrict',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 16),
                         ),
-                        Icon(Icons.arrow_forward_ios),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 20,
+                        ),
                       ],
                     ),
                   ),
@@ -111,11 +123,11 @@ class _FollowingBottmSheetState extends State<FollowingBottmSheet> {
                   child: Text(
                     'Follow',
                     style:
-                        TextStyle(color: Colors.deepPurple[400], fontSize: 20),
+                        TextStyle(color: Colors.deepPurple[400], fontSize: 18),
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 7,
                 )
               ],
             ),

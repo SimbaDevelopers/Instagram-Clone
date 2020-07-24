@@ -51,60 +51,33 @@ class MyAppState extends State<HomePage> {
     return MaterialApp(
       theme: ThemeData.dark(),
       home: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70),
-          child: SafeArea(
-            child: Container(
-              color: Colors.black,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.camera_alt),
-                          onPressed: () {
-                            getImage(true);
-                          },
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Text(
-                          'Instagram',
-                          style: TextStyle(
-                              fontSize: 25.0, fontFamily: 'Billabong'),
-                        ),
-                      ],
-                    ),
-
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Authenticate()));
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.message),
-                      onPressed: () {},
-                    ),
-                    _image == null
-                        ? Container()
-                        : Image.file(
-                            _image,
-                            height: 300.0,
-                            width: 300.0,
-                          ),
-
-                  ],
-                ),
+        appBar: AppBar(
+          title: Row(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.camera_alt),
+                onPressed: () {
+                  getImage(true);
+                },
               ),
-            ),
+              SizedBox(
+                width: 15,
+              ),
+              Text(
+                'Instagram',
+                style: TextStyle(fontSize: 25.0, fontFamily: 'Billabong'),
+              ),
+            ],
           ),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 13.0),
+              child: GestureDetector(
+                onTap: () {},
+                child: Icon(Icons.send),
+              ),
+            )
+          ],
         ),
         body: SingleChildScrollView(
           physics: ScrollPhysics(),

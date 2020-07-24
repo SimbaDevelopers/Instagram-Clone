@@ -21,22 +21,24 @@ class _AuthenticateState extends State<Authenticate> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: _auth.onAuthStateChanged,
-      builder: (ctx, usersnapshot) {
-        if (usersnapshot.connectionState == ConnectionState.waiting) {
-          return SplashScreen();
-        }
+    return showSignIn ? Login_Screen(toggleView) : SignUpScreen(toggleView)
+        //  StreamBuilder(
+        //   stream: _auth.onAuthStateChanged,
+        //   builder: (ctx, usersnapshot) {
+        //     if (usersnapshot.connectionState == ConnectionState.waiting) {
+        //       return SplashScreen();
+        //     }
 
         // if (usersnapshot.hasData) {
         //   return MainScreen();
         // }
-        if (showSignIn) {
-          return Login_Screen(toggleView);
-        } else {
-          return SignUpScreen(toggleView);
-        }
-      },
-    );
+        //     if (showSignIn) {
+        //       return Login_Screen(toggleView);
+        //     } else {
+        //       return SignUpScreen(toggleView);
+        //     }
+        //   },
+        // )
+        ;
   }
 }
