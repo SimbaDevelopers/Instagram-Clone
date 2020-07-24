@@ -67,6 +67,7 @@ class _SignUpState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: isLoading
           ? Container(
               child: Center(child: CircularProgressIndicator()),

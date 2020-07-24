@@ -5,24 +5,25 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 150),
-              height: 150,
-              width: 150,
-              child: Image.asset('assets/images/logo.png'),
+      backgroundColor: Colors.black,
+      body: Column(
+        children: <Widget>[
+          FittedBox(
+            child: Container(
+              // margin: EdgeInsets.only(top: 150),
+              // height: 1000,
+              // width: 1000,
+              child: Image.asset('assets/images/splash1.png'),
             ),
-            Container(
-              margin: EdgeInsets.only(top: 30),
-              child: Text(
-                "Instagram",
-                style: TextStyle(fontSize: 60, fontFamily: 'Billabong'),
-              ),
-            ),
-          ],
-        ),
+          ),
+          // Container(
+          //   margin: EdgeInsets.only(top: 5),
+          //   child: Text(
+          //     "Instagram",
+          //     style: TextStyle(fontSize: 60, fontFamily: 'Billabong'),
+          //   ),
+          // ),
+        ],
       ),
     );
   }

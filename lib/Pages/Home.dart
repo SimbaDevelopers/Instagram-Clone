@@ -2,6 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram/Chats/chat.dart';
+import 'package:instagram/Pages/Activity.dart';
+import 'package:instagram/Pages/Add.dart';
+import 'package:instagram/Pages/Profile.dart';
 import 'package:instagram/Screens/SignInScreen.dart';
 import 'package:instagram/Screens/startupscreen.dart';
 
@@ -51,7 +55,6 @@ class MyAppState extends State<HomePage> {
     return MaterialApp(
       theme: ThemeData.dark(),
       home: Scaffold(
-
         appBar: AppBar(
           title: Row(
             children: <Widget>[
@@ -63,8 +66,6 @@ class MyAppState extends State<HomePage> {
               ),
               SizedBox(
                 width: 15,
-
-       
               ),
               Text(
                 'Instagram',
@@ -76,7 +77,12 @@ class MyAppState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.only(right: 13.0),
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Chats()),
+                  );
+                },
                 child: Icon(Icons.send),
               ),
             )
