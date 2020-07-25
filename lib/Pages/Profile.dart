@@ -6,7 +6,7 @@ import 'package:instagram/widgets/PostAtProfile.dart';
 import 'package:instagram/widgets/SettingsDrawer.dart';
 import 'package:instagram/widgets/StoryHighlite.dart';
 
-import '../helpfunction.dart';
+import '../helper/helpfunction.dart';
 import '../widgets/InfoAtProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

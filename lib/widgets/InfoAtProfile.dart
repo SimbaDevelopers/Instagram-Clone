@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram/widgets/EditProfile.dart';
 import 'package:instagram/widgets/followingBottomSheet.dart';
 
-import '../helpfunction.dart';
+import '../helper/helpfunction.dart';
 
 class InfoAtProfile extends StatefulWidget {
   @override
