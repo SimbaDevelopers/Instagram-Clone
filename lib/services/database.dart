@@ -26,5 +26,18 @@ class DatabaseMethod {
           .document(user.uid)
           .setData(userMap);
     });
+
+  }
+  editUserInfo(userMap , userId)  {
+    Firestore.instance
+        .collection("users")
+        .document(userId)
+        .updateData(userMap);
+  }
+
+  getcurrentUserId() async{
+    String _uid;
+    await FirebaseAuth.instance.currentUser().then((value) => _uid = value.uid);
+    return _uid;
   }
 }

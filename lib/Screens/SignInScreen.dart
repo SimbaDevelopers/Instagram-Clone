@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/services/auth.dart';
 import 'package:instagram/services/database.dart';
@@ -27,16 +28,15 @@ class _Login_ScreenState extends State<Login_Screen> {
 
   bool isLoading = false;
   QuerySnapshot snapshotuserinfo;
-  signIn() {
+  signIn() async {
     if (formKey.currentState.validate()) {
       setState(() {
         isLoading = true;
       });
-      HelperFunction.saveuseremailSharedPreferecne(
-          emailTexteditingcontroller.text);
+
 
       databaseMethod
-          .getUserByUserEmail(emailTexteditingcontroller.text)
+          .getUserByUserEmail(emailTexteditingcontroller.text.trim())
           .then((val) {
         snapshotuserinfo = val;
         HelperFunction.saveusernameSharedPreferecne(
@@ -44,12 +44,21 @@ class _Login_ScreenState extends State<Login_Screen> {
         print("${snapshotuserinfo.documents[0].data["username"]}");
       });
 
+
       authMethod
           .signinwithemailandpassword(emailTexteditingcontroller.text,
               passwordTexteditingcontroller.text)
           .then((val) {
         if (val != null) {
           HelperFunction.saveuserloggedinSharedPreferecne(true);
+          HelperFunction.saveuseremailSharedPreferecne(
+              emailTexteditingcontroller.text);
+
+
+          FirebaseAuth.instance.currentUser().then((value) => HelperFunction.saveuserIDinSharedPreferecne(value.uid));
+
+
+
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => MainScreen()));
         }

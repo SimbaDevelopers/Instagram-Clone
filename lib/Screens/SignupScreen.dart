@@ -2,7 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/usernameScreen.dart';
+
+import 'file:///D:/Ongoing%20Projects/Instagram-Clone-2/lib/helper/helpfunction.dart';
+
 import 'file:///D:/Personal/Personal/Instagram-clone/3/lib/helper/helpfunction.dart';
+
 import 'package:instagram/services/auth.dart';
 import 'package:instagram/services/database.dart';
 
@@ -35,8 +39,10 @@ class _SignUpState extends State<SignUpScreen> {
     if (formkey.currentState.validate()) {
 
       Map<String, String> userInfoMap = {
-        "username": usernameTexteditingcontroller.text,
-        "email": emailTexteditingcontroller.text,
+
+        "username": usernameTexteditingcontroller.text.trim(),
+        "email": emailTexteditingcontroller.text.trim()
+
       };
       HelperFunction.saveusernameSharedPreferecne(
           usernameTexteditingcontroller.text);
@@ -47,15 +53,18 @@ class _SignUpState extends State<SignUpScreen> {
         isLoading = true;
       });
       authMethod
-          .signupwithemailandpassword(emailTexteditingcontroller.text,
-              passwordTexteditingcontroller.text)
+          .signupwithemailandpassword(emailTexteditingcontroller.text.trim(),
+              passwordTexteditingcontroller.text.trim())
           .then((val) {
-        print("$val.uid");
+    //    print("$val.uid");
 
         String _userId;
         FirebaseAuth.instance.currentUser().then((user) {
           _userId = user.uid;
         });
+
+
+        HelperFunction.saveuserIDinSharedPreferecne(_userId);
 
         databaseMethod.uploadUserInfo(userInfoMap, _userId);
         HelperFunction.saveuserloggedinSharedPreferecne(true);
