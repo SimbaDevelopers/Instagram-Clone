@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/services/auth.dart';
 import 'package:instagram/services/database.dart';
-import '../helpfunction.dart';
+import '../helper/helpfunction.dart';
 import 'SignupScreen.dart';
 import 'MainScreen.dart';
 

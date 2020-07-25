@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/services/database.dart';
-import '../helpfunction.dart';
+import '../helper/helpfunction.dart';
 
 class EditProfile extends StatefulWidget {
   static const routeName = '/EditProfile';

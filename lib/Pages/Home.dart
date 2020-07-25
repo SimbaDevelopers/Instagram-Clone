@@ -14,7 +14,7 @@ import 'package:instagram/widgets/storybar.dart';
 
 import 'package:instagram/authenticate.dart';
 import 'package:instagram/constants.dart';
-import 'package:instagram/helpfunction.dart';
+import 'file:///D:/Ongoing%20Projects/Instagram-Clone-2/lib/helper/helpfunction.dart';
 import 'package:instagram/services/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
