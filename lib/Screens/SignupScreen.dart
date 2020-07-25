@@ -34,8 +34,8 @@ class _SignUpState extends State<SignUpScreen> {
   signMeUp() {
     if (formkey.currentState.validate()) {
       Map<String, String> userInfoMap = {
-        "username": usernameTexteditingcontroller.text,
-        "email": emailTexteditingcontroller.text
+        "username": usernameTexteditingcontroller.text.trim(),
+        "email": emailTexteditingcontroller.text.trim()
       };
       HelperFunction.saveusernameSharedPreferecne(
           usernameTexteditingcontroller.text);
@@ -46,15 +46,18 @@ class _SignUpState extends State<SignUpScreen> {
         isLoading = true;
       });
       authMethod
-          .signupwithemailandpassword(emailTexteditingcontroller.text,
-              passwordTexteditingcontroller.text)
+          .signupwithemailandpassword(emailTexteditingcontroller.text.trim(),
+              passwordTexteditingcontroller.text.trim())
           .then((val) {
-        print("$val.uid");
+    //    print("$val.uid");
 
         String _userId;
         FirebaseAuth.instance.currentUser().then((user) {
           _userId = user.uid;
         });
+
+
+        HelperFunction.saveuserIDinSharedPreferecne(_userId);
 
         databaseMethod.uploadUserInfo(userInfoMap, _userId);
         HelperFunction.saveuserloggedinSharedPreferecne(true);

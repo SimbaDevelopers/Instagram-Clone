@@ -1,8 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram/services/database.dart';
+import '../helpfunction.dart';
 
 class EditProfile extends StatefulWidget {
   static const routeName = '/EditProfile';
@@ -12,40 +17,188 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  final formkey = GlobalKey<FormState>();
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
   TextEditingController phoneNoController = TextEditingController();
   TextEditingController websiteController = TextEditingController();
   TextEditingController bioController = TextEditingController();
 
   File _image;
 
-  void pickImage() async {
-    File image;
 
-    image = (await ImagePicker.pickImage(source: ImageSource.gallery)) as File;
+  String _name;
+  String _userName ;
+  String imageurl = '';
+  String _userId ;
+  String _website;
+  String _bio;
+  String _phoneNumber;
+  String _gender;
+  String _email;
+
+  bool isUploading = false;
+
+  DatabaseMethod databaseMethod = new DatabaseMethod();
+
+
+ @override
+  void initState() {
+     getUserInfo();
+    super.initState();
+  }
+
+  void getUserInfo() async {
+
+    await HelperFunction.getusernameSharedPreferecne().then((value) {
+        setState(() {
+
+          _userName = value;
+        });
+      });
+
+    await FirebaseAuth.instance.currentUser().then((value) { _userId = value.uid;
+
+    print(_userId);
+
+    Firestore.instance.collection('users').document(_userId).get().then((value) async{
+      _website = value.data['website'];
+      _bio = value.data['bio'];
+      _gender = value.data['gender'];
+      _name = value.data['name'];
+      _phoneNumber = value.data['phoneNumber'];
+      _email = value.data['email'];
+
+      imageurl= value.data['profileImageURL'].toString();
+
+      print( 'image url ' + value.data['profileImageURL'].toString());
+
+      setState(() {
+      });
+    });
+
+
+
+    });
+//    await HelperFunction.getuserIdSharedPreferecne().then((value)  {
+//
+//      _userId = value;
+//
+//
+//    });
+
+
+
+
+
+
+  }
+
+
+  editUserInfo() async {
+    final FormState form = _formKey.currentState;
+    print('click');
+   if( form.validate()){
+       setState(() {
+         isUploading=true;
+       });
+       if(_image == null) {
+
+       }
+       else {
+
+         //============================  Upload Image to Firebase Storage  ===================================
+
+         final ref = FirebaseStorage.instance.ref().child(_userId).child('ProfileImage').child(_userId + '.jpg');
+         await ref.putFile(_image).onComplete;
+         final _url =  await ref.getDownloadURL();
+         await Firestore.instance
+             .collection('users')
+             .document(_userId)
+             .updateData({
+
+           'profileImageURL': _url,
+         });
+
+         imageurl = _url.toString();
+         _image = null;
+       }
+
+       //===========================   upload user Info into database =========================================
+
+       Map<String, String> userInfoMap = {
+         'name' :  nameController.text.toString().trim(),
+         "username": userNameController.text.trim(),
+         'website' : websiteController.text.toString().trim(),
+         'bio' : bioController.text.toString().trim(),
+       'phoneNumber' :phoneNoController.text.toString().trim() ,
+
+       };
+
+
+       _website = websiteController.text.toString().trim();
+       _bio = bioController.text.toString().trim();
+       _name = nameController.text.toString().trim();
+       _phoneNumber =phoneNoController.text.toString().trim();
+      _userName = userNameController.text.trim();
+
+
+       databaseMethod.editUserInfo(userInfoMap, _userId);
+
+      setState(() {
+        isUploading = false;
+
+      });
+
+       _scaffoldKey.currentState.showSnackBar(new SnackBar(
+         content: new Text("Profile is Updated" , style: TextStyle(color: Colors.white),),
+         backgroundColor: Colors.black,
+
+       ));
+
+
+
+     }
+
+  }
+
+  void pickImage() async {
+
+
+    final image = await ImagePicker.pickImage(source: ImageSource.gallery );
 
     setState(() {
       _image = image;
+      print('_image ' );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Edit Profile"),
         actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Icon(
-              Icons.save,
-              color: Colors.deepPurple[400],
+          InkWell(
+            onTap: editUserInfo,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: Icon(
+
+                Icons.save,
+                color: Colors.deepPurple[400],
+                size: 35,
+              ),
             ),
           )
         ],
       ),
-      body: SingleChildScrollView(
+      body: isUploading ? Center(child: CircularProgressIndicator()) : SingleChildScrollView(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -57,9 +210,8 @@ class _EditProfileState extends State<EditProfile> {
                     children: <Widget>[
                       CircleAvatar(
                         backgroundColor: Colors.grey,
-                        backgroundImage: _image == null
-                            ? AssetImage('assets/images/profile.jpeg')
-                            : FileImage(_image),
+                        backgroundImage: _image == null ? imageurl == '' ? AssetImage('assets/images/profile.jpeg')   : NetworkImage(imageurl) : FileImage(_image),
+
                         radius: 45,
                       ),
                       FlatButton(
@@ -76,7 +228,7 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 TextField(
-                  controller: nameController..text = "Teͥjaͣsͫ",
+                  controller: _name == null ? nameController :  nameController..text = _name,
                   decoration: InputDecoration(
                       labelText: 'Name',
                       focusedBorder: new UnderlineInputBorder(
@@ -88,7 +240,9 @@ class _EditProfileState extends State<EditProfile> {
                       labelStyle: TextStyle(color: Colors.grey)),
                 ),
                 TextField(
+                  controller: _userName == null ? userNameController : userNameController..text = _userName,
                   decoration: InputDecoration(
+
                       labelText: 'Username',
                       focusedBorder: new UnderlineInputBorder(
                         borderSide: BorderSide(
@@ -99,6 +253,7 @@ class _EditProfileState extends State<EditProfile> {
                       labelStyle: TextStyle(color: Colors.grey)),
                 ),
                 TextField(
+                  controller: _website == null ? websiteController : websiteController..text = _website,
                   decoration: InputDecoration(
                       labelText: 'Website',
                       focusedBorder: new UnderlineInputBorder(
@@ -110,15 +265,17 @@ class _EditProfileState extends State<EditProfile> {
                       labelStyle: TextStyle(color: Colors.grey)),
                 ),
                 TextField(
-                  decoration: InputDecoration(
-                      labelText: 'Bio',
-                      focusedBorder: new UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.grey,
-                          width: 1.0,
+                    controller: _bio == null ? bioController : bioController..text= _bio,
+                    decoration: InputDecoration(
+                        labelText: 'Bio',
+                        focusedBorder: new UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
                         ),
-                      ),
-                      labelStyle: TextStyle(color: Colors.grey)),
+                        labelStyle: TextStyle(color: Colors.grey)),
+
                 ),
                 SizedBox(
                   height: 10,
@@ -140,25 +297,34 @@ class _EditProfileState extends State<EditProfile> {
                 SizedBox(
                   height: 4,
                 ),
-                Text('tejanghan@gmail.com'),
+                Text('$_email'),
                 Divider(color: Colors.grey),
                 SizedBox(height: 8),
                 Text('Phone Number', style: TextStyle(color: Colors.grey)),
-                TextFormField(
-                  validator: (value) {
-                    return value.length == 10 ? null : 'Enter Phone Number';
-                  },
-                  decoration: InputDecoration(
-                    focusedBorder: new UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1.0,
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+
+//                        validator: (value) {
+//                          return value==null ? null : value.length == 10 ? null : 'Enter a valid number';
+//                        },
+                        decoration: InputDecoration(
+                          focusedBorder: new UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                          ),
+                          labelStyle: TextStyle(color: Colors.grey),
+                        ),
+                        keyboardType: TextInputType.number,
+
+                        controller: _phoneNumber == null ? phoneNoController: phoneNoController..text = _phoneNumber,
                       ),
-                    ),
-                    labelStyle: TextStyle(color: Colors.grey),
+                    ],
                   ),
-                  keyboardType: TextInputType.number,
-                  controller: phoneNoController..text = '9081004787',
                 ),
                 SizedBox(height: 8),
                 Text('Gender', style: TextStyle(color: Colors.grey)),
@@ -176,3 +342,6 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 }
+
+
+//Teͥjaͣsͫ
