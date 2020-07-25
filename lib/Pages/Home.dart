@@ -13,10 +13,6 @@ import 'package:instagram/widgets/PostHomeScreen.dart';
 import 'package:instagram/widgets/storybar.dart';
 
 import 'package:instagram/authenticate.dart';
-
-import 'package:instagram/constants.dart';
-import 'file:///D:/Ongoing%20Projects/Instagram-Clone-2/lib/helper/helpfunction.dart';
-
 import 'file:///D:/Personal/Personal/Instagram-clone/3/lib/helper/constants.dart';
 import 'file:///D:/Personal/Personal/Instagram-clone/3/lib/helper/helpfunction.dart';
 
