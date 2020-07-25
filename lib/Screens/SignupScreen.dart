@@ -37,7 +37,6 @@ class _SignUpState extends State<SignUpScreen> {
       Map<String, String> userInfoMap = {
         "username": usernameTexteditingcontroller.text,
         "email": emailTexteditingcontroller.text,
-        "bio":''
       };
       HelperFunction.saveusernameSharedPreferecne(
           usernameTexteditingcontroller.text);
