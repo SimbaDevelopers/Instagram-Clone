@@ -2,10 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/usernameScreen.dart';
-import 'file:///D:/Ongoing%20Projects/Instagram-Clone-2/lib/helper/helpfunction.dart';
-
-
-
 import 'file:///D:/Personal/Personal/Instagram-clone/3/lib/helper/helpfunction.dart';
 
 

@@ -14,7 +14,7 @@ class StoryBar extends StatelessWidget {
           ),
           CircleAvatar(
             radius: 30.0,
-            backgroundImage: AssetImage('assets/images/profile.jpeg'),
+            backgroundImage:NetworkImage("imageurl"), //AssetImage('assets/images/profile.jpeg'),
             backgroundColor: Colors.transparent,
           ),
           SizedBox(
