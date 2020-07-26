@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/helper/constants.dart';
 import 'package:instagram/widgets/EditProfile.dart';
 import 'package:instagram/widgets/followingBottomSheet.dart';
 
@@ -51,7 +52,7 @@ class _InfoAtProfileState extends State<InfoAtProfile> {
             children: <Widget>[
               CircleAvatar(
                 radius: 45.0,
-                backgroundImage: AssetImage('assets/images/profile.jpeg'),
+                backgroundImage: NetworkImage(Constants.imgpro),
                 backgroundColor: Colors.transparent,
               ),
               Column(

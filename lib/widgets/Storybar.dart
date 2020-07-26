@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:instagram/helper/constants.dart';
 
 class StoryBar extends StatelessWidget {
   @override
@@ -14,7 +15,7 @@ class StoryBar extends StatelessWidget {
           ),
           CircleAvatar(
             radius: 30.0,
-            backgroundImage:NetworkImage("imageurl"), //AssetImage('assets/images/profile.jpeg'),
+            backgroundImage:NetworkImage(Constants.imgpro), //AssetImage('assets/images/profile.jpeg'),
             backgroundColor: Colors.transparent,
           ),
           SizedBox(

@@ -4,10 +4,6 @@ import 'package:instagram/Chats/chat.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
-
-
-import 'file:///D:/Personal/Personal/Instagram-clone/3/lib/helper/helpfunction.dart';
-
 import 'package:instagram/widgets/EditProfile.dart';
 
 import 'Pages/Activity.dart';
@@ -21,6 +17,7 @@ import 'Screens/SplashScreen.dart';
 import 'Screens/startupscreen.dart';
 import 'Screens/UsernameScreen.dart';
 import 'Pages/Search.dart';
+import 'helper/helpfunction.dart';
 
 void main() {
   runApp(MyApp());

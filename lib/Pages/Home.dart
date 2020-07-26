@@ -9,6 +9,7 @@ import 'package:instagram/Pages/Profile.dart';
 import 'package:instagram/Screens/SignInScreen.dart';
 import 'package:instagram/Screens/startupscreen.dart';
 import 'package:instagram/helper/constants.dart';
+import 'package:instagram/helper/helpfunction.dart';
 
 import 'package:instagram/widgets/PostHomeScreen.dart';
 import 'package:instagram/widgets/storybar.dart';
@@ -20,7 +21,6 @@ import 'package:instagram/authenticate.dart';
 //import 'helper/helpfunction.dart';
 
 // import 'file:///D:/Personal/Personal/Instagram-clone/3/lib/helper/constants.dart';
-import 'file:///D:/Personal/Personal/Instagram-clone/3/lib/helper/helpfunction.dart';
 
 
 import 'package:instagram/services/auth.dart';
