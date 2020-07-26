@@ -13,6 +13,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../authenticate.dart';
+import 'Activity.dart';
+import 'Add.dart';
+import 'Home.dart';
+import 'Search.dart';
+import 'bottom_nav.dart';
 
 void main() => runApp(ProfilePage());
 
@@ -76,9 +81,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
-      onWillPop: _onWillPop,
-      child: new Scaffold(
+    return
+//      new
+//      WillPopScope(
+//      onWillPop: _onWillPop,
+//      child:
+//      new
+      Scaffold(
         appBar: new AppBar(
           title: userName == null ? Text('usename') : new Text(userName),
         ),
@@ -95,7 +104,47 @@ class _ProfilePageState extends State<ProfilePage> {
 
           ),
         ),
-      ),
+        bottomNavigationBar: BottomNavigation('ProfilePage' , context),
+//        bottomNavigationBar: Padding(
+//          padding: const EdgeInsets.symmetric(horizontal: 10 , vertical: 5),
+//          child: Row(
+//            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//            children: <Widget>[
+//
+//              GestureDetector(
+//                onTap: (){
+//                  Navigator.of(context).pushNamed(HomePage.routeName);
+//                },
+//                child: Icon(Icons.home , size: 35, color: Colors.white,),
+//              ),
+//              GestureDetector(
+//                onTap: (){
+//                  Navigator.of(context).pushNamed(SearchPage.routeName);
+//                },
+//                child: Icon(Icons.search, size: 35, color: Colors.grey,),
+//              ),
+//              GestureDetector(
+//                onTap: (){
+//                  Navigator.of(context).pushNamed(AddPage.routeName);
+//                },
+//                child: Icon(Icons.add, size: 35,color: Colors.grey,),
+//              ),
+//              GestureDetector(
+//                onTap: (){
+//                  Navigator.of(context).pushNamed(ActivityPage.routeName);
+//
+//                },
+//                child: Icon(Icons.favorite_border, size: 35,color: Colors.grey,),
+//              ),
+//              GestureDetector(
+//                onTap: (){},
+//                child: Icon(Icons.supervised_user_circle, size: 35,color: Colors.grey,),
+//              ),
+//
+//            ],
+//          ),
+//        ),
+//      ),
     );
   }
 }

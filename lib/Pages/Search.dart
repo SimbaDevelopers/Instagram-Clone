@@ -1,6 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/Pages/Home.dart';
 import 'package:instagram/services/database.dart';
+
+import 'Activity.dart';
+import 'Add.dart';
+import 'Profile.dart';
+import 'bottom_nav.dart';
 
 void main() => runApp(SearchPage());
 
@@ -57,13 +63,14 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         appBar: AppBar(
           title: Row(
             children: <Widget>[
-              Icon(
-                Icons.keyboard_arrow_left,
-                size: 50,
-              ),
+//              Icon(
+//                Icons.keyboard_arrow_left,
+//                size: 50,
+//              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
@@ -91,7 +98,61 @@ class _SearchPageState extends State<SearchPage> {
         ),
         body: isSearching
             ? Center(child: CircularProgressIndicator())
-            : searchList()
+            : searchList(),
+      bottomNavigationBar: BottomNavigation('SearchPage' , context),
+    //  bottomNavigationBar: BottomNavigation('SearchPage', context),
+//      bottomNavigationBar: Padding(
+//        padding: const EdgeInsets.symmetric(horizontal: 10 , vertical: 5),
+//        child: Row(
+//          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//          children: <Widget>[
+//
+//            GestureDetector(
+//              onTap: (){
+//
+//                bool isNewRouteSameAsCurrent = false;
+//
+////                Navigator.of(context).popUntil( (route) {
+////                  if (route.settings.name == HomePage.routeName) {
+////                    isNewRouteSameAsCurrent = true;
+////                  }
+////                  return false;
+////                });
+//
+//                if (!isNewRouteSameAsCurrent) {
+//                  Navigator.of(context).pushNamed(HomePage.routeName);
+//                }
+//
+//              },
+//              child: Icon(Icons.home , size: 35, color: Colors.grey,),
+//            ),
+//            GestureDetector(
+//
+//              child: Icon(Icons.search, size: 35, color: Colors.white,),
+//            ),
+//            GestureDetector(
+//              onTap: (){
+//                Navigator.of(context).pushNamed(AddPage.routeName);
+//              },
+//              child: Icon(Icons.add, size: 35,color: Colors.grey,),
+//            ),
+//            GestureDetector(
+//              onTap: (){
+//                Navigator.of(context).pushNamed(ActivityPage.routeName);
+//              },
+//              child: Icon(Icons.favorite_border, size: 35,color: Colors.grey,),
+//            ),
+//            GestureDetector(
+//              onTap: (){
+//                Navigator.of(context).pushNamed(ProfilePage.routeName);
+//              },
+//              child: Icon(Icons.supervised_user_circle, size: 35,color: Colors.grey,),
+//            ),
+//
+//          ],
+//        ),
+//      ),
+
         //  Container(
         //   child: Column(children: [
         //     Container(
@@ -116,6 +177,8 @@ class _SearchPageState extends State<SearchPage> {
         //     searchList()
         //   ]),
         // ),
+
+
         );
   }
 }

@@ -6,7 +6,7 @@ import 'file:///D:/Ongoing%20Projects/Instagram-Clone-2/lib/helper/helpfunction.
 
 
 
-import 'file:///D:/Personal/Personal/Instagram-clone/3/lib/helper/helpfunction.dart';
+
 
 
 import 'package:instagram/services/auth.dart';
@@ -40,12 +40,7 @@ class _SignUpState extends State<SignUpScreen> {
   signMeUp() {
     if (formkey.currentState.validate()) {
 
-      Map<String, String> userInfoMap = {
 
-        "username": usernameTexteditingcontroller.text.trim(),
-        "email": emailTexteditingcontroller.text.trim()
-
-      };
       HelperFunction.saveusernameSharedPreferecne(
           usernameTexteditingcontroller.text);
       HelperFunction.saveuseremailSharedPreferecne(
@@ -63,16 +58,25 @@ class _SignUpState extends State<SignUpScreen> {
         String _userId;
         FirebaseAuth.instance.currentUser().then((user) {
           _userId = user.uid;
+
+          HelperFunction.saveuserIDinSharedPreferecne(_userId);
+
+          Map<String, String> userInfoMap = {
+
+            "username": usernameTexteditingcontroller.text.trim(),
+            "email": emailTexteditingcontroller.text.trim(),
+            "userId" : _userId,
+          };
+
+          databaseMethod.uploadUserInfo(userInfoMap, _userId);
+          HelperFunction.saveuserloggedinSharedPreferecne(true);
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => MainScreen()));
+        });
         });
 
 
-        HelperFunction.saveuserIDinSharedPreferecne(_userId);
 
-        databaseMethod.uploadUserInfo(userInfoMap, _userId);
-        HelperFunction.saveuserloggedinSharedPreferecne(true);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainScreen()));
-      });
     }
   }
 

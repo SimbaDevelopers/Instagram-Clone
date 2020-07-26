@@ -59,16 +59,19 @@ class _Login_ScreenState extends State<Login_Screen> {
           FirebaseAuth.instance.currentUser().then((value) {
             HelperFunction.saveuserIDinSharedPreferecne(value.uid);
             Firestore.instance.collection('users').document(value.uid).get().then((value) {
-              print('usernme = ' + value['username']);
+              HelperFunction.saveProfileImageUrlSharedPreference(value['profileImageURL']);
               HelperFunction.saveusernameSharedPreferecne(value['username']);});
           });
 
 
 
+
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => MainScreen()));
+              context, MaterialPageRoute(
+              //settings: RouteSettings(name: MainScreen.routeName),
+              builder: (context) => MainScreen()));
         }
-      });
+     });
     }
   }
 
