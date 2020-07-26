@@ -163,6 +163,7 @@ class _ChatScreenState extends State<Chats> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Column(
           children: <Widget>[
+
             Expanded(
               child: Container(
                 child: ListView.builder(

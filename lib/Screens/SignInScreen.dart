@@ -35,27 +35,33 @@ class _Login_ScreenState extends State<Login_Screen> {
       });
 
 
-      databaseMethod
-          .getUserByUserEmail(emailTexteditingcontroller.text.trim())
-          .then((val) {
-        snapshotuserinfo = val;
-        HelperFunction.saveusernameSharedPreferecne(
-            snapshotuserinfo.documents[0].data["username"]);
-        print("${snapshotuserinfo.documents[0].data["username"]}");
-      });
+//      databaseMethod
+//          .getUserByUserEmail(emailTexteditingcontroller.text.trim())
+//          .then((val) {
+//        snapshotuserinfo = val;
+//        HelperFunction.saveusernameSharedPreferecne(
+//            snapshotuserinfo.documents[0].data["username"]);
+//        print(" username = ${snapshotuserinfo.documents[0].data["username"]}");
+//      });
 
 
       authMethod
           .signinwithemailandpassword(emailTexteditingcontroller.text,
               passwordTexteditingcontroller.text)
-          .then((val) {
+          .then((val) async {
         if (val != null) {
+
           HelperFunction.saveuserloggedinSharedPreferecne(true);
           HelperFunction.saveuseremailSharedPreferecne(
               emailTexteditingcontroller.text);
 
 
-          FirebaseAuth.instance.currentUser().then((value) => HelperFunction.saveuserIDinSharedPreferecne(value.uid));
+          FirebaseAuth.instance.currentUser().then((value) {
+            HelperFunction.saveuserIDinSharedPreferecne(value.uid);
+            Firestore.instance.collection('users').document(value.uid).get().then((value) {
+              print('usernme = ' + value['username']);
+              HelperFunction.saveusernameSharedPreferecne(value['username']);});
+          });
 
 
 
@@ -119,6 +125,7 @@ class _Login_ScreenState extends State<Login_Screen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: TextFormField(
+                        obscureText: true,
                         controller: passwordTexteditingcontroller,
                         decoration: new InputDecoration(
                           labelText: 'Password',

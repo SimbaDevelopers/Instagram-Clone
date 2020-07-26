@@ -40,4 +40,11 @@ class DatabaseMethod {
     await FirebaseAuth.instance.currentUser().then((value) => _uid = value.uid);
     return _uid;
   }
+
+
+  addNewPost(postMap) {
+    Firestore.instance
+        .collection("posts").add(postMap);
+
+  }
 }

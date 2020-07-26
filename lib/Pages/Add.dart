@@ -2,6 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:instagram/helper/helpfunction.dart';
+import 'package:instagram/services/database.dart';
 
 void main() => runApp(AddPage());
 
@@ -13,12 +18,26 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  DatabaseMethod databaseMethod = new DatabaseMethod();
+
   bool facebook = false;
   bool twitter = false;
   bool tumblr = false;
   var _value = 'Gallery';
   var captionController = TextEditingController();
+  bool isUploading = false;
+
+   TextEditingController locationController = TextEditingController();
+
+
+
   File _image;
+  String _userId;
+  String posturl;
+
+
 
   void pickImage(type) async {
     File image;
@@ -33,9 +52,78 @@ class _AddPageState extends State<AddPage> {
     });
   }
 
+  addPost( context) async {
+    setState(() {
+      isUploading = true;
+    });
+    print('AddPost');
+
+    await HelperFunction.getuserIdSharedPreferecne().then((value) async {
+      _userId = value;
+      print(value);
+
+      await HelperFunction.getusernameSharedPreferecne().then((username) async {
+
+        print('username = ' + username);
+
+        if(_image == null){
+          _scaffoldKey.currentState.showSnackBar(new SnackBar(
+            content: new Text("Please Select Image..." , style: TextStyle(color: Colors.white),),
+            backgroundColor: Colors.black,),);
+
+        }else{
+          final ref = FirebaseStorage.instance.ref().child(_userId).child('posts').child(Timestamp.now().toString() + '.jpg');
+          await ref.putFile(_image).onComplete;
+          final _url =  await ref.getDownloadURL();
+//        await Firestore.instance
+//            .collection('users')
+//            .document(_userId)
+//            .updateData({
+//
+//          'profileImageURL': _url,
+//        });
+
+          Map<String,Object> postMap = {
+            'userId'  : _userId,
+            'caption' : captionController.text.trim(),
+            'createdAt' : Timestamp.now(),
+            'postURL' : _url,
+            'location': locationController.text.trim(),
+            'username' : username,
+
+          };
+
+          databaseMethod.addNewPost(postMap);
+          posturl = _url.toString();
+          _image = null;
+          captionController.text= null;
+          locationController.text = null;
+
+          setState(() {
+            isUploading = false;
+          });
+
+        }
+
+      });
+
+
+
+    });
+
+
+
+
+
+
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           'New Post',
@@ -61,14 +149,14 @@ class _AddPageState extends State<AddPage> {
             },
           ),
           FlatButton(
-              onPressed: () {},
+              onPressed: () { addPost(context); },
               child: Text(
                 'Share',
                 style: TextStyle(color: Colors.deepPurple[300]),
               ))
         ],
       ),
-      body: SingleChildScrollView(
+      body: isUploading ? Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
         physics: ScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,6 +230,7 @@ class _AddPageState extends State<AddPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: TextField(
+                controller: locationController,
                 decoration: InputDecoration(
                   labelText: 'Add Location..',
                   labelStyle: TextStyle(color: Colors.white),

@@ -2,7 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screens/SplashScreen.dart';
 
-class Post extends StatelessWidget {
+class Post extends StatefulWidget {
+  @override
+  _PostState createState() => _PostState();
+}
+
+class _PostState extends State<Post> {
+  bool isLiked = false;
+  bool isBookmarked = false;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -70,9 +77,19 @@ class Post extends StatelessWidget {
                           await FirebaseAuth.instance.currentUser();
                       print(user.uid.toString());
                     },
-                    child: Icon(
-                      Icons.favorite,
-                      size: 30,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+
+                      },
+                      child: isLiked ? Icon(Icons.favorite ,
+                      color: Colors.redAccent,
+                      size: 30,) : Icon(
+                       Icons.favorite_border,
+                        size: 30,
+                      ),
                     ),
                   ),
                 ),
@@ -102,9 +119,15 @@ class Post extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.bookmark,
-                size: 30,
+              child: GestureDetector(
+                onTap: (){setState(() {
+                  isBookmarked = !isBookmarked;
+
+                }); },
+                child: isBookmarked ? Icon(Icons.bookmark , size: 30 , color: Colors.blueAccent,) : Icon(
+                  Icons.bookmark_border,
+                  size: 30,
+                ),
               ),
             ),
           ],
