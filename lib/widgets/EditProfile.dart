@@ -154,9 +154,9 @@ class _EditProfileState extends State<EditProfile> {
 
       });
 
-       _scaffoldKey.currentState.showSnackBar(new SnackBar(
-         content: new Text("Profile is Updated" , style: TextStyle(color: Colors.white),),
-         backgroundColor: Colors.black,
+         _scaffoldKey.currentState.showSnackBar(new SnackBar(
+           content: new Text("Profile is Updated" , style: TextStyle(color: Colors.white),),
+           backgroundColor: Colors.black,
 
        ));
 
