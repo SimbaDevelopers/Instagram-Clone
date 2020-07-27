@@ -48,10 +48,9 @@ class _Login_ScreenState extends State<Login_Screen> {
 
       authMethod
           .signinwithemailandpassword(emailTexteditingcontroller.text,
-              passwordTexteditingcontroller.text)
+          passwordTexteditingcontroller.text)
           .then((val) async {
         if (val != null) {
-
           HelperFunction.saveuserloggedinSharedPreferecne(true);
           HelperFunction.saveuseremailSharedPreferecne(
               emailTexteditingcontroller.text);
@@ -59,18 +58,25 @@ class _Login_ScreenState extends State<Login_Screen> {
 
           FirebaseAuth.instance.currentUser().then((value) {
             HelperFunction.saveuserIDinSharedPreferecne(value.uid);
-            Firestore.instance.collection('users').document(value.uid).get().then((value) {
-
-              HelperFunction.saveProfileImageUrlSharedPreference(value['profileImageURL']);
-              HelperFunction.saveusernameSharedPreferecne(value['username']);});
-
+            Firestore.instance.collection('users').document(value.uid)
+                .get()
+                .then((value) {
+              HelperFunction.saveProfileImageUrlSharedPreference(
+                  value['profileImageURL']);
+              HelperFunction.saveusernameSharedPreferecne(value['username']);
               print('usernme = ' + value['username']);
-           //   HelperFunction.saveusernameSharedPreferecne(value['username']);
-              Constants.imgpro=value['profileImageURL'];
+              //   HelperFunction.saveusernameSharedPreferecne(value['username']);
+              Constants.imgpro = value['profileImageURL'];
             });
 
-          });
 
+          });
+        }
+      });
+
+          FirebaseAuth.instance.currentUser().then((user) {
+            Constants.uid= user.uid;
+          });
 
 
 
@@ -79,9 +85,9 @@ class _Login_ScreenState extends State<Login_Screen> {
               //settings: RouteSettings(name: MainScreen.routeName),
               builder: (context) => MainScreen()));
         }
-     });
-    }
-  }
+     }
+
+
 
   @override
   Widget build(BuildContext context) {

@@ -5,8 +5,6 @@ import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
 
-import 'file:///D:/Ongoing%20Projects/Instagram-Clone-2/lib/helper/helpfunction.dart';
-
 import 'package:instagram/widgets/EditProfile.dart';
 
 import 'Pages/Activity.dart';
