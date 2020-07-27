@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram/helper/constants.dart';
 import 'package:instagram/services/database.dart';
 import '../helper/helpfunction.dart';
 
@@ -125,6 +126,7 @@ class _EditProfileState extends State<EditProfile> {
          });
 
          imageurl = _url.toString();
+         Constants.imgpro=imageurl;
          _image = null;
        }
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/helper/constants.dart';
 import 'package:instagram/services/auth.dart';
 import 'package:instagram/services/database.dart';
 import '../helper/helpfunction.dart';
@@ -59,8 +60,15 @@ class _Login_ScreenState extends State<Login_Screen> {
           FirebaseAuth.instance.currentUser().then((value) {
             HelperFunction.saveuserIDinSharedPreferecne(value.uid);
             Firestore.instance.collection('users').document(value.uid).get().then((value) {
+
               HelperFunction.saveProfileImageUrlSharedPreference(value['profileImageURL']);
               HelperFunction.saveusernameSharedPreferecne(value['username']);});
+
+              print('usernme = ' + value['username']);
+           //   HelperFunction.saveusernameSharedPreferecne(value['username']);
+              Constants.imgpro=value['profileImageURL'];
+            });
+
           });
 
 
