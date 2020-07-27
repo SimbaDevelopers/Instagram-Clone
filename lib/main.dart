@@ -4,6 +4,9 @@ import 'package:instagram/Chats/chat.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
+
+import 'file:///D:/Ongoing%20Projects/Instagram-Clone-2/lib/helper/helpfunction.dart';
+
 import 'package:instagram/widgets/EditProfile.dart';
 
 import 'Pages/Activity.dart';
@@ -57,17 +60,34 @@ class MyAppState extends State<MyApp> {
           : userIsLoggedIn != null
               ? userIsLoggedIn ? MainScreen() : Authenticate()
               : Authenticate(),
+      onGenerateRoute: (routeSettings) {
+        if (routeSettings.name == SearchPage.routeName)
+          return PageRouteBuilder(pageBuilder:(_, __, ___) => SearchPage() , transitionDuration: Duration(seconds: 0),);
+
+        if (routeSettings.name == HomePage.routeName)
+          return PageRouteBuilder(pageBuilder:(_, __, ___) => HomePage() , transitionDuration: Duration(seconds: 0),);
+
+        if (routeSettings.name == ProfilePage.routeName)
+          return PageRouteBuilder(pageBuilder:(_, __, ___) => ProfilePage() , transitionDuration: Duration(seconds: 0),);
+
+
+
+        if (routeSettings.name == ActivityPage.routeName)
+          return PageRouteBuilder(pageBuilder:(_, __, ___) => ActivityPage() , transitionDuration: Duration(seconds: 0),);
+
+        return null;
+      },
       routes: {
         // SignUpScreen.routeName: (context) => SignUpScreen(),
         LoginOrSignup.routeName: (context) => LoginOrSignup(),
         // Login_Screen.routName: (context) => Login_Screen(),
         MainScreen.routeName: (context) => MainScreen(),
         UsernameScreen.routeName: (context) => UsernameScreen(),
-        HomePage.routeName: (ctx) => HomePage(),
-        SearchPage.routeName: (ctx) => SearchPage(),
+//        HomePage.routeName: (ctx) => HomePage(),
+//        SearchPage.routeName: (ctx) => SearchPage(),
         AddPage.routeName: (ctx) => AddPage(),
-        ActivityPage.routeName: (ctx) => ActivityPage(),
-        ProfilePage.routeName: (ctx) => ProfilePage(),
+//       ActivityPage.routeName: (ctx) => ActivityPage(),
+//        ProfilePage.routeName: (ctx) => ProfilePage(),
         SplashScreen.routeName: (ctx) => SplashScreen(),
         EditProfile.routeName: (ctx) => EditProfile(),
       },

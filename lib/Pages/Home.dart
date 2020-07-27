@@ -6,6 +6,7 @@ import 'package:instagram/Chats/chat.dart';
 import 'package:instagram/Pages/Activity.dart';
 import 'package:instagram/Pages/Add.dart';
 import 'package:instagram/Pages/Profile.dart';
+import 'package:instagram/Pages/Search.dart';
 import 'package:instagram/Screens/SignInScreen.dart';
 import 'package:instagram/Screens/startupscreen.dart';
 import 'package:instagram/helper/constants.dart';
@@ -17,10 +18,13 @@ import 'package:instagram/widgets/storybar.dart';
 import 'package:instagram/authenticate.dart';
 
 //import 'package:instagram/constants.dart';
+import 'bottom_nav.dart';
+import 'file:///D:/Ongoing%20Projects/Instagram-Clone-2/lib/helper/helpfunction.dart';
+
 //import 'helper/constants.dart';
 //import 'helper/helpfunction.dart';
 
-// import 'file:///D:/Personal/Personal/Instagram-clone/3/lib/helper/constants.dart';
+
 
 
 import 'package:instagram/services/auth.dart';
@@ -105,9 +109,51 @@ class MyAppState extends State<HomePage> {
                 color: Colors.white,
               ),
               PostHome(),
+              Text('asdsa'),
             ],
           ),
         ),
+        bottomNavigationBar: BottomNavigation('HomePage' , context),
+//        bottomNavigationBar: BottomNavigation('HomePage' , context),
+//        bottomNavigationBar: Padding(
+//          padding: const EdgeInsets.symmetric(horizontal: 10 , vertical: 5),
+//          child: Row(
+//            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//            children: <Widget>[
+//
+//              GestureDetector(
+//
+//                  child: Icon(Icons.home , size: 35, color: Colors.white,),
+//              ),
+//              GestureDetector(
+//                onTap: (){
+//                    Navigator.of(context).pushNamed(SearchPage.routeName);
+//                },
+//                child: Icon(Icons.search, size: 35, color: Colors.grey,),
+//              ),
+//              GestureDetector(
+//                onTap: (){
+//                  Navigator.of(context).pushNamed(AddPage.routeName);
+//                },
+//                child: Icon(Icons.add, size: 35,color: Colors.grey,),
+//              ),
+//              GestureDetector(
+//                onTap: (){
+//                  Navigator.of(context).pushNamed(ActivityPage.routeName);
+//
+//                },
+//                child: Icon(Icons.favorite_border, size: 35,color: Colors.grey,),
+//              ),
+//              GestureDetector(
+//                onTap: (){
+//                  Navigator.of(context).pushNamed(ProfilePage.routeName);
+//                },
+//                child: Icon(Icons.supervised_user_circle, size: 35,color: Colors.grey,),
+//              ),
+//
+//            ],
+//          ),
+//        ),
       ),
     );
   }

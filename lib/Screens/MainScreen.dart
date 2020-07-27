@@ -15,14 +15,17 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  var _pages = [MainScreenX(), Chats()];
+ // var _pages = [MainScreenX(), Chats()];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        children: _pages,
-      ),
-    );
+    return HomePage();
+
+//      Scaffold(
+//      body:
+//      PageView(
+//        children: _pages,
+//      ),
+//    );
   }
 }
