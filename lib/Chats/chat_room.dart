@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram/Chats/messages.dart';
 import 'package:instagram/helper/app_constants.dart';
 import 'package:instagram/helper/constants.dart';
+import 'package:instagram/main.dart';
 import 'package:instagram/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -115,7 +116,12 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.post.data["username"])),
+      backgroundColor: Colors.black,
+      appBar: AppBar(title: Text(widget.post.data["username"]),
+        actions: <Widget>[ Positioned( left: 140,
+          child: CircleAvatar(backgroundImage: AssetImage('assets/images/profile.jpeg'),),)
+
+        ],),
       body: Container(
         child: Column(
           children: <Widget>[
