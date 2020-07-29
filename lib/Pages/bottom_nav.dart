@@ -34,10 +34,6 @@ class BottomNavigation extends StatefulWidget {
 class BottomNavigationState extends State<BottomNavigation> {
 
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return  Padding(
@@ -52,15 +48,17 @@ class BottomNavigationState extends State<BottomNavigation> {
                 content: new Text("temporary use back button for go to home page..." , style: TextStyle(color: Colors.white),),
                 backgroundColor: Colors.black,
               ));
-             // Navigator.popUntil(context, ModalRoute.withName(HomePage.routeName));
-//              Navigator.of(widget.context).pushNamed(HomePage.routeName);
+//              Navigator.popUntil(widget.context, ModalRoute.withName(HomePage.routeName));
+              Navigator.of(widget.context).pushNamed(HomePage.routeName);
             },
             child: Icon(Icons.home , size: 35, color: widget.isHomePage ? Colors.white : Colors.grey,),
           ),
           GestureDetector(
             onTap: (){
-              if(!widget.isSearchPage)
+              if(!widget.isSearchPage) {
+//                Navigator.popUntil(widget.context, ModalRoute.withName(SearchPage.routeName));
                 Navigator.of(widget.context).pushNamed(SearchPage.routeName);
+              }
             },
             child: Icon(Icons.search, size: 35, color: widget.isSearchPage ? Colors.white : Colors.grey,),
           ),

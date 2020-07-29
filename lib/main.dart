@@ -4,8 +4,9 @@ import 'package:instagram/Chats/chat.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
-
+import 'package:instagram/provider/PostList.dart';
 import 'package:instagram/widgets/EditProfile.dart';
+import 'package:provider/provider.dart';
 
 import 'Pages/Activity.dart';
 import 'Pages/Add.dart';
@@ -49,46 +50,57 @@ class MyAppState extends State<MyApp> {
     });
   }
 
+  gotoHomePage(context){
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(
+        settings: RouteSettings(name: HomePage.routeName),
+        builder: (context) => HomePage()));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.dark(),
-      home: ischecking
-          ? SplashScreen()
-          : userIsLoggedIn != null
-              ? userIsLoggedIn ? MainScreen() : Authenticate()
-              : Authenticate(),
-      onGenerateRoute: (routeSettings) {
-        if (routeSettings.name == SearchPage.routeName)
-          return PageRouteBuilder(pageBuilder:(_, __, ___) => SearchPage() , transitionDuration: Duration(seconds: 0),);
+    return ChangeNotifierProvider(
+      create : (ctx) =>  PostList(),
+      child: MaterialApp(
+        theme: ThemeData.dark(),
+        home: ischecking
+            ? SplashScreen()
+            : userIsLoggedIn != null
+                ? userIsLoggedIn ? HomePage() : Authenticate()
+                : Authenticate(),
+        onGenerateRoute: (routeSettings) {
+          if (routeSettings.name == SearchPage.routeName)
+            return PageRouteBuilder(pageBuilder:(_, __, ___) => SearchPage() , transitionDuration: Duration(seconds: 0),);
 
-        if (routeSettings.name == HomePage.routeName)
-          return PageRouteBuilder(pageBuilder:(_, __, ___) => HomePage() , transitionDuration: Duration(seconds: 0),);
+          if (routeSettings.name == HomePage.routeName)
+            return PageRouteBuilder(pageBuilder:(_, __, ___) => HomePage() , transitionDuration: Duration(seconds: 0),);
 
-        if (routeSettings.name == ProfilePage.routeName)
-          return PageRouteBuilder(pageBuilder:(_, __, ___) => ProfilePage() , transitionDuration: Duration(seconds: 0),);
+          if (routeSettings.name == ProfilePage.routeName)
+            return PageRouteBuilder(pageBuilder:(_, __, ___) => ProfilePage() , transitionDuration: Duration(seconds: 0),);
 
 
 
-        if (routeSettings.name == ActivityPage.routeName)
-          return PageRouteBuilder(pageBuilder:(_, __, ___) => ActivityPage() , transitionDuration: Duration(seconds: 0),);
+          if (routeSettings.name == ActivityPage.routeName)
+            return PageRouteBuilder(pageBuilder:(_, __, ___) => ActivityPage() , transitionDuration: Duration(seconds: 0),);
 
-        return null;
-      },
-      routes: {
-        // SignUpScreen.routeName: (context) => SignUpScreen(),
-        LoginOrSignup.routeName: (context) => LoginOrSignup(),
-        // Login_Screen.routName: (context) => Login_Screen(),
-        MainScreen.routeName: (context) => MainScreen(),
-        UsernameScreen.routeName: (context) => UsernameScreen(),
+          return null;
+        },
+
+        routes: {
+          // SignUpScreen.routeName: (context) => SignUpScreen(),
+          LoginOrSignup.routeName: (context) => LoginOrSignup(),
+          // Login_Screen.routName: (context) => Login_Screen(),
+          MainScreen.routeName: (context) => MainScreen(),
+          UsernameScreen.routeName: (context) => UsernameScreen(),
 //        HomePage.routeName: (ctx) => HomePage(),
 //        SearchPage.routeName: (ctx) => SearchPage(),
-        AddPage.routeName: (ctx) => AddPage(),
+          AddPage.routeName: (ctx) => AddPage(),
 //       ActivityPage.routeName: (ctx) => ActivityPage(),
 //        ProfilePage.routeName: (ctx) => ProfilePage(),
-        SplashScreen.routeName: (ctx) => SplashScreen(),
-        EditProfile.routeName: (ctx) => EditProfile(),
-      },
+          SplashScreen.routeName: (ctx) => SplashScreen(),
+          EditProfile.routeName: (ctx) => EditProfile(),
+        },
+      ),
     );
   }
 }

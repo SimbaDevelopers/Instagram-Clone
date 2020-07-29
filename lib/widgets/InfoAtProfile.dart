@@ -15,14 +15,28 @@ class _InfoAtProfileState extends State<InfoAtProfile> {
   FirebaseUser currentUser;
   String curreentUid;
   String userName;
+  String profileImage;
   void getUserInfo() async {
-    currentUser = await FirebaseAuth.instance.currentUser();
-    curreentUid = currentUser.uid;
+
+
     HelperFunction.getusernameSharedPreferecne().then((value) {
-      setState(() {
+
         userName = value;
+        HelperFunction.getuserIdSharedPreferecne().then((uid) {
+          curreentUid = uid;
+
+          HelperFunction.getProfileImageUrlSharedPreference().then((profImage) {
+            setState(() {
+              profileImage = profImage;
+            });
+
+          });
+
+
       });
     });
+
+
   }
 
   void followingButtonPressed(context) {
@@ -52,7 +66,7 @@ class _InfoAtProfileState extends State<InfoAtProfile> {
             children: <Widget>[
               CircleAvatar(
                 radius: 45.0,
-                backgroundImage: NetworkImage(Constants.imgpro),
+                backgroundImage: profileImage == null ?  AssetImage('assets/images/profile.jpeg') :   NetworkImage(profileImage),
                 backgroundColor: Colors.transparent,
               ),
               Column(

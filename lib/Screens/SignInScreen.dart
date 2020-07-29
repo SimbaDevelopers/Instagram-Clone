@@ -56,20 +56,19 @@ class _Login_ScreenState extends State<Login_Screen> {
               emailTexteditingcontroller.text);
 
 
+
           FirebaseAuth.instance.currentUser().then((value) {
             HelperFunction.saveuserIDinSharedPreferecne(value.uid);
-            Firestore.instance.collection('users').document(value.uid)
-                .get()
-                .then((value) {
-              HelperFunction.saveProfileImageUrlSharedPreference(
-                  value['profileImageURL']);
+
+            Firestore.instance.collection('users').document(value.uid).get().then((value) {
+              print('pro image ' + value['profileImageURL']);
+              HelperFunction.saveProfileImageUrlSharedPreference(value['profileImageURL']);
               HelperFunction.saveusernameSharedPreferecne(value['username']);
-              print('usernme = ' + value['username']);
-              //   HelperFunction.saveusernameSharedPreferecne(value['username']);
-              Constants.imgpro = value['profileImageURL'];
+
+
             });
-
-
+            
+            
           });
         }
       });

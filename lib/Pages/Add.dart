@@ -31,13 +31,9 @@ class _AddPageState extends State<AddPage> {
 
    TextEditingController locationController = TextEditingController();
 
-
-
   File _image;
   String _userId;
   String posturl;
-
-
 
   void pickImage(type) async {
     File image;
@@ -60,12 +56,6 @@ class _AddPageState extends State<AddPage> {
 
     await HelperFunction.getuserIdSharedPreferecne().then((value) async {
       _userId = value;
-      print(value);
-
-      await HelperFunction.getusernameSharedPreferecne().then((username) async {
-
-        print('username = ' + username);
-
         if(_image == null){
           _scaffoldKey.currentState.showSnackBar(new SnackBar(
             content: new Text("Please Select Image..." , style: TextStyle(color: Colors.white),),
@@ -75,22 +65,13 @@ class _AddPageState extends State<AddPage> {
           final ref = FirebaseStorage.instance.ref().child(_userId).child('posts').child(Timestamp.now().toString() + '.jpg');
           await ref.putFile(_image).onComplete;
           final _url =  await ref.getDownloadURL();
-//        await Firestore.instance
-//            .collection('users')
-//            .document(_userId)
-//            .updateData({
-//
-//          'profileImageURL': _url,
-//        });
 
           Map<String,Object> postMap = {
             'userId'  : _userId,
             'caption' : captionController.text.trim(),
-            'createdAt' : Timestamp.now(),
+            'createdAt' : DateTime.now(),
             'postURL' : _url,
             'location': locationController.text.trim(),
-            'username' : username,
-
           };
 
           databaseMethod.addNewPost(postMap);
@@ -104,20 +85,7 @@ class _AddPageState extends State<AddPage> {
           });
 
         }
-
-      });
-
-
-
     });
-
-
-
-
-
-
-
-
   }
 
   @override

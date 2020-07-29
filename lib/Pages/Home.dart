@@ -12,18 +12,20 @@ import 'package:instagram/Screens/SignInScreen.dart';
 import 'package:instagram/Screens/startupscreen.dart';
 import 'package:instagram/helper/constants.dart';
 import 'package:instagram/helper/helpfunction.dart';
+import 'package:instagram/provider/PostList.dart';
 
 import 'package:instagram/widgets/PostHomeScreen.dart';
 import 'package:instagram/widgets/storybar.dart';
 
 import 'package:instagram/authenticate.dart';
+import 'package:provider/provider.dart';
 
 //import 'package:instagram/constants.dart';
 import 'bottom_nav.dart';
 
 
 //import 'helper/constants.dart';
-//import 'helper/helpfunction.dart';
+
 
 
 
@@ -63,11 +65,18 @@ class MyAppState extends State<HomePage> {
     });
   }
 
+  refreshPage() async {
+    Provider.of<PostList>(context , listen: false).clearPostList();
+    Provider.of<PostList>(context , listen: false).getAndSetAllPost(2);
+    setState(() {
+
+    });
+    return 'sdfsf';
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.dark(),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Row(
             children: <Widget>[
@@ -101,17 +110,31 @@ class MyAppState extends State<HomePage> {
             )
           ],
         ),
-        body: SingleChildScrollView(
-          physics: ScrollPhysics(),
-          child: Column(
-            children: <Widget>[
-              StoryBar(),
-              Divider(
-                color: Colors.white,
-              ),
-              PostHome(),
-              Text('asdsa'),
-            ],
+        body: RefreshIndicator(
+          onRefresh: () {
+            return  refreshPage();
+          }
+            
+          ,
+          child: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                StoryBar(),
+                Divider(
+                  color: Colors.white,
+                ),
+                PostHome(),
+                Divider(
+                  height: 20,
+                  color: Colors.white,
+                ),
+
+
+
+
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: BottomNavigation('HomePage' , context),
@@ -155,7 +178,7 @@ class MyAppState extends State<HomePage> {
 //            ],
 //          ),
 //        ),
-      ),
+   //   ),
     );
   }
 }

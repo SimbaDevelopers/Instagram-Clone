@@ -1,7 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:instagram/helper/constants.dart';
+import 'package:instagram/helper/helpfunction.dart';
 
-class StoryBar extends StatelessWidget {
+class StoryBar extends StatefulWidget {
+
+
+  @override
+  _StoryBarState createState() => _StoryBarState();
+}
+
+class _StoryBarState extends State<StoryBar> {
+
+  String _profileImage;
+
+  getUserInfo() async {
+
+     HelperFunction.getProfileImageUrlSharedPreference().then((value) {
+
+       setState(() {
+         _profileImage = value;
+       });
+     });
+  }
+
+  @override
+  void initState() {
+    getUserInfo();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,7 +42,7 @@ class StoryBar extends StatelessWidget {
           ),
           CircleAvatar(
             radius: 30.0,
-            backgroundImage:NetworkImage(Constants.imgpro), //AssetImage('assets/images/profile.jpeg'),
+            backgroundImage: _profileImage == null ?  AssetImage('assets/images/profile.jpeg') :NetworkImage(_profileImage), //AssetImage('assets/images/profile.jpeg'),
             backgroundColor: Colors.transparent,
           ),
           SizedBox(
