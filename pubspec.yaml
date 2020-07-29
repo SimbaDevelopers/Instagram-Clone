@@ -40,6 +40,11 @@ dependencies:
 
   shared_preferences: ^0.5.7
 
+  intl: ^0.16.1
+  timeago: ^2.0.26
+  provider: ^4.3.1
+
+
 
 
 

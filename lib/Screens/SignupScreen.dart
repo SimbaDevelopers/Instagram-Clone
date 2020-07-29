@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/Pages/Home.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/usernameScreen.dart';
 
-import 'file:///D:/Ongoing%20Projects/Instagram-Clone-2/lib/helper/helpfunction.dart';
+
 
 
 import 'package:instagram/helper/helpfunction.dart';
@@ -70,7 +71,7 @@ class _SignUpState extends State<SignUpScreen> {
           databaseMethod.uploadUserInfo(userInfoMap, _userId);
           HelperFunction.saveuserloggedinSharedPreferecne(true);
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => MainScreen()));
+              context, MaterialPageRoute(builder: (context) => HomePage()));
         });
         });
 

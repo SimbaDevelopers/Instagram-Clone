@@ -126,6 +126,7 @@ class _EditProfileState extends State<EditProfile> {
          });
 
          imageurl = _url.toString();
+         HelperFunction.saveProfileImageUrlSharedPreference(imageurl);
          Constants.imgpro=imageurl;
          _image = null;
        }
