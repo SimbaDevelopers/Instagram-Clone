@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:instagram/Chats/chat.dart';
 import 'package:instagram/Pages/bottom_nav.dart';
 
 import '../Pages/Activity.dart';

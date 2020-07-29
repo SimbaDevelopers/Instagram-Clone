@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/Chats/all_users.dart';
-import 'package:instagram/Chats/chat.dart';
 import 'package:instagram/Pages/Activity.dart';
 import 'package:instagram/Pages/Add.dart';
 import 'package:instagram/Pages/Profile.dart';

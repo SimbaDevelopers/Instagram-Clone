@@ -57,8 +57,7 @@ class _SignUpState extends State<SignUpScreen> {
 
             "username": usernameTexteditingcontroller.text.trim(),
             "email": emailTexteditingcontroller.text.trim(),
-            'useId' : _userId,
-
+            'userId' : _userId,
           };
           HelperFunction.saveuserIDinSharedPreferecne(_userId);
 

@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/helper/constants.dart';
 
 import 'chat_room.dart';
+
+
 
 
 class All_Users extends StatefulWidget {
@@ -26,6 +29,7 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  String uid;
   Future _data;
   Future getPosts() async{
     var firestore =Firestore.instance;
@@ -47,24 +51,36 @@ _data=getPosts();
       child: FutureBuilder(
         future: _data,
           builder: (_, snapshot){
-          
+            getuid();
         if(snapshot.connectionState==ConnectionState.waiting){
           return Center(
             child: Text("Loading..."),
           );
         }else{
       return ListView.builder(
-        itemCount: snapshot.data.length,
+          itemCount: snapshot.data.length,
           itemBuilder: (_,index){
             Constants.chatname=snapshot.data[index].data["username"];
-          return ListTile(
-            title: Text(snapshot.data[index].data["username"]),
-            onTap: ()=> navigateToDetail(snapshot.data[index]),
-          );
+            if(snapshot.data[index].data["userId"]!=uid){
+             // print(snapshot.data[index].data["userId"]+"aaaaa"+uid);
+              return ListTile(
+                title:Text(snapshot.data[index].data["username"]),
+                onTap: ()=> navigateToDetail(snapshot.data[index]),
+              );
+            }else{
+              return Column();
+            }
+
       });
         }
       }),
     );
+  }
+
+  getuid() {
+    FirebaseAuth.instance.currentUser().then((value){
+      uid=value.uid;
+        });
   }
 }
 
