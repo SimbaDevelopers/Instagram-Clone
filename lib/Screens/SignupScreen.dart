@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram/Pages/Home.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/usernameScreen.dart';
-
-
-
-
 import 'package:instagram/helper/helpfunction.dart';
-
 import 'package:instagram/services/auth.dart';
 import 'package:instagram/services/database.dart';
 
@@ -58,25 +53,24 @@ class _SignUpState extends State<SignUpScreen> {
         String _userId;
         FirebaseAuth.instance.currentUser().then((user) {
           _userId = user.uid;
-
-          HelperFunction.saveuserIDinSharedPreferecne(_userId);
-
           Map<String, String> userInfoMap = {
 
             "username": usernameTexteditingcontroller.text.trim(),
             "email": emailTexteditingcontroller.text.trim(),
-            "userId" : _userId,
+            'useId' : _userId,
+
           };
+          HelperFunction.saveuserIDinSharedPreferecne(_userId);
 
           databaseMethod.uploadUserInfo(userInfoMap, _userId);
           HelperFunction.saveuserloggedinSharedPreferecne(true);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => HomePage()));
         });
-        });
 
 
 
+      });
     }
   }
 

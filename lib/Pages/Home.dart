@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram/Chats/all_users.dart';
 import 'package:instagram/Chats/chat.dart';
 import 'package:instagram/Pages/Activity.dart';
 import 'package:instagram/Pages/Add.dart';
@@ -101,7 +102,7 @@ class MyAppState extends State<HomePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Chats()),
+                    MaterialPageRoute(builder: (context) => All_Users()),
                   );
                 },
                 child: Icon(Icons.send),
