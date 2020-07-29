@@ -5,9 +5,6 @@ import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
 import 'package:instagram/provider/PostList.dart';
-
-
-
 import 'package:instagram/widgets/EditProfile.dart';
 import 'package:provider/provider.dart';
 
