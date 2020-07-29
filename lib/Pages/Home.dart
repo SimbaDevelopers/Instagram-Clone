@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -18,6 +19,7 @@ import 'package:instagram/widgets/storybar.dart';
 
 import 'package:instagram/authenticate.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 //import 'package:instagram/constants.dart';
 import 'bottom_nav.dart';
@@ -64,14 +66,26 @@ class MyAppState extends State<HomePage> {
     });
   }
 
-  refreshPage() async {
+//  refreshPage() async {
+//    Provider.of<PostList>(context , listen: false).clearPostList();
+//    Provider.of<PostList>(context , listen: false).getAndSetAllPost(2);
+//
+//    return 'sdfsf';
+//  }
+  RefreshController _refreshController =
+  RefreshController(initialRefresh: false);
+
+  void _onRefresh() async{
     Provider.of<PostList>(context , listen: false).clearPostList();
     Provider.of<PostList>(context , listen: false).getAndSetAllPost(2);
-    setState(() {
-
-    });
-    return 'sdfsf';
+    _refreshController.refreshCompleted();
   }
+
+  void _onLoading() async{
+    await Provider.of<PostList>(context , listen: false).getAndSetAllPost(2);
+    _refreshController.loadComplete();
+  }
+//  FRefreshController controller = FRefreshController();
 
   @override
   Widget build(BuildContext context) {
@@ -109,12 +123,40 @@ class MyAppState extends State<HomePage> {
             )
           ],
         ),
-        body: RefreshIndicator(
-          onRefresh: () {
-            return  refreshPage();
-          }
-            
-          ,
+
+        body:
+        SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: WaterDropHeader(),
+
+          footer: CustomFooter(
+            builder: (BuildContext context,LoadStatus mode){
+              Widget body ;
+              if(mode==LoadStatus.idle){
+                body =  Text("pull up to load");
+              }
+              else if(mode==LoadStatus.loading){
+                body =  CupertinoActivityIndicator();
+              }
+              else if(mode == LoadStatus.failed){
+                body = Text("Load Failed!Click retry!");
+              }
+              else if(mode == LoadStatus.canLoading){
+                body = Text("release to load more");
+              }
+              else{
+                body = Text("No more Data");
+              }
+              return Container(
+                height: 55.0,
+                child: Center(child:body),
+              );
+            },
+          ),
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
           child: SingleChildScrollView(
             physics: ScrollPhysics(),
             child: Column(
@@ -128,14 +170,12 @@ class MyAppState extends State<HomePage> {
                   height: 20,
                   color: Colors.white,
                 ),
-
-
-
-
               ],
             ),
           ),
         ),
+
+
         bottomNavigationBar: BottomNavigation('HomePage' , context),
 //        bottomNavigationBar: BottomNavigation('HomePage' , context),
 //        bottomNavigationBar: Padding(

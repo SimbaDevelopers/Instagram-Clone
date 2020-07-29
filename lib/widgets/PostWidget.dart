@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:instagram/Screens/SplashScreen.dart';
 import 'package:instagram/model/Post.dart';
 import 'package:intl/intl.dart';
@@ -8,13 +9,13 @@ import 'package:timeago/timeago.dart';
 
 class PostWidget extends StatefulWidget {
   Post _documentSnapshot;
-  bool isLast ;
-  var time = '';
-  Function refreshPosts;
 
-  PostWidget(doc , islast , {this.refreshPosts})  {
+  var time = '';
+
+
+  PostWidget(doc )  {
     _documentSnapshot = doc;
-    this.isLast = islast;
+
    // print(_documentSnapshot.profileImageURL);
     // print(_documentSnapshot['createdAt'].toDate());
     time = displayTimeAgoFromTimestamp(
@@ -97,6 +98,7 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
+
   bool isLiked = false;
   bool isBookmarked = false;
   String profileImageURL;
@@ -333,28 +335,28 @@ class _PostWidgetState extends State<PostWidget> {
           ),
         ),
         Divider(),
-        widget.isLast ? Column(
-          children: <Widget>[
-            Divider(
-              height: 20,
-              color: Colors.white,
-            ),
-            SizedBox(height: 20,),
-            InkWell(
-              onTap: widget.refreshPosts,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.refresh ,
-                    size: 40,),
-                  Text('refresh Posts')
-
-                ],
-              ),
-            ),
-            SizedBox(height: 20,),
-          ],
-        ) : Container(),
+//        widget.isLast ? Column(
+//          children: <Widget>[
+//            Divider(
+//              height: 20,
+//              color: Colors.white,
+//            ),
+//            SizedBox(height: 20,),
+//            InkWell(
+//              onTap: widget.refreshPosts,
+//              child: Column(
+//                crossAxisAlignment: CrossAxisAlignment.center,
+//                children: <Widget>[
+//                  Icon(Icons.refresh ,
+//                    size: 40,),
+//                  Text('refresh Posts')
+//
+//                ],
+//              ),
+//            ),
+//            SizedBox(height: 20,),
+//          ],
+//        ) : Container(),
       ],
     );
   }
