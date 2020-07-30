@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:instagram/Screens/MainScreen.dart';
@@ -19,6 +20,7 @@ import 'Screens/startupscreen.dart';
 import 'Screens/UsernameScreen.dart';
 import 'Pages/Search.dart';
 import 'helper/helpfunction.dart';
+import 'package:instagram/provider/UserInfo.dart';
 
 void main() {
   runApp(MyApp());
@@ -58,49 +60,60 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create : (ctx) =>  PostList(),
-      child: MaterialApp(
-        theme: ThemeData.dark(),
-        home: ischecking
-            ? SplashScreen()
-            : userIsLoggedIn != null
-                ? userIsLoggedIn ? HomePage() : Authenticate()
-                : Authenticate(),
-        onGenerateRoute: (routeSettings) {
-          if (routeSettings.name == SearchPage.routeName)
-            return PageRouteBuilder(pageBuilder:(_, __, ___) => SearchPage() , transitionDuration: Duration(seconds: 0),);
-
-          if (routeSettings.name == HomePage.routeName)
-            return PageRouteBuilder(pageBuilder:(_, __, ___) => HomePage() , transitionDuration: Duration(seconds: 0),);
-
-          if (routeSettings.name == ProfilePage.routeName)
-            return PageRouteBuilder(pageBuilder:(_, __, ___) => ProfilePage() , transitionDuration: Duration(seconds: 0),);
+    return 
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<PostList>(
+              create : (ctx) =>  PostList(),
+          ),
+          ChangeNotifierProvider<UserInformation>(
+            create: (ctx) => UserInformation(),
+          ),
 
 
+        ],
+        child: MaterialApp(
+          theme: ThemeData.dark(),
+          home: ischecking
+              ? SplashScreen()
+              : userIsLoggedIn != null
+                  ? userIsLoggedIn ? HomePage() : Authenticate()
+                  : Authenticate(),
+          onGenerateRoute: (routeSettings) {
+            if (routeSettings.name == SearchPage.routeName)
+              return PageRouteBuilder(settings : routeSettings, pageBuilder:(_, __, ___) => SearchPage() , transitionDuration: Duration(seconds: 0),);
 
-          if (routeSettings.name == ActivityPage.routeName)
-            return PageRouteBuilder(pageBuilder:(_, __, ___) => ActivityPage() , transitionDuration: Duration(seconds: 0),);
+            if (routeSettings.name == HomePage.routeName)
+              return PageRouteBuilder(settings : routeSettings,pageBuilder:(_, __, ___) => HomePage() , transitionDuration: Duration(seconds: 0),);
 
-          return null;
-        },
+            if (routeSettings.name == ProfilePage.routeName)
+              return PageRouteBuilder(settings : routeSettings ,  pageBuilder:(_, __, ___) => ProfilePage() , transitionDuration: Duration(seconds: 0),);
 
-        routes: {
-          // SignUpScreen.routeName: (context) => SignUpScreen(),
-          LoginOrSignup.routeName: (context) => LoginOrSignup(),
-          // Login_Screen.routName: (context) => Login_Screen(),
-          MainScreen.routeName: (context) => MainScreen(),
-          UsernameScreen.routeName: (context) => UsernameScreen(),
+
+
+            if (routeSettings.name == ActivityPage.routeName)
+              return PageRouteBuilder(settings : routeSettings,pageBuilder:(_, __, ___) => ActivityPage() , transitionDuration: Duration(seconds: 0),);
+
+            return null;
+          },
+
+          routes: {
+            // SignUpScreen.routeName: (context) => SignUpScreen(),
+            LoginOrSignup.routeName: (context) => LoginOrSignup(),
+            // Login_Screen.routName: (context) => Login_Screen(),
+            MainScreen.routeName: (context) => MainScreen(),
+            UsernameScreen.routeName: (context) => UsernameScreen(),
 //        HomePage.routeName: (ctx) => HomePage(),
 //        SearchPage.routeName: (ctx) => SearchPage(),
-          AddPage.routeName: (ctx) => AddPage(),
+            AddPage.routeName: (ctx) => AddPage(),
 //       ActivityPage.routeName: (ctx) => ActivityPage(),
 //        ProfilePage.routeName: (ctx) => ProfilePage(),
-          SplashScreen.routeName: (ctx) => SplashScreen(),
-          EditProfile.routeName: (ctx) => EditProfile(),
-        },
-      ),
-    );
+            SplashScreen.routeName: (ctx) => SplashScreen(),
+            EditProfile.routeName: (ctx) => EditProfile(),
+          },
+        ),
+      );
+
   }
 }
 

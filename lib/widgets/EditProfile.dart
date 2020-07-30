@@ -116,7 +116,9 @@ class _EditProfileState extends State<EditProfile> {
         });
 
         imageurl = _url.toString();
+
         HelperFunction.saveProfileImageUrlSharedPreference(imageurl);
+
         Constants.imgpro = imageurl;
         _image = null;
       }
@@ -136,6 +138,9 @@ class _EditProfileState extends State<EditProfile> {
       _name = nameController.text.toString().trim();
       _phoneNumber = phoneNoController.text.toString().trim();
       _userName = userNameController.text.trim();
+
+      HelperFunction.saveusernameSharedPreferecne(_userName);
+      HelperFunction.saveNameSharedPreference(_name);
 
       databaseMethod.editUserInfo(userInfoMap, _userId);
 

@@ -32,8 +32,6 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class BottomNavigationState extends State<BottomNavigation> {
-
-
   @override
   Widget build(BuildContext context) {
     return  Padding(

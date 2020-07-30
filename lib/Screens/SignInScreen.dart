@@ -64,6 +64,8 @@ class _Login_ScreenState extends State<Login_Screen> {
               print('pro image ' + value['profileImageURL']);
               HelperFunction.saveProfileImageUrlSharedPreference(value['profileImageURL']);
               HelperFunction.saveusernameSharedPreferecne(value['username']);
+              HelperFunction.saveNameSharedPreference(value['name']);
+              HelperFunction.saveBioSharedPreference(value['bio']);
 
 
             });

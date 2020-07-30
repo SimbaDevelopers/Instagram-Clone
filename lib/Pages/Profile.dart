@@ -2,9 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/model/chatuser.dart';
+import 'package:instagram/model/user.dart';
+import 'package:instagram/provider/UserInfo.dart';
 import 'package:instagram/widgets/PostAtProfile.dart';
 import 'package:instagram/widgets/SettingsDrawer.dart';
 import 'package:instagram/widgets/StoryHighlite.dart';
+import 'package:provider/provider.dart';
 
 import '../helper/helpfunction.dart';
 import '../widgets/InfoAtProfile.dart';
@@ -29,33 +33,46 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String userName = '';
 
-  void getUserInfo() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    // await HelperFunction.getusernameSharedPreferecne().then((value) {
-    //   setState(() {
-    //     print(value);
-    //     userName = value;
-    //   });
-    // });
+  String currentUserName = '';
+  String currentUserId;
+  String currentUserProfileURL;
+  Map currentUser;
+  String currentName;
+  String currentUserBio;
+  UserModel user;
 
-    await Firestore.instance
-        .collection("users")
-        .document(user.uid)
-        .get()
-        .then((snapShot) {
-      setState(() {
-        userName = snapShot.data['username'];
-      });
+  UserModel searchedUser;
+
+
+  getSearchedUser(arguments) async {
+    var followingsListSnapshot;
+    var followersListSnapshot;
+    List<Map> followingsList = [];
+    List<Map> followersList = [];
+
+    followingsListSnapshot = await Firestore.instance.collection('users').document(arguments['userId']).collection('followingsList').getDocuments();
+    if(followingsListSnapshot.documents.length != 0){
+      for (DocumentSnapshot documentSnapshot in followingsListSnapshot.documents) {
+        followingsList.add(documentSnapshot.data);
+      }
+    }
+
+    followersListSnapshot = await Firestore.instance.collection('users').document(arguments['userId']).collection('followersList').getDocuments();
+    if(followersListSnapshot.documents.length != 0){
+      for (DocumentSnapshot documentSnapshot in followersListSnapshot.documents) {
+        followersList.add(documentSnapshot.data);
+      }
+    }
+
+    setState(() {
+      searchedUser = UserModel.fromMap(snapshot: arguments, followersList: followersList , followingsList:  followingsList);
     });
   }
 
   @override
   void initState() {
 
-    print('zdf');
-    getUserInfo();
     super.initState();
   }
 
@@ -82,6 +99,24 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
+
+    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    if(arguments != null)
+      {
+       // getSearchedUser(arguments);
+//        setState(() {
+          searchedUser = UserModel.fromMap(snapshot: arguments, followersList: arguments['followersList'] , followingsList:  arguments['followingsList']);
+//        });
+       print('here');
+      }
+    else {
+        user = Provider
+            .of<UserInformation>(context)
+            .user;
+    }
     return
 //      new
 //      WillPopScope(
@@ -90,7 +125,10 @@ class _ProfilePageState extends State<ProfilePage> {
 //      new
       Scaffold(
         appBar: new AppBar(
-          title: userName == null ? Text('usename') : new Text(userName),
+          title:  Consumer<UserInformation>(
+            builder: (context, userInformation, child) {
+            return Text(userInformation.user.username);
+          },),
         ),
         endDrawer: SettingsDrawer(),
 
@@ -98,7 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
           physics: ScrollPhysics(),
           child: Column(
             children: <Widget>[
-              InfoAtProfile(),
+              arguments != null ? searchedUser != null ? InfoAtProfile( user: searchedUser ) : Container() : user != null ? InfoAtProfile(user: user,) : Container() ,
               StoryHighights(),
               PostAtProfile(),
             ],

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Pages/Home.dart';
+import 'package:instagram/model/user.dart';
 import 'package:instagram/services/database.dart';
+import 'package:instagram/widgets/InfoAtProfile.dart';
 
 import 'Activity.dart';
 import 'Add.dart';
@@ -12,6 +14,7 @@ void main() => runApp(SearchPage());
 
 class SearchPage extends StatefulWidget {
   static const routeName = '/SearchPage';
+
   @override
   State<StatefulWidget> createState() {
     return _SearchPageState();
@@ -26,6 +29,7 @@ class _SearchPageState extends State<SearchPage> {
 
   QuerySnapshot searchSnapshot;
   initiateSearch() {
+
     isSearching = true;
     databaseMethod
         .getUserByUsername(searchtextEditingcontroller.text)
@@ -44,9 +48,9 @@ class _SearchPageState extends State<SearchPage> {
             itemCount: searchSnapshot.documents.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
+
               return Searchtile(
-                userEmail: searchSnapshot.documents[index].data["username"],
-                userName: searchSnapshot.documents[index].data["email"],
+                docSnap: searchSnapshot.documents[index],
               );
             })
         : Center(
@@ -100,131 +104,93 @@ class _SearchPageState extends State<SearchPage> {
             ? Center(child: CircularProgressIndicator())
             : searchList(),
       bottomNavigationBar: BottomNavigation('SearchPage' , context),
-    //  bottomNavigationBar: BottomNavigation('SearchPage', context),
-//      bottomNavigationBar: Padding(
-//        padding: const EdgeInsets.symmetric(horizontal: 10 , vertical: 5),
-//        child: Row(
-//          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//          children: <Widget>[
-//
-//            GestureDetector(
-//              onTap: (){
-//
-//                bool isNewRouteSameAsCurrent = false;
-//
-////                Navigator.of(context).popUntil( (route) {
-////                  if (route.settings.name == HomePage.routeName) {
-////                    isNewRouteSameAsCurrent = true;
-////                  }
-////                  return false;
-////                });
-//
-//                if (!isNewRouteSameAsCurrent) {
-//                  Navigator.of(context).pushNamed(HomePage.routeName);
-//                }
-//
-//              },
-//              child: Icon(Icons.home , size: 35, color: Colors.grey,),
-//            ),
-//            GestureDetector(
-//
-//              child: Icon(Icons.search, size: 35, color: Colors.white,),
-//            ),
-//            GestureDetector(
-//              onTap: (){
-//                Navigator.of(context).pushNamed(AddPage.routeName);
-//              },
-//              child: Icon(Icons.add, size: 35,color: Colors.grey,),
-//            ),
-//            GestureDetector(
-//              onTap: (){
-//                Navigator.of(context).pushNamed(ActivityPage.routeName);
-//              },
-//              child: Icon(Icons.favorite_border, size: 35,color: Colors.grey,),
-//            ),
-//            GestureDetector(
-//              onTap: (){
-//                Navigator.of(context).pushNamed(ProfilePage.routeName);
-//              },
-//              child: Icon(Icons.supervised_user_circle, size: 35,color: Colors.grey,),
-//            ),
-//
-//          ],
-//        ),
-//      ),
-
-        //  Container(
-        //   child: Column(children: [
-        //     Container(
-        //       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-        //       child: Row(children: [
-        //         Expanded(
-        //             child: TextField(
-        //           controller: searchtextEditingcontroller,
-        //           decoration: InputDecoration(
-        //               hintText: "search", border: InputBorder.none),
-        //         )),
-        //         GestureDetector(
-        //           onTap: () {
-        //             initiateSearch();
-        //           },
-        //           child: Container(
-        //               padding: EdgeInsets.all(10),
-        //               child: Image.asset("assets/images/search.png")),
-        //         ),
-        //       ]),
-        //     ),
-        //     searchList()
-        //   ]),
-        // ),
-
-
         );
   }
 }
 
 class Searchtile extends StatelessWidget {
-  final String userName;
-  final String userEmail;
-  Searchtile({this.userName, this.userEmail});
+
+  final docSnap;
+
+  Searchtile({
+    this.docSnap,
+  });
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 7),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage(
-                  'assets/images/profile.jpeg',
-                ),
-                radius: 25,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      userName,
-                    ),
+    return InkWell(
+      onTap: () async {
+        var followingsListSnapshot;
+        var followersListSnapshot;
+        List<Map> followingsList = [];
+        List<Map> followersList = [];
+
+        followingsListSnapshot = await Firestore.instance.collection('users').document(docSnap.data['userId']).collection('followingsList').getDocuments();
+        if(followingsListSnapshot.documents.length != 0){
+          for (DocumentSnapshot documentSnapshot in followingsListSnapshot.documents) {
+            followingsList.add(documentSnapshot.data);
+          }
+        }
+
+        followersListSnapshot = await Firestore.instance.collection('users').document(docSnap.data['userId']).collection('followersList').getDocuments();
+        if(followersListSnapshot.documents.length != 0){
+          for (DocumentSnapshot documentSnapshot in followersListSnapshot.documents) {
+            followersList.add(documentSnapshot.data);
+          }
+        }
+        Navigator.of(context).pushNamed(ProfilePage.routeName , arguments: {
+          'username' : docSnap.data['username'],
+          'userId' : docSnap.data['userId'],
+          'profileImageURL' : docSnap.data['profileImageURL'],
+          'name' :docSnap.data['name'],
+          'bio' : docSnap.data['bio'],
+          'followingsCount' : docSnap.data['followingsCount'],
+          'followersCount' : docSnap.data['followersCount'],
+          'followersMap' : docSnap.data['followersMap'],
+          'followingsMap' : docSnap.data['followingsMap'],
+          'postCount' : docSnap.data['postCount'],
+          'email' : docSnap.data['email'],
+          'followersList' : followersList,
+          'followingsList' : followingsList,
+        });
+
+      } ,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 7),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage(
+                    'assets/images/profile.jpeg',
                   ),
-                  Text(
-                    userEmail,
-                  )
-                ],
-              ),
-              Spacer(),
-              Text("X"),
-            ],
+                  radius: 25,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        docSnap.data['username'],
+                      ),
+                    ),
+                    Text(
+                      docSnap.data['email'],
+                    )
+                  ],
+                ),
+                Spacer(),
+                Text("X"),
+              ],
+            ),
           ),
-        ),
-        Divider(),
-      ],
+          Divider(),
+        ],
+      ),
     );
   }
 }
