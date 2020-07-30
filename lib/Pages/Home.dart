@@ -13,6 +13,7 @@ import 'package:instagram/Screens/startupscreen.dart';
 import 'package:instagram/helper/constants.dart';
 import 'package:instagram/helper/helpfunction.dart';
 import 'package:instagram/provider/PostList.dart';
+import 'package:instagram/provider/UserInfo.dart';
 
 import 'package:instagram/widgets/PostHomeScreen.dart';
 import 'package:instagram/widgets/storybar.dart';
@@ -45,11 +46,16 @@ class MyAppState extends State<HomePage> {
   AuthMethod authMethod = new AuthMethod();
   void initState() {
     getUserInfo();
+    Future.delayed(Duration.zero).then((value) async {
+      await Provider.of<UserInformation>(context ,listen: false).getUserInfo();
+
+    });
     super.initState();
   }
 
   getUserInfo() async {
     Constants.myName = await HelperFunction.getusernameSharedPreferecne();
+
     setState(() {});
   }
 

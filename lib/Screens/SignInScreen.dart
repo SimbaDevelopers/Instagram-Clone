@@ -63,8 +63,7 @@ class _Login_ScreenState extends State<Login_Screen> {
             Firestore.instance.collection('users').document(value.uid).get().then((value) {
               HelperFunction.saveProfileImageUrlSharedPreference(value['profileImageURL']);
               HelperFunction.saveusernameSharedPreferecne(value['username']);
-              HelperFunction.savenameSharedPreferecne(value['name']);
-              HelperFunction.saveuserbioSharedPreferecne(value['bio']);
+
             });
           });
         }

@@ -32,7 +32,7 @@ class _SignUpState extends State<SignUpScreen> {
   TextEditingController passwordTexteditingcontroller =
       new TextEditingController();
 
-  signMeUp() {
+  signMeUp()  {
     if (formkey.currentState.validate()) {
 
 
@@ -47,18 +47,30 @@ class _SignUpState extends State<SignUpScreen> {
       authMethod
           .signupwithemailandpassword(emailTexteditingcontroller.text.trim(),
               passwordTexteditingcontroller.text.trim())
-          .then((val) {
+          .then((val)  {
     //    print("$val.uid");
 
         String _userId;
-        FirebaseAuth.instance.currentUser().then((user) {
+         FirebaseAuth.instance.currentUser().then((user) {
+          print('uid' + user.uid);
           _userId = user.uid;
-          Map<String, String> userInfoMap = {
 
+          Map<String, Object> userInfoMap = {
             "username": usernameTexteditingcontroller.text.trim(),
             "email": emailTexteditingcontroller.text.trim(),
             'userId' : _userId,
+            'bio' : '',
+            'name' : '',
+            'phoneNumber' : '',
+            'profileImageURL' : '',
+            'website' : '',
+            'followingsMap' : {},
+            'followersMap' : {},
+            'followersCount' : 0,
+            'followingsCount' : 0,
+            'postCount' : 0,
           };
+
           HelperFunction.saveuserIDinSharedPreferecne(_userId);
 
           databaseMethod.uploadUserInfo(userInfoMap, _userId);
@@ -66,9 +78,6 @@ class _SignUpState extends State<SignUpScreen> {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => HomePage()));
         });
-
-
-
       });
     }
   }

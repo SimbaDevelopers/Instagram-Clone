@@ -4,8 +4,8 @@ import 'package:instagram/model/user.dart';
 class AuthMethod {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  User _userFromFirebaseUser(FirebaseUser user) {
-    return user != null ? User(userId: user.uid) : null;
+  UserModel _userFromFirebaseUser(FirebaseUser user) {
+    return user != null ? UserModel(userId: user.uid) : null;
   }
 
   Future signinwithemailandpassword(String email, String password) async {
