@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/helper/constants.dart';
+import 'package:instagram/helper/helpfunction.dart';
 
 import 'chat_room.dart';
 
@@ -14,11 +15,19 @@ class All_Users extends StatefulWidget {
 }
 
 class _All_UsersState extends State<All_Users> {
+  String username;
   @override
   Widget build(BuildContext context) {
+    HelperFunction.getusernameSharedPreferecne().then((value) {
+      setState(() {
+        username=value;
+        print(username);
+      });
+    });
     return Scaffold(
-        appBar: AppBar(title: Text("Chats")),
-    body: ListPage(),
+      backgroundColor: Colors.black,
+        appBar: AppBar(title: Text(username)),
+       body: ListPage(),
     );
   }
 }
@@ -54,7 +63,7 @@ _data=getPosts();
             getuid();
         if(snapshot.connectionState==ConnectionState.waiting){
           return Center(
-            child: Text("Loading..."),
+            child: Text(""),
           );
         }else{
       return ListView.builder(
@@ -64,6 +73,18 @@ _data=getPosts();
             if(snapshot.data[index].data["userId"]!=uid){
              // print(snapshot.data[index].data["userId"]+"aaaaa"+uid);
               return ListTile(
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 10
+                ),
+                leading: Container(
+                  padding: EdgeInsets.symmetric(
+                        horizontal: 10
+                  ),
+                  child: CircleAvatar(
+                    backgroundImage:snapshot.data[index].data["profileImageURL"]==null ?
+                    AssetImage('assets/images/profile.jpeg') : NetworkImage(snapshot.data[index].data["profileImageURL"]),
+                  ),
+                ),
                 title:Text(snapshot.data[index].data["username"]),
                 onTap: ()=> navigateToDetail(snapshot.data[index]),
               );

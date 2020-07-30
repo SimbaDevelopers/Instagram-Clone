@@ -19,6 +19,7 @@ class InfoAtProfile extends StatefulWidget {
 
 class _InfoAtProfileState extends State<InfoAtProfile> {
 
+
   bool isMe  ;
 
   void getUserInfo() async {
@@ -27,6 +28,9 @@ class _InfoAtProfileState extends State<InfoAtProfile> {
       user.uid == widget.user.userId ? isMe = true : isMe = false;
        // print(' prof image in infoAt :' + widget.userMap['profileImage']);
       });
+
+
+
   }
 
   void followingButtonPressed(context) {
@@ -81,13 +85,64 @@ class _InfoAtProfileState extends State<InfoAtProfile> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
+
             child: widget.user.name == null || widget.user.name == '' ? Text('Name') : Text(widget.user.name),
+
           ),
           Padding(
             padding: const EdgeInsets.only(
               left: 8,
             ),
+
             child:widget.user.bio == null || widget.user.bio == '' ? Text('Bio') : Text(widget.user.bio),
+
+           
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(color: Colors.deepPurple[400])),
+                  color: Colors.deepPurple[400],
+                  textColor: Colors.white,
+                  disabledColor: Colors.grey,
+                  disabledTextColor: Colors.black,
+                  splashColor: Colors.blueAccent,
+                  onPressed: () {
+                    followingButtonPressed(context);
+                  },
+                  child: Text(
+                    ' Following ▼ ',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(color: Colors.deepPurple[400])),
+                  color: Colors.deepPurple[400],
+                  textColor: Colors.white,
+                  disabledColor: Colors.grey,
+                  disabledTextColor: Colors.black,
+                  padding: EdgeInsets.all(7),
+                  splashColor: Colors.blueAccent,
+                  onPressed: () {},
+                  child: Text(
+                    ' Message ',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                ),
+              ),
+            ],
+
           ),
            isMe == null ? Container() : isMe ?
           FlatButton(

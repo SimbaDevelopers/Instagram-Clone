@@ -34,6 +34,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
 
+
   String currentUserName = '';
   String currentUserId;
   String currentUserProfileURL;
@@ -68,6 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       searchedUser = UserModel.fromMap(snapshot: arguments, followersList: followersList , followingsList:  followingsList);
     });
+
   }
 
   @override
