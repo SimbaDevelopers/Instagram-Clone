@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/Chats/chat_details.dart';
 import 'package:instagram/Chats/messages.dart';
 import 'package:instagram/helper/app_constants.dart';
 import 'package:instagram/helper/constants.dart';
@@ -109,7 +111,7 @@ class _DetailPageState extends State<DetailPage> {
         "toUserId": widget.post.data["userId"],
         "text": text,
         "timestamp": Timestamp.now(),
-    });
+    });      print(widget.post.data["profileImageURL"]);
     });
   }
 
@@ -117,16 +119,63 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(title: Text(widget.post.data["username"]),
-        actions: <Widget>[ Positioned( left: 140,
-          child: CircleAvatar(backgroundImage: AssetImage('assets/images/profile.jpeg'),),)
+      appBar: AppBar(
+        title:Column(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(
+                  right: 0,
 
-        ],),
+              ),
+              child: CircleAvatar(
+                  backgroundImage:(widget.post.data["profileImageURL"])==null? AssetImage('assets/images/profile.jpeg') : NetworkImage((widget.post.data["profileImageURL"]))
+              ),
+            ),
+          ],
+        ),actions: <Widget>[
+          Container(
+                margin: EdgeInsets.only(
+             top: 12),
+               child:widget.post.data["name"]!=null ?Text(widget.post.data["name"]) : Text(""),
+          ),
+          Container(
+            margin: EdgeInsets.only(
+              top: 25,
+            ),
+            child:Text(widget.post.data["username"]),
+          ),
+        Container(
+          margin: EdgeInsets.only(
+            left:15
+          ),
+          child:
+          RawMaterialButton(
+            onPressed: () {},
+            child: Icon(
+              Icons.video_call,
+              color: Colors.white,
+              size: 25.0,
+            ),
+          ),
+        ),
+
+        RawMaterialButton(
+          onPressed: () =>ChatDetails(),
+          child: Icon(
+            Icons.details,
+            color: Colors.white,
+            size: 25.0,
+          ),
+        )
+      ],
+      ),
+
       body: Container(
         child: Column(
           children: <Widget>[
            Expanded(
-             child: Messages(widget.post.data["userId"]),
+             child: Messages(widget.post.data["userId"],
+                 widget.post.data["profileImageURL"]),
            ),
             _buildMessageComposer(),
           ],

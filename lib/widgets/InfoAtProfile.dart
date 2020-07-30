@@ -14,28 +14,29 @@ class InfoAtProfile extends StatefulWidget {
 class _InfoAtProfileState extends State<InfoAtProfile> {
   FirebaseUser currentUser;
   String curreentUid;
-  String userName;
+  String userName,name,bio;
   String profileImage;
   void getUserInfo() async {
 
 
     HelperFunction.getusernameSharedPreferecne().then((value) {
-
         userName = value;
         HelperFunction.getuserIdSharedPreferecne().then((uid) {
           curreentUid = uid;
-
-          HelperFunction.getProfileImageUrlSharedPreference().then((profImage) {
-            setState(() {
-              profileImage = profImage;
+          HelperFunction.getnameSharedPreferecne().then((value) {
+            name=value;
+            HelperFunction.getuserbioSharedPreferecne().then((value) {
+              bio=value;
+              HelperFunction.getProfileImageUrlSharedPreference().then((
+                  profImage) {
+                setState(() {
+                  profileImage = profImage;
+                });
+              });
             });
-
-          });
-
-
       });
     });
-
+    });
 
   }
 
@@ -85,13 +86,13 @@ class _InfoAtProfileState extends State<InfoAtProfile> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text('Teͥjaͣsͫ'),
+            child:name==null ? Text("") : Text(name),
           ),
           Padding(
             padding: const EdgeInsets.only(
               left: 8,
             ),
-            child: Text('Bio'),
+            child: bio==null ? Text("") : Text(bio),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

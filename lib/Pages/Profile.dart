@@ -33,22 +33,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void getUserInfo() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    // await HelperFunction.getusernameSharedPreferecne().then((value) {
-    //   setState(() {
-    //     print(value);
-    //     userName = value;
-    //   });
-    // });
+     await HelperFunction.getusernameSharedPreferecne().then((value) {
+       setState(() {
+         print(value);
+         userName = value;
+       });
+     });
 
-    await Firestore.instance
-        .collection("users")
-        .document(user.uid)
-        .get()
-        .then((snapShot) {
-      setState(() {
-        userName = snapShot.data['username'];
-      });
-    });
+//    await Firestore.instance
+//        .collection("users")
+//        .document(user.uid)
+//        .get()
+//        .then((snapShot) {
+//      setState(() {
+//        userName = snapShot.data['username'];
+//      });
+//    });
   }
 
   @override
