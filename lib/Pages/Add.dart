@@ -80,9 +80,18 @@ class _AddPageState extends State<AddPage> {
           captionController.text= null;
           locationController.text = null;
 
-          setState(() {
-            isUploading = false;
+          Firestore.instance.collection('users').document(_userId).get().then((value) {
+            int postCount = value['postCount'];
+            postCount++;
+            Firestore.instance.collection('users').document(_userId).updateData({'postCount' : postCount});
+
+            setState(() {
+              isUploading = false;
+            });
+
           });
+
+
 
         }
     });

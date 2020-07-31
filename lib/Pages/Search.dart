@@ -119,38 +119,39 @@ class Searchtile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        var followingsListSnapshot;
-        var followersListSnapshot;
-        List<Map> followingsList = [];
-        List<Map> followersList = [];
-
-        followingsListSnapshot = await Firestore.instance.collection('users').document(docSnap.data['userId']).collection('followingsList').getDocuments();
-        if(followingsListSnapshot.documents.length != 0){
-          for (DocumentSnapshot documentSnapshot in followingsListSnapshot.documents) {
-            followingsList.add(documentSnapshot.data);
-          }
-        }
-
-        followersListSnapshot = await Firestore.instance.collection('users').document(docSnap.data['userId']).collection('followersList').getDocuments();
-        if(followersListSnapshot.documents.length != 0){
-          for (DocumentSnapshot documentSnapshot in followersListSnapshot.documents) {
-            followersList.add(documentSnapshot.data);
-          }
-        }
+//        var followingsListSnapshot;
+//        var followersListSnapshot;
+//        List<Map> followingsList = [];
+//        List<Map> followersList = [];
+//
+//        followingsListSnapshot = await Firestore.instance.collection('users').document(docSnap.data['userId']).collection('followingsList').getDocuments();
+//        if(followingsListSnapshot.documents.length != 0){
+//          for (DocumentSnapshot documentSnapshot in followingsListSnapshot.documents) {
+//            followingsList.add(documentSnapshot.data);
+//          }
+//        }
+//
+//        followersListSnapshot = await Firestore.instance.collection('users').document(docSnap.data['userId']).collection('followersList').getDocuments();
+//        if(followersListSnapshot.documents.length != 0){
+//          for (DocumentSnapshot documentSnapshot in followersListSnapshot.documents) {
+//            followersList.add(documentSnapshot.data);
+//          }
+//        }
+//        print(docSnap.data['userId']);
         Navigator.of(context).pushNamed(ProfilePage.routeName , arguments: {
-          'username' : docSnap.data['username'],
+//          'username' : docSnap.data['username'],
           'userId' : docSnap.data['userId'],
-          'profileImageURL' : docSnap.data['profileImageURL'],
-          'name' :docSnap.data['name'],
-          'bio' : docSnap.data['bio'],
-          'followingsCount' : docSnap.data['followingsCount'],
-          'followersCount' : docSnap.data['followersCount'],
-          'followersMap' : docSnap.data['followersMap'],
-          'followingsMap' : docSnap.data['followingsMap'],
-          'postCount' : docSnap.data['postCount'],
-          'email' : docSnap.data['email'],
-          'followersList' : followersList,
-          'followingsList' : followingsList,
+//          'profileImageURL' : docSnap.data['profileImageURL'],
+//          'name' :docSnap.data['name'],
+//          'bio' : docSnap.data['bio'],
+//          'followingsCount' : docSnap.data['followingsCount'],
+//          'followersCount' : docSnap.data['followersCount'],
+//          'followersMap' : docSnap.data['followersMap'],
+//          'followingsMap' : docSnap.data['followingsMap'],
+//          'postCount' : docSnap.data['postCount'],
+//          'email' : docSnap.data['email'],
+//          'followersList' : followersList,
+//          'followingsList' : followingsList,
         });
 
       } ,

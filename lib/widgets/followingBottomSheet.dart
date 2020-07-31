@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:instagram/model/user.dart';
+import 'package:instagram/provider/UserInfo.dart';
+import 'package:provider/provider.dart';
 
 class FollowingBottmSheet extends StatefulWidget {
+
+  UserModel user;
+  Function decreaseFollowingsCount;
+  FollowingBottmSheet({this.user , this.decreaseFollowingsCount});
   @override
   _FollowingBottmSheetState createState() => _FollowingBottmSheetState();
 }
 
 class _FollowingBottmSheetState extends State<FollowingBottmSheet> {
+
+
+  unfollow() async {
+    await Provider.of<UserInformation>(context , listen: false ).unfollow(widget.user.userId);
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -119,9 +131,13 @@ class _FollowingBottmSheetState extends State<FollowingBottmSheet> {
                   ),
                 ),
                 FlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    unfollow();
+                    widget.decreaseFollowingsCount();
+                    Navigator.of(context).pop();
+                  },
                   child: Text(
-                    'Follow',
+                    'unfollow',
                     style:
                         TextStyle(color: Colors.deepPurple[400], fontSize: 18),
                   ),
