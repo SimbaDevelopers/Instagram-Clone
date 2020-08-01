@@ -144,7 +144,7 @@ class _PostWidgetState extends State<PostWidget> {
                   padding: const EdgeInsets.all(8.0),
                   child:
                       CircleAvatar(
-                  backgroundImage: profileImageURL == null ? AssetImage('assets/images/profile.jpeg') : NetworkImage(profileImageURL),
+                  backgroundImage: profileImageURL == null || profileImageURL == '' ? AssetImage('assets/images/profile.jpeg') : NetworkImage(profileImageURL),
                   backgroundColor: Colors.grey,
                   )
            ),
