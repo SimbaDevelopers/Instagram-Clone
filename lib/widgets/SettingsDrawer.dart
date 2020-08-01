@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/helper/constants.dart';
+import 'package:instagram/provider/PostList.dart';
+import 'package:instagram/provider/UserInfo.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../authenticate.dart';
@@ -168,6 +171,9 @@ class SettingsDrawer extends StatelessWidget {
 
                 FirebaseAuth.instance.signOut();
                 Constants.imgpro="";
+
+                Provider.of<UserInformation>(context , listen: false).logout();
+                Provider.of<PostList>(context , listen: false).logout();
 
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (ctx) => Authenticate()));

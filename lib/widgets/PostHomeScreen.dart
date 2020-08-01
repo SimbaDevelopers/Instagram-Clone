@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram/helper/helpfunction.dart';
 import 'package:instagram/model/Post.dart';
 import 'package:instagram/provider/PostList.dart';
+import 'package:instagram/provider/UserInfo.dart';
 import 'package:instagram/widgets/PostWidget.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +37,8 @@ class _PostHomeState extends State<PostHome> {
 
     getUserInfo();
     Future.delayed(Duration.zero).then((value) async {
-     await Provider.of<PostList>(context ,listen: false).getAndSetAllPost(2);
+     await Provider.of<PostList>(context ,listen: false).getAndSetAllPost(3);
+     await Provider.of<UserInformation>(context ,listen: false).getUserInfo();
 
     });
     // TODO: implement initState

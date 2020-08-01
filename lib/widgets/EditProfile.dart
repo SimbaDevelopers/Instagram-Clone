@@ -140,7 +140,7 @@ class _EditProfileState extends State<EditProfile> {
       _userName = userNameController.text.trim();
 
       HelperFunction.saveusernameSharedPreferecne(_userName);
-      HelperFunction.saveNameSharedPreference(_name);
+      
 
       databaseMethod.editUserInfo(userInfoMap, _userId);
 

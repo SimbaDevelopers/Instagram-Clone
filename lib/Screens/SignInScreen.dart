@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/Pages/Home.dart';
 import 'package:instagram/helper/constants.dart';
 import 'package:instagram/services/auth.dart';
 import 'package:instagram/services/database.dart';
@@ -64,21 +65,21 @@ class _Login_ScreenState extends State<Login_Screen> {
               HelperFunction.saveProfileImageUrlSharedPreference(value['profileImageURL']);
               HelperFunction.saveusernameSharedPreferecne(value['username']);
 
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(
+                //settings: RouteSettings(name: MainScreen.routeName),
+                  builder: (context) => HomePage()));
+
             });
           });
         }
+      }) . catchError((error){
+        Scaffold.of(context).showSnackBar(new SnackBar(
+          content: new Text(error.toString() , style: TextStyle(color: Colors.white),),
+          backgroundColor: Colors.black,
+        ));
       });
 
-          FirebaseAuth.instance.currentUser().then((user) {
-            Constants.uid= user.uid;
-          });
-
-
-
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(
-              //settings: RouteSettings(name: MainScreen.routeName),
-              builder: (context) => MainScreen()));
         }
      }
 

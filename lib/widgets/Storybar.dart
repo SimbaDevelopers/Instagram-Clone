@@ -42,7 +42,7 @@ class _StoryBarState extends State<StoryBar> {
           ),
           CircleAvatar(
             radius: 30.0,
-            backgroundImage: _profileImage == null ?  AssetImage('assets/images/profile.jpeg') :NetworkImage(_profileImage), //AssetImage('assets/images/profile.jpeg'),
+            backgroundImage: _profileImage == null || _profileImage== '' ?  AssetImage('assets/images/profile.jpeg') :NetworkImage(_profileImage), //AssetImage('assets/images/profile.jpeg'),
             backgroundColor: Colors.transparent,
           ),
           SizedBox(

@@ -112,9 +112,14 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   getUsernameAndProfileURl() async {
-    final ds =  await Firestore.instance.collection('users').document(widget._documentSnapshot.userId).get();
-    profileImageURL = ds['profileImageURL'].toString();
-    username = ds['username'];
+    Firestore.instance.collection('users').document(widget._documentSnapshot.userId).get().then((value) {
+      setState(() {
+        profileImageURL = value['profileImageURL'].toString();
+        username = value['username'];
+      });
+
+    });
+
 //    print('ds["username"] : ' + ds['profileImageURL'].toString());
 //    print('usename : ' + ds['username'] );
     setState(() {});

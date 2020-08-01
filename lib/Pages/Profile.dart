@@ -9,6 +9,7 @@ import 'package:instagram/widgets/PostAtProfile.dart';
 import 'package:instagram/widgets/SettingsDrawer.dart';
 import 'package:instagram/widgets/StoryHighlite.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../helper/helpfunction.dart';
 import '../widgets/InfoAtProfile.dart';
@@ -35,13 +36,11 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
 
 
-  String currentUserName = '';
-  String currentUserId;
-  String currentUserProfileURL;
-  Map currentUser;
-  String currentName;
-  String currentUserBio;
+// String username , name , userId , profileImageURL , bio , website ,email;
+// int followingsCount , followersCount , postCount ;
+// Map followersMap , followingsMap;
   UserModel user;
+  Map arguments;
 
   UserModel searchedUser;
 
@@ -51,6 +50,19 @@ class _ProfilePageState extends State<ProfilePage> {
     var followersListSnapshot;
     List<Map> followingsList = [];
     List<Map> followersList = [];
+
+     var docSnap = await Firestore.instance.collection('users').document(arguments['userId']).get();
+//     username         = docSnap.data['username'],
+//     name             = docSnap.data['userId'],
+//     profileImageURL  = docSnap.data['profileImageURL'],
+//     name             = docSnap.data['name'],
+//     bio              = docSnap.data['bio'],
+//     followingsCount  = docSnap.data['followingsCount'],
+//     followersCount   = docSnap.data['followersCount'],
+//     followersMap     = docSnap.data['followersMap'],
+//     followingsMap    = docSnap.data['followingsMap'],
+//     email            = docSnap.data['email'],
+//     postCount        = docSnap.data['postCount'],
 
     followingsListSnapshot = await Firestore.instance.collection('users').document(arguments['userId']).collection('followingsList').getDocuments();
     if(followingsListSnapshot.documents.length != 0){
@@ -67,14 +79,16 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     setState(() {
-      searchedUser = UserModel.fromMap(snapshot: arguments, followersList: followersList , followingsList:  followingsList);
+      searchedUser = UserModel.fromMap(snapshot: docSnap, followersList: followersList , followingsList:  followingsList);
     });
 
   }
 
   @override
   void initState() {
-
+    Future.delayed(Duration.zero).then((value) async {
+      await Provider.of<UserInformation>(context ,listen: false).getUserInfo();
+    });
     super.initState();
   }
 
@@ -99,26 +113,31 @@ class _ProfilePageState extends State<ProfilePage> {
         false;
   }
 
+  RefreshController _refreshController =
+  RefreshController(initialRefresh: false);
+
+  void _onRefresh() async{
+   await  Provider.of<UserInformation>(context , listen: false).getUserInfo();
+    _refreshController.refreshCompleted();
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    arguments = ModalRoute.of(context).settings.arguments as Map;
+    if(arguments != null && searchedUser == null)
+    {
+      getSearchedUser(arguments);
+      //   searchedUser = UserModel.fromMap(snapshot: arguments, followersList: arguments['followersList'] , followingsList:  arguments['followingsList']);
 
-
-
-
-    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
-    if(arguments != null)
-      {
-       // getSearchedUser(arguments);
-//        setState(() {
-          searchedUser = UserModel.fromMap(snapshot: arguments, followersList: arguments['followersList'] , followingsList:  arguments['followingsList']);
-//        });
-       print('here');
-      }
-    else {
-        user = Provider
-            .of<UserInformation>(context)
-            .user;
     }
+    if(arguments == null)  {
+      user = Provider
+          .of<UserInformation>(context)
+          .user;
+    }
+
+
     return
 //      new
 //      WillPopScope(
@@ -129,20 +148,27 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar: new AppBar(
           title:  Consumer<UserInformation>(
             builder: (context, userInformation, child) {
-            return Text(userInformation.user.username);
+            return userInformation.user.username == null ? Text('') : Text(userInformation.user.username);
           },),
         ),
         endDrawer: SettingsDrawer(),
 
-        body: SingleChildScrollView(
-          physics: ScrollPhysics(),
-          child: Column(
-            children: <Widget>[
-              arguments != null ? searchedUser != null ? InfoAtProfile( user: searchedUser ) : Container() : user != null ? InfoAtProfile(user: user,) : Container() ,
-              StoryHighights(),
-              PostAtProfile(),
-            ],
+        body: SmartRefresher(
+          enablePullDown: true,
+          header: WaterDropHeader(),
+          controller: _refreshController,
+          onRefresh: _onRefresh,
 
+          child: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                arguments != null ? searchedUser != null ? InfoAtProfile( user: searchedUser ) : Center(child: CircularProgressIndicator()) : user.userId == null ? Center(child: CircularProgressIndicator()): InfoAtProfile(user: user,) ,
+                StoryHighights(),
+                PostAtProfile(),
+              ],
+
+            ),
           ),
         ),
         bottomNavigationBar: BottomNavigation('ProfilePage' , context),

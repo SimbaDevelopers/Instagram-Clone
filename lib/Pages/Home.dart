@@ -45,19 +45,12 @@ class HomePage extends StatefulWidget {
 class MyAppState extends State<HomePage> {
   AuthMethod authMethod = new AuthMethod();
   void initState() {
-    getUserInfo();
-    Future.delayed(Duration.zero).then((value) async {
-      await Provider.of<UserInformation>(context ,listen: false).getUserInfo();
-
-    });
+//    Future.delayed(Duration.zero).then((value) async {
+//      await Provider.of<UserInformation>(context ,listen: false).getUserInfo();
+//    });
     super.initState();
   }
 
-  getUserInfo() async {
-    Constants.myName = await HelperFunction.getusernameSharedPreferecne();
-
-    setState(() {});
-  }
 
   File _image;
   Future getImage(bool isCamera) async {
@@ -83,12 +76,12 @@ class MyAppState extends State<HomePage> {
 
   void _onRefresh() async{
     Provider.of<PostList>(context , listen: false).clearPostList();
-    Provider.of<PostList>(context , listen: false).getAndSetAllPost(2);
+    Provider.of<PostList>(context , listen: false).getAndSetAllPost(5);
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async{
-    await Provider.of<PostList>(context , listen: false).getAndSetAllPost(2);
+    await Provider.of<PostList>(context , listen: false).getAndSetAllPost(5);
     _refreshController.loadComplete();
   }
 //  FRefreshController controller = FRefreshController();

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:instagram/Screens/FollowersFollowingsScreen.dart';
 import 'package:instagram/Screens/MainScreen.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
@@ -39,6 +40,7 @@ class MyAppState extends State<MyApp> {
   @override
   void initState() {
     getLoggedInState();
+
     super.initState();
   }
 
@@ -110,6 +112,7 @@ class MyAppState extends State<MyApp> {
 //        ProfilePage.routeName: (ctx) => ProfilePage(),
             SplashScreen.routeName: (ctx) => SplashScreen(),
             EditProfile.routeName: (ctx) => EditProfile(),
+            FollowersFollowingsScreen.routeName: (ctx) => FollowersFollowingsScreen(),
           },
         ),
       );
