@@ -8,8 +8,11 @@ import 'package:instagram/provider/PostList.dart';
 import 'package:instagram/provider/UserInfo.dart';
 import 'package:instagram/widgets/PostWidget.dart';
 import 'package:provider/provider.dart';
+import './SendPostBottomSheet.dart';
 
 class PostHome extends StatefulWidget {
+  Function sendPost;
+  PostHome({this.sendPost});
   @override
   _PostHomeState createState() => _PostHomeState();
 }
@@ -31,6 +34,15 @@ class _PostHomeState extends State<PostHome> {
       });
     });
   }
+
+  sendPost(){
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return SendPostBottomSheet();
+        });
+  }
+
 
   @override
   void initState()   {
@@ -59,7 +71,7 @@ class _PostHomeState extends State<PostHome> {
       itemCount: postList == null ? 0 : postList.length,
       itemBuilder: (context, index) {
         // print(postList[index].userName);
-          return  PostWidget(postList[index] );
+          return  PostWidget(postList[index] , sendPost);
 //          return index == postList.length -1 ?  PostWidget(postList[index] , true , refreshPosts: refreshPosts,) : PostWidget(postList[index] , false);
       },
 //      ),

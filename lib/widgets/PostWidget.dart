@@ -9,12 +9,14 @@ import 'package:timeago/timeago.dart';
 
 class PostWidget extends StatefulWidget {
   Post _documentSnapshot;
+  Function sendPost;
 
   var time = '';
 
 
-  PostWidget(doc )  {
+  PostWidget(doc  , sendPost)  {
     _documentSnapshot = doc;
+    this.sendPost = sendPost;
 
    // print(_documentSnapshot.profileImageURL);
     // print(_documentSnapshot['createdAt'].toDate());
@@ -201,29 +203,22 @@ class _PostWidgetState extends State<PostWidget> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: InkWell(
-                    onTap: () async {
-                      final FirebaseUser user =
-                          await FirebaseAuth.instance.currentUser();
-                      print(user.uid.toString());
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isLiked = !isLiked;
+                      });
                     },
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isLiked = !isLiked;
-                        });
-                      },
-                      child: isLiked
-                          ? Icon(
-                              Icons.favorite,
-                              color: Colors.redAccent,
-                              size: 30,
-                            )
-                          : Icon(
-                              Icons.favorite_border,
-                              size: 30,
-                            ),
-                    ),
+                    child: isLiked
+                        ? Icon(
+                            Icons.favorite,
+                            color: Colors.redAccent,
+                            size: 30,
+                          )
+                        : Icon(
+                            Icons.favorite_border,
+                            size: 30,
+                          ),
                   ),
                 ),
                 Padding(
@@ -243,9 +238,14 @@ class _PostWidgetState extends State<PostWidget> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.send,
-                    size: 30,
+                  child: InkWell(
+                    onTap: (){
+                      widget.sendPost();
+                    },
+                    child: Icon(
+                      Icons.send,
+                      size: 30,
+                    ),
                   ),
                 ),
               ],

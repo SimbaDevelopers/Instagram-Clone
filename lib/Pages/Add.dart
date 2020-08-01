@@ -90,15 +90,13 @@ class _AddPageState extends State<AddPage> {
             });
 
           });
-
-
-
         }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
