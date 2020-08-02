@@ -35,11 +35,10 @@ class _PostHomeState extends State<PostHome> {
     });
   }
 
-  sendPost(){
-    showModalBottomSheet(
-        context: context,
+  sendPost(String posturl){
+    showModalBottomSheet(context: context,
         builder: (ctx) {
-          return SendPostBottomSheet();
+          return SendPostBottomSheet(posturl);
         });
   }
 

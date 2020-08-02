@@ -21,12 +21,12 @@ class _All_UsersState extends State<All_Users> {
     HelperFunction.getusernameSharedPreferecne().then((value) {
       setState(() {
         username=value;
-        print(username);
+       // print(username);
       });
     });
     return Scaffold(
       backgroundColor: Colors.black,
-        appBar: AppBar(title: Text(username)),
+        appBar: AppBar(title: Text(username!=null ? username : "")),
        body: ListPage(),
     );
   }
@@ -46,7 +46,7 @@ class _ListPageState extends State<ListPage> {
    return qn.documents;
   }
   navigateToDetail(DocumentSnapshot post){
-    Navigator.push(context, MaterialPageRoute(builder: (context) =>DetailPage(post: post,)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) =>DetailPage(post,null,null,null,null)));
   }
   @override
   void initState() {
@@ -81,11 +81,11 @@ _data=getPosts();
                         horizontal: 10
                   ),
                   child: CircleAvatar(
-                    backgroundImage:snapshot.data[index].data["profileImageURL"]==null ?
+                    backgroundImage:snapshot.data[index].data["profileImageURL"]==null ||snapshot.data[index].data["profileImageURL"]=="" ?
                     AssetImage('assets/images/profile.jpeg') : NetworkImage(snapshot.data[index].data["profileImageURL"]),
                   ),
                 ),
-                title:Text(snapshot.data[index].data["username"]),
+                title: Text(snapshot.data[index].data["username"]==null ? "" :snapshot.data[index].data["username"]),
                 onTap: ()=> navigateToDetail(snapshot.data[index]),
               );
             }else{

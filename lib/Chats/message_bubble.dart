@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
       Positioned(top: 8,
         child:
        CircleAvatar(
-        backgroundImage:isMe ? null : userimg==null ? AssetImage('assets/images/profile.jpeg') : NetworkImage(userimg),),),
+        backgroundImage:isMe ? null : userimg==null||userimg=="" ? AssetImage('assets/images/profile.jpeg') : NetworkImage(userimg),),),
        Row(
         mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: <Widget>[
@@ -37,7 +37,7 @@ import 'package:flutter/material.dart';
             horizontal: 16,),
             margin: isMe? EdgeInsets.symmetric(
               vertical: 4,
-              horizontal: 8,
+              horizontal: 10,
             ) : EdgeInsets.only(
               left: 45,
               right: 16,

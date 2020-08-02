@@ -240,7 +240,7 @@ class _PostWidgetState extends State<PostWidget> {
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
                     onTap: (){
-                      widget.sendPost();
+                      widget.sendPost(widget._documentSnapshot.postURL);
                     },
                     child: Icon(
                       Icons.send,

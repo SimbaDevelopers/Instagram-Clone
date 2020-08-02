@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:instagram/Chats/chat_details.dart';
 import 'package:instagram/Chats/messages.dart';
 import 'package:instagram/helper/app_constants.dart';
 import 'package:instagram/helper/constants.dart';
 import 'package:instagram/main.dart';
+import 'package:instagram/model/user.dart';
 import 'package:instagram/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -15,8 +20,9 @@ import 'database_chat.dart';
 
 class DetailPage extends StatefulWidget {
   final DocumentSnapshot post;
+  final toimgurl,toname,tousername,touserId;
 
-  DetailPage({this.post});
+  DetailPage(this.post,this.toname,this.tousername,this.toimgurl,this.touserId);
 
   @override
   _DetailPageState createState() => _DetailPageState();
@@ -42,7 +48,28 @@ class _DetailPageState extends State<DetailPage> {
       child: Row(
         children: <Widget>[
           RawMaterialButton(
-            onPressed: () {},
+            onPressed: () async {
+         //     print("xxxxxxxxxxxxxxxxxxxxxxxx"+widget.user.name);
+              File imageFile = await ImagePicker.pickImage(
+                source: ImageSource.gallery,
+              );
+              if (imageFile != null) {
+                //  String imageUrl =
+//                    await Provider.of<StorageService>(context, listen: false)
+//                    .uploadMessageImage(imageFile);
+//                _handleSubmitted(null, imageUrl);
+                FirebaseAuth.instance.currentUser().then((user) async {
+                  final ref = FirebaseStorage.instance
+                      .ref()
+                      .child(user.uid)
+                      .child('chat_img')
+                      .child(Timestamp.now().toString() + '.jpg');
+                  await ref.putFile(imageFile).onComplete;
+                  final _url = await ref.getDownloadURL();
+                  _handleSubmitted(null, _url);
+                });
+              }
+            },
             child: Icon(
               Icons.camera_alt,
               color: Colors.white,
@@ -79,7 +106,7 @@ class _DetailPageState extends State<DetailPage> {
             iconSize: 25.0,
             color: Theme.of(context).primaryColor,
             onPressed: _isComposing
-                ? () => _handleSubmitted(_textMessageController.text)
+                ? () => _handleSubmitted(_textMessageController.text, null)
                 : null,
           ),
         ],
@@ -87,16 +114,16 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  void _handleSubmitted(String text) {
-  //  FocusScope.of(context).unfocus();
-    DateTime _currentdate = new DateTime.now();
+  void _handleSubmitted(String text, String imageurl) {
+    //  FocusScope.of(context).unfocus();
+ //   DateTime _currentdate = new DateTime.now();
     _textMessageController.clear();
 
     setState(() {
       _isComposing = false;
     });
     FirebaseAuth.instance.currentUser().then((user) {
-        Constants.uid = user.uid;
+      Constants.uid = user.uid;
 
 //      Map<String, String> userInfoMap = {
 //        "senderId": user.uid,
@@ -106,12 +133,13 @@ class _DetailPageState extends State<DetailPage> {
 //      };
 //      dataBaseService.sendChatMessage(userInfoMap);
 
-    Firestore.instance.collection('chat_room').add({
+      Firestore.instance.collection('chat_room').add({
         "senderId": user.uid,
-        "toUserId": widget.post.data["userId"],
+        "toUserId": widget.tousername==null ? widget.post.data["userId"] : widget.touserId,
         "text": text,
+        "imgurl": imageurl,
         "timestamp": Timestamp.now(),
-    });      print(widget.post.data["profileImageURL"]);
+      }); //  print(widget.post.data["profileImageURL"]);
     });
   }
 
@@ -120,68 +148,74 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title:Column(
+        title: Row(
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(
-                  right: 0,
-
-              ),
-              child: CircleAvatar(
-                  backgroundImage:(widget.post.data["profileImageURL"])==null? AssetImage('assets/images/profile.jpeg') : NetworkImage((widget.post.data["profileImageURL"]))
-              ),
+            CircleAvatar(
+                backgroundImage: widget.tousername==null ? (widget.post.data["profileImageURL"]) == null ||widget.post.data["profileImageURL"]==""
+                    ? AssetImage('assets/images/profile.jpeg')
+                    : NetworkImage(widget.post.data["profileImageURL"]) : widget.toimgurl==null ||widget.toimgurl==""
+                    ? AssetImage('assets/images/profile.jpeg')
+                    : NetworkImage(widget.toimgurl)
             ),
+            SizedBox(
+              width: 10,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child:widget.tousername==null ? widget.post.data["name"] != null
+                      ? Text(widget.post.data["name"])
+                      : Text("") : widget.toname != null
+                      ? Text(widget.toname)
+                      : Text(""),
+                ),
+                Text(widget.tousername==null ?
+                  widget.post.data["username"] :widget.tousername,
+                  style: TextStyle(fontSize: 12),
+                )
+              ],
+            ),
+            Spacer(),
+            Icon(Icons.videocam),
+            SizedBox(
+              width: 10,
+            ), IconButton(
+              icon: Icon(Icons.info_outline),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>widget.tousername==null ? ChatDetails(
+                      widget.post.data["name"],
+                      widget.post.data["username"],
+                    widget.post.data["profileImageURL"],
+                    widget.post.data["userId"],) : ChatDetails(
+                    widget.toname,
+                    widget.tousername,
+                    widget.toimgurl,
+                    widget.touserId)),
+                );
+              },
+            ),
+            SizedBox(
+              width: 10,
+            )
           ],
-        ),actions: <Widget>[
-          Container(
-                margin: EdgeInsets.only(
-             top: 12),
-               child:widget.post.data["name"]!=null ?Text(widget.post.data["name"]) : Text(""),
-          ),
-          Container(
-            margin: EdgeInsets.only(
-              top: 25,
-            ),
-            child:Text(widget.post.data["username"]),
-          ),
-        Container(
-          margin: EdgeInsets.only(
-            left:15
-          ),
-          child:
-          RawMaterialButton(
-            onPressed: () {},
-            child: Icon(
-              Icons.video_call,
-              color: Colors.white,
-              size: 25.0,
-            ),
-          ),
         ),
-
-        RawMaterialButton(
-          onPressed: () =>ChatDetails(),
-          child: Icon(
-            Icons.details,
-            color: Colors.white,
-            size: 25.0,
-          ),
-        )
-      ],
       ),
-
       body: Container(
         child: Column(
           children: <Widget>[
-           Expanded(
-             child: Messages(widget.post.data["userId"],
-                 widget.post.data["profileImageURL"]),
-           ),
+            Expanded(
+              child:widget.tousername==null ? Messages(widget.post.data["userId"],
+                  widget.post.data["profileImageURL"]) : Messages(widget.touserId,
+                  widget.toimgurl),
+            ),
             _buildMessageComposer(),
           ],
         ),
       ),
-
     );
   }
 }

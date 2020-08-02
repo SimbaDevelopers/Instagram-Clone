@@ -38,7 +38,6 @@ class _SearchPageState extends State<SearchPage> {
         isSearching = false;
         searchSnapshot = val;
       });
-      ;
     });
   }
 
@@ -55,7 +54,7 @@ class _SearchPageState extends State<SearchPage> {
             })
         : Center(
             child: Container(
-            child: Text('Result Not Found'),
+               child: Text('Result Not Found'),
           ));
   }
 
@@ -162,9 +161,8 @@ class Searchtile extends StatelessWidget {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: AssetImage(
-                    'assets/images/profile.jpeg',
-                  ),
+                  backgroundImage:docSnap.data['profileImageURL']==null ?AssetImage(
+                    'assets/images/profile.jpeg',) : NetworkImage(docSnap.data['profileImageURL']),
                   radius: 25,
                 ),
                 SizedBox(
@@ -180,7 +178,7 @@ class Searchtile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      docSnap.data['email'],
+                      docSnap.data['name'],
                     )
                   ],
                 ),

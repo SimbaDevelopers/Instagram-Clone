@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/Chats/chat_room.dart';
 import 'package:instagram/Screens/FollowersFollowingsScreen.dart';
 import 'package:instagram/helper/constants.dart';
 import 'package:instagram/model/user.dart';
@@ -203,7 +204,11 @@ class _InfoAtProfileState extends State<InfoAtProfile> {
                    disabledTextColor: Colors.black,
                    padding: EdgeInsets.all(7),
                    splashColor: Colors.blueAccent,
-                   onPressed: () {},
+                   onPressed: () {
+                     //  print("lllll"+widget.user.userId);
+                     Navigator.push(context, MaterialPageRoute(builder: (context) =>DetailPage
+                       (null,widget.user.name,widget.user.username,widget.user.profileImageURL,widget.user.userId)));
+                   },
                    child: Text(
                      ' Message ',
                      style: TextStyle(fontSize: 13),
