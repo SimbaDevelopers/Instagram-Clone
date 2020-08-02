@@ -20,17 +20,6 @@ class _FollowersTabState extends State<FollowersTab> with AutomaticKeepAliveClie
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
-//  Future _loadingFollowers;
-//  Future loadFollowers() async {
-//    return await Firestore.instance.collection('users').getDocuments();
-//  }
-
-  @override
-  void initState() {
-//    _loadingFollowers = loadFollowers(); // only create the future once.
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);

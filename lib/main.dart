@@ -18,6 +18,7 @@ import 'Screens/SignupScreen.dart';
 import 'Screens/SignupScreen.dart';
 import 'Screens/SplashScreen.dart';
 import 'Screens/startupscreen.dart';
+import 'Screens/CloseFriendsScreen.dart';
 import 'Screens/UsernameScreen.dart';
 import 'Pages/Search.dart';
 import 'helper/helpfunction.dart';
@@ -113,6 +114,7 @@ class MyAppState extends State<MyApp> {
             SplashScreen.routeName: (ctx) => SplashScreen(),
             EditProfile.routeName: (ctx) => EditProfile(),
             FollowersFollowingsScreen.routeName: (ctx) => FollowersFollowingsScreen(),
+            CloseFriendsScreen.routeName: (ctx) => CloseFriendsScreen(),
           },
         ),
       );

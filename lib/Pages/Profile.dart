@@ -48,8 +48,10 @@ class _ProfilePageState extends State<ProfilePage> {
   getSearchedUser(arguments) async {
     var followingsListSnapshot;
     var followersListSnapshot;
+    var closeFriendsListSnapshot;
     List<Map> followingsList = [];
     List<Map> followersList = [];
+    List<Map> closeFriendsList = [];
 
      var docSnap = await Firestore.instance.collection('users').document(arguments['userId']).get();
 //     username         = docSnap.data['username'],
@@ -78,8 +80,15 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     }
 
+    closeFriendsListSnapshot = await Firestore.instance.collection('users').document(arguments['userId']).collection('closeFriendsList').getDocuments();
+    if(closeFriendsListSnapshot.documents.length != 0){
+      for (DocumentSnapshot documentSnapshot in closeFriendsListSnapshot.documents) {
+        closeFriendsList.add(documentSnapshot.data);
+      }
+    }
+
     setState(() {
-      searchedUser = UserModel.fromMap(snapshot: docSnap, followersList: followersList , followingsList:  followingsList);
+      searchedUser = UserModel.fromMap(snapshot: docSnap, followersList: followersList , followingsList:  followingsList , closeFriendsList: closeFriendsList);
     });
 
   }
@@ -151,7 +160,8 @@ class _ProfilePageState extends State<ProfilePage> {
             return userInformation.user.username == null ? Text('') : Text(userInformation.user.username);
           },),
         ),
-        endDrawer: SettingsDrawer(),
+        endDrawer: /*arguments != null ? searchedUser != null ? SettingsDrawer() : Center(child: CircularProgressIndicator()) : user.userId == null ? Center(child: CircularProgressIndicator()):*/ SettingsDrawer() ,
+
 
         body: SmartRefresher(
           enablePullDown: true,
@@ -163,7 +173,10 @@ class _ProfilePageState extends State<ProfilePage> {
             physics: ScrollPhysics(),
             child: Column(
               children: <Widget>[
-                arguments != null ? searchedUser != null ? InfoAtProfile( user: searchedUser ) : Center(child: CircularProgressIndicator()) : user.userId == null ? Center(child: CircularProgressIndicator()): InfoAtProfile(user: user,) ,
+                arguments != null ? searchedUser != null ? InfoAtProfile( user: searchedUser ) : Center(child: CircularProgressIndicator()) : user == null  ? Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Center(child: CircularProgressIndicator()),
+                ): InfoAtProfile(user: user,) ,
                 StoryHighights(),
                 PostAtProfile(),
               ],

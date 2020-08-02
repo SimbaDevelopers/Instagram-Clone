@@ -26,6 +26,7 @@ class _AddPageState extends State<AddPage> {
   bool twitter = false;
   bool tumblr = false;
   var _value = 'Gallery';
+  var _postType = 'friends';
   var captionController = TextEditingController();
   bool isUploading = false;
 
@@ -72,6 +73,7 @@ class _AddPageState extends State<AddPage> {
             'createdAt' : DateTime.now(),
             'postURL' : _url,
             'location': locationController.text.trim(),
+            'postType' : _postType
           };
 
           databaseMethod.addNewPost(postMap);
@@ -217,6 +219,44 @@ class _AddPageState extends State<AddPage> {
                   //   borderSide: BorderSide(color: Colors.grey, width: 1.0),
                   // ),
                 ),
+              ),
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    'Share  Post  to ',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  Spacer(),
+                  DropdownButton(
+                    value: _postType,
+                    items: [
+                      DropdownMenuItem(
+                        child: Text("Friends"),
+                        value: 'friends',
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Close Friends"),
+                        value: 'closeFriends',
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Public"),
+                        value: 'public',
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _postType = value;
+                      });
+                    },
+                  ),
+
+                ],
               ),
             ),
             Divider(

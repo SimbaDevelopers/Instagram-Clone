@@ -118,7 +118,9 @@ class _PostWidgetState extends State<PostWidget> {
       setState(() {
         profileImageURL = value['profileImageURL'].toString();
         username = value['username'];
+
       });
+
 
     });
 

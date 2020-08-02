@@ -9,8 +9,8 @@ class PostList with ChangeNotifier{
   List<Post> _postList = [];
   var lastDocument;
   bool lastFetched = false;
-  String userId;
-  Map followingsMap;
+  String currentUserId;
+//  Map followingsMap;
   clearPostList () {
     _postList = [];
     lastDocument = null;
@@ -19,50 +19,17 @@ class PostList with ChangeNotifier{
   }
 
   List<Post> get postList  {
-
     return [..._postList];
   }
 
-  Future<Null> getAndSetAllPost( int fetchLimit) async {
+  Future<Null> getAndSetAllPost( int fetchLimit ) async {
 
     var _querySnapshot;
-    if(userId == null ){
-     FirebaseAuth.instance.currentUser().then((currentUser) async{
-       userId = currentUser.uid;
-       if (!lastFetched) {
-         _querySnapshot = await Firestore.instance
-             .collection("posts")
-             .orderBy("createdAt", descending: true)
-             .limit(fetchLimit)
-             .getDocuments();
-         lastFetched = true;
-       } else {
-         _querySnapshot = await Firestore.instance
-             .collection("posts")
-             .orderBy("createdAt", descending: true)
-             .startAfterDocument(lastDocument)
-             .limit(fetchLimit)
-             .getDocuments();
-         print('in post list elase part');
-       }
-       if (_querySnapshot.documents.length != 0) {
-         lastDocument =
-         _querySnapshot.documents[_querySnapshot.documents.length - 1];
-       }
 
-       Firestore.instance.collection('users').document(userId).get().then((snapshot){
-         followingsMap = snapshot['followingsMap'];
+   await FirebaseAuth.instance.currentUser().then((currentUser) async {
+      currentUserId = currentUser.uid;
+      print(currentUserId);
 
-         for (DocumentSnapshot documentSnapshot in _querySnapshot.documents) {
-           if(followingsMap.containsKey(documentSnapshot.data['userId'])) {
-             Post tekPost = Post.fromMap(documentSnapshot.data);
-             _postList.add(tekPost);
-           }
-         }
-         notifyListeners();
-       });
-     });
-    }else{
       if (!lastFetched) {
         _querySnapshot = await Firestore.instance
             .collection("posts")
@@ -84,28 +51,49 @@ class PostList with ChangeNotifier{
         _querySnapshot.documents[_querySnapshot.documents.length - 1];
       }
 
-      Firestore.instance.collection('users').document(userId).get().then((snapshot){
-        followingsMap = snapshot['followingsMap'];
-      for (DocumentSnapshot documentSnapshot in _querySnapshot.documents) {
-        if(followingsMap.containsKey(documentSnapshot.data['userId'])) {
-          Post tekPost = Post.fromMap(documentSnapshot.data);
-          _postList.add(tekPost);
+
+     await Firestore.instance.collection('users').document(currentUserId).get().then((currenUserSnap) {
+
+        for (DocumentSnapshot documentSnapshot in _querySnapshot.documents) {
+          if(documentSnapshot.data['userId'] == currentUserId)
+            {
+              Post tekPost = Post.fromMap(documentSnapshot.data);
+              _postList.add(tekPost);
+
+            }else{
+            switch(documentSnapshot.data['postType']){
+              case 'public':
+                Post tekPost = Post.fromMap(documentSnapshot.data);
+                _postList.add(tekPost);
+                break;
+              case 'friends':
+                if (currenUserSnap['followingsMap']
+                    .containsKey(documentSnapshot.data['userId'])) {
+                  Post tekPost = Post.fromMap(documentSnapshot.data);
+                  _postList.add(tekPost);
+                }
+                break;
+              case 'closeFriends':
+                if (currenUserSnap['followingsMap']
+                    .containsKey(documentSnapshot.data['userId'])) {
+                  if (currenUserSnap['whoAddedUinCFsMap']
+                      .containsKey(documentSnapshot.data['userId'])) {
+                    Post tekPost = Post.fromMap(documentSnapshot.data);
+                    _postList.add(tekPost);
+                  }
+                }
+                break;
+            }
+          }
         }
-      }
-
-
-      notifyListeners();
       });
-    }
-
-  //  return [..._postList];
+      notifyListeners();
+    });
   }
 
   logout(){
      _postList = [];
      lastDocument = null;
      lastFetched = false;
-     userId = null;
-   followingsMap = null;
   }
 }

@@ -3,8 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:instagram/helper/helpfunction.dart';
-
 import 'package:instagram/model/user.dart';
 
 
@@ -18,8 +16,10 @@ class UserInformation with ChangeNotifier{
     var docSnapshot;
     var followingsListSnapshot;
     var followersListSnapshot;
+    var closeFriendsListSnapshot;
     List<Map> followingsList = [];
     List<Map> followersList = [];
+    List<Map> closeFriendsList = [];
     FirebaseAuth.instance.currentUser().then((currentUser)  async{
 
       userId = currentUser.uid;
@@ -36,11 +36,18 @@ class UserInformation with ChangeNotifier{
           followersList.add(documentSnapshot.data);
         }
       }
+
+      closeFriendsListSnapshot = await Firestore.instance.collection('users').document(userId).collection('closeFriendsList').getDocuments();
+      if(closeFriendsListSnapshot.documents.length != 0){
+        for (DocumentSnapshot documentSnapshot in closeFriendsListSnapshot.documents) {
+          closeFriendsList.add(documentSnapshot.data);
+        }
+      }
       docSnapshot =  await Firestore.instance.collection('users').document(userId).get();
       if(docSnapshot.data != null)
       {
         print(docSnapshot['followersCount'].toString());
-        user = UserModel.fromMap(snapshot: docSnapshot , followersList: followersList , followingsList:  followingsList);
+        user = UserModel.fromMap(snapshot: docSnapshot , followersList: followersList , followingsList:  followingsList , closeFriendsList: closeFriendsList);
       }
       else{
         print("docSnapshot is null");
@@ -134,6 +141,71 @@ class UserInformation with ChangeNotifier{
       print('error : => ' + error.toString());
     }
   }
+
+  addCloseFriend( friendsId) async{
+    try {
+      var docSnap = await Firestore.instance.collection('users')
+          .document(user.userId);
+      docSnap.updateData({
+        'closeFriendsMap.$friendsId': true,
+      });
+      user.closeFriendsMap[friendsId.toString()] = true;
+
+
+      user.closeFriendsCount++;
+      docSnap.updateData({'closeFriendsCount': user.closeFriendsCount});
+
+
+      user.closeFriendsList.add({
+        'userId': friendsId,
+      });
+      docSnap.collection('closeFriendsList').document(friendsId).setData({
+        'userId': friendsId,
+      });
+
+
+      var friendsSnap = await Firestore.instance.collection('users')
+          .document(friendsId);
+       friendsSnap.updateData({
+        'whoAddedUinCFsMap.${user.userId}': true
+      });
+      notifyListeners();
+    }
+    catch(err){
+      print("Error in addClose Friend : " + err);
+    }
+  }
+
+
+  removeCloseFriend(friendsId)async {
+    try {
+      var docSnap = await Firestore.instance.collection('users')
+          .document(user.userId);
+      docSnap.updateData({
+        'closeFriendsMap.$friendsId': FieldValue.delete(),
+      });
+      user.closeFriendsMap.remove(friendsId.toString());
+
+
+      user.closeFriendsCount--;
+      docSnap.updateData({'closeFriendsCount': user.closeFriendsCount});
+
+
+      docSnap.collection('closeFriendsList').document(friendsId).delete();
+      user.closeFriendsList.removeWhere((item) =>
+      item['userId'] == friendsId);
+
+
+      var friendsSnap = await Firestore.instance.collection('users')
+          .document(friendsId);
+      friendsSnap.updateData({
+        'whoAddedUinCFsMap.${user.userId.toString()}': FieldValue.delete(),
+
+      });
+      notifyListeners();
+    }
+    catch(err){}
+    }
 
   logout(){
     user = new UserModel() ;

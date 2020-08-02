@@ -12,6 +12,7 @@ import 'package:instagram/Screens/SignInScreen.dart';
 import 'package:instagram/Screens/startupscreen.dart';
 import 'package:instagram/helper/constants.dart';
 import 'package:instagram/helper/helpfunction.dart';
+import 'package:instagram/model/user.dart';
 import 'package:instagram/provider/PostList.dart';
 import 'package:instagram/provider/UserInfo.dart';
 
@@ -45,9 +46,9 @@ class HomePage extends StatefulWidget {
 class MyAppState extends State<HomePage> {
   AuthMethod authMethod = new AuthMethod();
   void initState() {
-//    Future.delayed(Duration.zero).then((value) async {
-//      await Provider.of<UserInformation>(context ,listen: false).getUserInfo();
-//    });
+    Future.delayed(Duration.zero).then((value) async {
+      await Provider.of<PostList>(context ,listen: false).getAndSetAllPost(5);
+    });
     super.initState();
   }
 
@@ -73,9 +74,9 @@ class MyAppState extends State<HomePage> {
 //  }
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
-
   void _onRefresh() async{
     Provider.of<PostList>(context , listen: false).clearPostList();
+
     Provider.of<PostList>(context , listen: false).getAndSetAllPost(5);
     _refreshController.refreshCompleted();
   }
