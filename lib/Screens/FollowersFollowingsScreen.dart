@@ -27,6 +27,7 @@ class _FollowersFollowingsScreenState extends State<FollowersFollowingsScreen> {
       }
 
     return DefaultTabController(
+
       length: 2,
       child: Scaffold(
         appBar: AppBar(

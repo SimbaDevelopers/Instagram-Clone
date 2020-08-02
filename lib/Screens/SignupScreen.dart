@@ -56,19 +56,22 @@ class _SignUpState extends State<SignUpScreen> {
           _userId = user.uid;
 
           Map<String, Object> userInfoMap = {
-            "username": usernameTexteditingcontroller.text.trim(),
-            "email": emailTexteditingcontroller.text.trim(),
-            'userId' : _userId,
-            'bio' : 'bio',
-            'name' : 'Name',
-            'phoneNumber' : '',
-            'profileImageURL' : '',
-            'website' : '',
-            'followingsMap' : { _userId : true},
-            'followersMap' : {},
-            'followersCount' : 0,
-            'followingsCount' : 0,
-            'postCount' : 0,
+            "username"         : usernameTexteditingcontroller.text.trim(),
+            "email"            : emailTexteditingcontroller.text.trim(),
+            'userId'           : _userId,
+            'bio'              : 'bio',
+            'name'             : 'Name',
+            'phoneNumber'      : '',
+            'profileImageURL'  : '',
+            'website'          : '',
+            'followingsMap'    : { _userId : true},
+            'followersMap'     : {},
+            'followersCount'   : 0,
+            'followingsCount'  : 0,
+            'postCount'        : 0,
+            'closeFriendsMap'  : {},
+            'whoAddedUinCFsMap': {},
+            'closeFriendsCount': 0,
           };
 
           HelperFunction.saveuserIDinSharedPreferecne(_userId);

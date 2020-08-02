@@ -10,6 +10,7 @@ class Post{
   String postURL;
   String userId;
   String profileImageURL;
+  String postType;
 
 
   Post({
@@ -18,6 +19,7 @@ class Post{
     this.location,
     this.postURL,
     this.userId,
+    this.postType,
 //    this.userName,
 //    this.profileImageURL,
 });
@@ -29,6 +31,7 @@ class Post{
       location : snapshot['location'],
       postURL:  snapshot['postURL'],
       userId: snapshot['userId'],
+      postType: snapshot['postType']
 //      userName: snapshot['username'],
 //      profileImageURL: snapshot['profileImageURL'].toString(),
 

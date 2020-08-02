@@ -1,16 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/helper/constants.dart';
+import 'package:instagram/model/chatuser.dart';
+import 'package:instagram/model/user.dart';
 import 'package:instagram/provider/PostList.dart';
 import 'package:instagram/provider/UserInfo.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../authenticate.dart';
+import '../Screens/CloseFriendsScreen.dart';
 
 class SettingsDrawer extends StatelessWidget {
+
+
+
   @override
   Widget build(BuildContext context) {
+    UserModel user = Provider.of<UserInformation>(context).user;
     return Drawer(
       child: Padding(
         padding: const EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 8),
@@ -130,10 +137,18 @@ class SettingsDrawer extends StatelessWidget {
                     SizedBox(
                       width: 15,
                     ),
-                    Expanded(
-                      child: Text(
-                        'Close Friends',
-                        style: TextStyle(fontSize: 18),
+                    InkWell(
+                      onTap: (){
+                        user.userId == null ? print('User == null') :
+                        Navigator.of(context).pushNamed(CloseFriendsScreen.routeName , arguments: {
+                          'user' : user
+                        });
+                      },
+                      child: Expanded(
+                        child: Text(
+                          'Close Friends',
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
                     ),
                   ],

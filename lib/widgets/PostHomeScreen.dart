@@ -48,8 +48,11 @@ class _PostHomeState extends State<PostHome> {
 
     getUserInfo();
     Future.delayed(Duration.zero).then((value) async {
-     await Provider.of<PostList>(context ,listen: false).getAndSetAllPost(3);
-     await Provider.of<UserInformation>(context ,listen: false).getUserInfo();
+      await Provider.of<UserInformation>(context ,listen: false).getUserInfo();
+//     await Provider.of<PostList>(context ,listen: false).getAndSetAllPost(3).then((value) {
+//       setState(() {});
+//     });
+
 
     });
     // TODO: implement initState
@@ -62,6 +65,7 @@ class _PostHomeState extends State<PostHome> {
   Widget build(BuildContext context) {
    final postData =  Provider.of<PostList>(context);
    final postList = postData.postList;
+
 
   // print(postList[0].userName);
     return postList == null ?  Center(child: CircularProgressIndicator()) : ListView.builder(
