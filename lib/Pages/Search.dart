@@ -1,12 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram/Pages/Home.dart';
-import 'package:instagram/model/user.dart';
 import 'package:instagram/services/database.dart';
-import 'package:instagram/widgets/InfoAtProfile.dart';
-
-import 'Activity.dart';
-import 'Add.dart';
 import 'Profile.dart';
 import 'bottom_nav.dart';
 
@@ -22,6 +16,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  Future _data;
   bool isSearching = false;
   DatabaseMethod databaseMethod = new DatabaseMethod();
   TextEditingController searchtextEditingcontroller =
@@ -40,7 +35,16 @@ class _SearchPageState extends State<SearchPage> {
       });
     });
   }
-
+  @override
+  void initState() {
+    super.initState();
+    _data=getPosts();
+  }
+  Future getPosts() async{
+    var firestore =Firestore.instance;
+    QuerySnapshot qn= await firestore.collection("posts").getDocuments();
+    return qn.documents;
+  }
   Widget searchList() {
     return searchSnapshot != null
         ? ListView.builder(
@@ -52,16 +56,56 @@ class _SearchPageState extends State<SearchPage> {
                 docSnap: searchSnapshot.documents[index],
               );
             })
-        : Center(
-            child: Container(
-               child: Text('Result Not Found'),
-          ));
+        :    Container(
+      child: FutureBuilder(
+        future: _data,
+        builder: (_, snapshot){
+          if(snapshot.connectionState==ConnectionState.waiting){
+            return Center(
+              child: Text(""),
+            );
+          }else{
+            return GridView.count(
+                crossAxisCount: 3,
+                children: List.generate(snapshot.data.length, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(1.0),
+                    child: Container(
+                      child:Image.network(snapshot.data[index].data["postURL"]), //Text(snapshot.data[index].data["postURL"]),
+                    ),
+                  );
+                }));
+          }
+
+            //  });
+        }
+      ),
+    );
+
+
+//    GridView.count(
+//        crossAxisCount: 3,
+//        children: List.generate(10, (index) {
+//          return Container(
+//            child: Text('$index'),
+//          );
+//        }));
+
+
+
+
+
+
+//        : Center(
+//            child: Container(
+//               child: Text('Result Not Found'),
+//          ));
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
+//  @override
+//  void initState() {
+//    super.initState();
+//  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,41 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/Chats/all_users.dart';
-import 'package:instagram/Pages/Activity.dart';
-import 'package:instagram/Pages/Add.dart';
-import 'package:instagram/Pages/Profile.dart';
-import 'package:instagram/Pages/Search.dart';
-import 'package:instagram/Screens/SignInScreen.dart';
-import 'package:instagram/Screens/startupscreen.dart';
-import 'package:instagram/helper/constants.dart';
-import 'package:instagram/helper/helpfunction.dart';
-import 'package:instagram/model/user.dart';
 import 'package:instagram/provider/PostList.dart';
-import 'package:instagram/provider/UserInfo.dart';
-
 import 'package:instagram/widgets/PostHomeScreen.dart';
 import 'package:instagram/widgets/storybar.dart';
-
-import 'package:instagram/authenticate.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-//import 'package:instagram/constants.dart';
 import 'bottom_nav.dart';
-
-
-//import 'helper/constants.dart';
-
-
-
-
-
 import 'package:instagram/services/auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
   State<StatefulWidget> createState() {
