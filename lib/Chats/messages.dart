@@ -27,11 +27,11 @@ Messages(this.onlyuser,this.userimg);
           .snapshots(),
       builder: (ctx,chatSnapshot){
 
-//        if(chatSnapshot.connectionState==ConnectionState.waiting){
-//
-//          return Center(child: Text(''),
-//          );
-//        }
+        if(chatSnapshot.connectionState==ConnectionState.waiting){
+
+          return Center(child: CircularProgressIndicator(),
+          );
+        }
         final documents=chatSnapshot.data.documents;
         return ListView.builder(
             reverse: true,

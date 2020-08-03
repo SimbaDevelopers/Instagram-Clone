@@ -173,7 +173,10 @@ class _ProfilePageState extends State<ProfilePage> {
             physics: ScrollPhysics(),
             child: Column(
               children: <Widget>[
-                arguments != null ? searchedUser != null ? InfoAtProfile( user: searchedUser ) : Center(child: CircularProgressIndicator()) : user == null  ? Padding(
+                arguments != null ? searchedUser != null ? InfoAtProfile( user: searchedUser ) : Padding(
+                  padding: const EdgeInsets.all(75.0),
+                  child: Center(child: CircularProgressIndicator()),
+                ) : user == null  ? Padding(
                   padding: const EdgeInsets.all(25.0),
                   child: Center(child: CircularProgressIndicator()),
                 ): InfoAtProfile(user: user,) ,

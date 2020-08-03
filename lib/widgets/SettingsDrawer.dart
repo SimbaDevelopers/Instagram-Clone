@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'file:///D:/Personal/Personal/Instagram-clone/Instagram-Clone/lib/Settings/SettingScreen.dart';
+//import 'file:///D:/Personal/Personal/Instagram-clone/Instagram-Clone/lib/Settings/SettingScreen.dart';
+import '../Settings/SettingScreen.dart';
 import 'package:instagram/model/user.dart';
 import 'package:instagram/provider/UserInfo.dart';
 import 'package:provider/provider.dart';
