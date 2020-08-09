@@ -17,24 +17,30 @@ class _FollowingsTabState extends State<FollowingsTab> with AutomaticKeepAliveCl
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
-//  Future _loadingFollowings;
-//  Future loadFollowings() async {
-//    return await Firestore.instance.collection('users').getDocuments();
-//  }
-
-  @override
-  void initState() {
-//    _loadingFollowings = loadFollowings(); // only create the future once.
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return widget.user.followingsCount == 0 ? Container() : ListView.builder( itemCount : widget.user.followingsCount,
-        itemBuilder: (ctx , index){
-      print(widget.user.followingList[index]['userId']);
-          return FollowingListTile(followingsId: widget.user.followingList[index]['userId'], userId: widget.user.userId,);
-        } );
+    return
+      StreamBuilder(
+        stream: Firestore.instance.collection('users').document(widget.user.userId).collection('followingsList').snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return CircularProgressIndicator();
+          List<Map> followingsList = [];
+          snapshot.data.documents.forEach((doc) {
+            followingsList.add(doc.data);
+          });
+          return ListView.builder(
+              itemCount: followingsList.length,
+              itemBuilder: (ctx, index) {
+                return FollowingListTile(followingsId:followingsList[index]['userId'], userId: widget.user.userId,);
+              });
+        },
+      );
+//      widget.user.followingsCount == 0 ? Container() : ListView.builder( itemCount : widget.user.followingsCount,
+//        itemBuilder: (ctx , index){
+//      print(widget.user.followingList[index]['userId']);
+//          return FollowingListTile(followingsId: widget.user.followingList[index]['userId'], userId: widget.user.userId,);
+//        } );
   }
 }

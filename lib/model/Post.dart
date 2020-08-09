@@ -2,16 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post{
 
-  String userName;
   String name;
   Timestamp timeStamp;
   String caption;
   String location;
   String postURL;
   String userId;
-  String profileImageURL;
+  String postId;
   String postType;
-
+  int likesCount;
+  int commentsCount;
+  Map likesMap;
 
   Post({
     this.caption,
@@ -19,22 +20,25 @@ class Post{
     this.location,
     this.postURL,
     this.userId,
+    this.postId,
     this.postType,
-//    this.userName,
-//    this.profileImageURL,
+    this.likesCount,
+    this.commentsCount,
+    this.likesMap,
 });
 
-   static Post fromMap(snapshot){
+  static Post fromMap(snapshot) {
     return Post(
       caption: snapshot['caption'],
       timeStamp: snapshot['createdAt'],
-      location : snapshot['location'],
-      postURL:  snapshot['postURL'],
+      location: snapshot['location'],
+      postURL: snapshot['postURL'],
       userId: snapshot['userId'],
-      postType: snapshot['postType']
-//      userName: snapshot['username'],
-//      profileImageURL: snapshot['profileImageURL'].toString(),
-
+      postType: snapshot['postType'],
+      likesCount: snapshot['likesCount'],
+      commentsCount: snapshot['commentsCount'],
+      likesMap: snapshot['likesMap'],
+      postId: snapshot['postId'],
     );
   }
 }

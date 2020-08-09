@@ -92,6 +92,13 @@ class UserInformation with ChangeNotifier{
         'userId' : user.userId,
       });
 
+      //======== Activity Feed =======
+      Firestore.instance.collection('feeds').document(searchedUserId).collection('feedItems').add({
+        'type' : 'follower',
+        'userId' : userId,
+        'timeStamp' : DateTime.now(),
+      });
+
       notifyListeners();
 
 

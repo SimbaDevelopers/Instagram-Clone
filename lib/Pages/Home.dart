@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/Chats/all_users.dart';
 import 'package:instagram/provider/PostList.dart';
+import 'package:instagram/provider/UserInfo.dart';
 import 'package:instagram/widgets/PostHomeScreen.dart';
 import 'package:instagram/widgets/storybar.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +23,10 @@ class MyAppState extends State<HomePage> {
   AuthMethod authMethod = new AuthMethod();
   void initState() {
     Future.delayed(Duration.zero).then((value) async {
-      await Provider.of<PostList>(context ,listen: false).getAndSetAllPost(5);
+      await Provider.of<UserInformation>(context ,listen: false).getUserInfo().then((value)  async{
+        await Provider.of<PostList>(context ,listen: false).getAndSetAllPost(5);
+      });
+
     });
     super.initState();
   }
@@ -48,11 +53,12 @@ class MyAppState extends State<HomePage> {
 //  }
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
-  void _onRefresh() async{
-    Provider.of<PostList>(context , listen: false).clearPostList();
+  void _onRefresh() async {
+    Provider.of<PostList>(context, listen: false).clearPostList();
 
-    Provider.of<PostList>(context , listen: false).getAndSetAllPost(5);
+    Provider.of<PostList>(context, listen: false).getAndSetAllPost(5);
     _refreshController.refreshCompleted();
+
   }
 
   void _onLoading() async{
@@ -65,6 +71,7 @@ class MyAppState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Row(
             children: <Widget>[
               IconButton(

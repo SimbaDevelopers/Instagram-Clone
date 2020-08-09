@@ -73,7 +73,10 @@ class _AddPageState extends State<AddPage> {
             'createdAt' : DateTime.now(),
             'postURL' : _url,
             'location': locationController.text.trim(),
-            'postType' : _postType
+            'postType' : _postType,
+            'likesCount' : 0,
+            'commentsCount' : 0,
+            'likesMap' : {}
           };
 
           databaseMethod.addNewPost(postMap);
