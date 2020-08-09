@@ -23,6 +23,9 @@ import 'Screens/UsernameScreen.dart';
 import 'Pages/Search.dart';
 import 'helper/helpfunction.dart';
 import 'package:instagram/provider/UserInfo.dart';
+import './Screens/LikesScreen.dart';
+import './Screens/CommentsScreen.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -115,6 +118,8 @@ class MyAppState extends State<MyApp> {
             EditProfile.routeName: (ctx) => EditProfile(),
             FollowersFollowingsScreen.routeName: (ctx) => FollowersFollowingsScreen(),
             CloseFriendsScreen.routeName: (ctx) => CloseFriendsScreen(),
+            LikesScreen.routeName: (ctx) => LikesScreen(),
+            CommentsScreen.routeName: (ctx) => CommentsScreen(),
           },
         ),
       );

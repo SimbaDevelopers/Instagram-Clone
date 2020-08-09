@@ -54,38 +54,27 @@ class _ProfilePageState extends State<ProfilePage> {
     List<Map> closeFriendsList = [];
 
      var docSnap = await Firestore.instance.collection('users').document(arguments['userId']).get();
-//     username         = docSnap.data['username'],
-//     name             = docSnap.data['userId'],
-//     profileImageURL  = docSnap.data['profileImageURL'],
-//     name             = docSnap.data['name'],
-//     bio              = docSnap.data['bio'],
-//     followingsCount  = docSnap.data['followingsCount'],
-//     followersCount   = docSnap.data['followersCount'],
-//     followersMap     = docSnap.data['followersMap'],
-//     followingsMap    = docSnap.data['followingsMap'],
-//     email            = docSnap.data['email'],
-//     postCount        = docSnap.data['postCount'],
 
-    followingsListSnapshot = await Firestore.instance.collection('users').document(arguments['userId']).collection('followingsList').getDocuments();
-    if(followingsListSnapshot.documents.length != 0){
-      for (DocumentSnapshot documentSnapshot in followingsListSnapshot.documents) {
-        followingsList.add(documentSnapshot.data);
-      }
-    }
-
-    followersListSnapshot = await Firestore.instance.collection('users').document(arguments['userId']).collection('followersList').getDocuments();
-    if(followersListSnapshot.documents.length != 0){
-      for (DocumentSnapshot documentSnapshot in followersListSnapshot.documents) {
-        followersList.add(documentSnapshot.data);
-      }
-    }
-
-    closeFriendsListSnapshot = await Firestore.instance.collection('users').document(arguments['userId']).collection('closeFriendsList').getDocuments();
-    if(closeFriendsListSnapshot.documents.length != 0){
-      for (DocumentSnapshot documentSnapshot in closeFriendsListSnapshot.documents) {
-        closeFriendsList.add(documentSnapshot.data);
-      }
-    }
+//    followingsListSnapshot = await Firestore.instance.collection('users').document(arguments['userId']).collection('followingsList').getDocuments();
+//    if(followingsListSnapshot.documents.length != 0){
+//      for (DocumentSnapshot documentSnapshot in followingsListSnapshot.documents) {
+//        followingsList.add(documentSnapshot.data);
+//      }
+//    }
+//
+//    followersListSnapshot = await Firestore.instance.collection('users').document(arguments['userId']).collection('followersList').getDocuments();
+//    if(followersListSnapshot.documents.length != 0){
+//      for (DocumentSnapshot documentSnapshot in followersListSnapshot.documents) {
+//        followersList.add(documentSnapshot.data);
+//      }
+//    }
+//
+//    closeFriendsListSnapshot = await Firestore.instance.collection('users').document(arguments['userId']).collection('closeFriendsList').getDocuments();
+//    if(closeFriendsListSnapshot.documents.length != 0){
+//      for (DocumentSnapshot documentSnapshot in closeFriendsListSnapshot.documents) {
+//        closeFriendsList.add(documentSnapshot.data);
+//      }
+//    }
 
     setState(() {
       searchedUser = UserModel.fromMap(snapshot: docSnap, followersList: followersList , followingsList:  followingsList , closeFriendsList: closeFriendsList);
@@ -120,6 +109,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         )) ??
         false;
+
+
   }
 
   RefreshController _refreshController =

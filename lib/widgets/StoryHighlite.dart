@@ -19,7 +19,7 @@ class _StoryHighightsState extends State<StoryHighights> {
             });
           },
           child: Padding(
-            padding: const EdgeInsets.only(top: 8, left: 18, right: 18),
+            padding: const EdgeInsets.only(top: 8, left: 18, right: 18 , bottom: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[

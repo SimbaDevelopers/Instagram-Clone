@@ -42,9 +42,16 @@ class DatabaseMethod {
   }
 
 
-  addNewPost(postMap) {
-    Firestore.instance
-        .collection("posts").add(postMap);
+  addNewPost(postMap) async {
+     final docRef = await Firestore.instance
+        .collection("posts")
+         .add(postMap);
 
+     Firestore.instance
+         .collection("posts")
+         .document(docRef.documentID)
+         .updateData({
+       'postId' : docRef.documentID,
+     });
   }
 }

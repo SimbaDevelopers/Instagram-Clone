@@ -48,7 +48,7 @@ class _PostHomeState extends State<PostHome> {
 
     getUserInfo();
     Future.delayed(Duration.zero).then((value) async {
-      await Provider.of<UserInformation>(context ,listen: false).getUserInfo();
+   //   await Provider.of<UserInformation>(context ,listen: false).getUserInfo();
 //     await Provider.of<PostList>(context ,listen: false).getAndSetAllPost(3).then((value) {
 //       setState(() {});
 //     });
@@ -65,10 +65,11 @@ class _PostHomeState extends State<PostHome> {
   Widget build(BuildContext context) {
    final postData =  Provider.of<PostList>(context);
    final postList = postData.postList;
+   final user= Provider.of<UserInformation>(context).user;
 
 
   // print(postList[0].userName);
-    return postList == null ?  Center(child: CircularProgressIndicator()) : ListView.builder(
+    return postList == null || user == null  ?  Center(child: CircularProgressIndicator()) : ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: postList == null ? 0 : postList.length,

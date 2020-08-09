@@ -1,11 +1,20 @@
+import 'dart:async';
+
+import 'package:animator/animator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/Screens/CommentsScreen.dart';
 
 import 'package:instagram/Screens/SplashScreen.dart';
 import 'package:instagram/model/Post.dart';
+import 'package:instagram/model/user.dart';
+import 'package:instagram/provider/PostList.dart';
+import 'package:instagram/provider/UserInfo.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart';
+import '../Screens/LikesScreen.dart';
 
 class PostWidget extends StatefulWidget {
   Post _documentSnapshot;
@@ -13,18 +22,15 @@ class PostWidget extends StatefulWidget {
 
   var time = '';
 
-
-  PostWidget(doc  , sendPost)  {
+  PostWidget(doc, sendPost) {
     _documentSnapshot = doc;
     this.sendPost = sendPost;
 
-   // print(_documentSnapshot.profileImageURL);
+    // print(_documentSnapshot.profileImageURL);
     // print(_documentSnapshot['createdAt'].toDate());
     time = displayTimeAgoFromTimestamp(
         _documentSnapshot.timeStamp.toDate().toString());
   }
-
-
 
   String displayTimeAgoFromTimestamp(String timestamp) {
     final year = int.parse(timestamp.substring(0, 4));
@@ -67,32 +73,6 @@ class PostWidget extends StatefulWidget {
     return timeAgo + ' ago';
   }
 
-  //  getTime(_documentSnapshot['createdAt']);
-//    DateTime timeStamp = _documentSnapshot['createdAt'] ;
-//
-//    var now = DateTime.now();
-//    var format = DateFormat('HH:mm a');
-//    var date = DateTime.fromMillisecondsSinceEpoch(timeStamp.millisecondsSinceEpoch * 1000);
-//    var diff = now.difference(date);
-//
-//
-//    if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
-//      time = format.format(date);
-//    } else if (diff.inDays > 0 && diff.inDays < 7) {
-//      if (diff.inDays == 1) {
-//        time = diff.inDays.toString() + ' DAY AGO';
-//      } else {
-//        time = diff.inDays.toString() + ' DAYS AGO';
-//      }
-//    } else {
-//      if (diff.inDays == 7) {
-//        time = (diff.inDays / 7).floor().toString() + ' WEEK AGO';
-//      } else {
-//
-//        time = (diff.inDays / 7).floor().toString() + ' WEEKS AGO';
-//      }
-//    }
-
   getTime(int timeStamp) {}
 
   @override
@@ -100,36 +80,67 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
-
   bool isLiked = false;
   bool isBookmarked = false;
   String profileImageURL;
   String username;
+  List<String> likerName = [];
+  UserModel currentUser;
+  bool showHeart = false;
+
+  TextEditingController commentController = TextEditingController();
 
   @override
   void initState() {
     getUsernameAndProfileURl();
+    currentUser = Provider.of<UserInformation>(context, listen: false).user;
+    setState(() {
+      isLiked =
+          widget._documentSnapshot.likesMap.containsKey(currentUser.userId);
+    });
+    likesThings();
+
     // TODO: implement initState
     super.initState();
   }
 
+  likesThings() async {
+    if (widget._documentSnapshot.likesMap == null) {
+      isLiked = false;
+    } else {
+      print('============================================');
+      int i = 0;
+      String likerId;
+      for (var k in widget._documentSnapshot.likesMap.keys) {
+        if (i >= 1) return;
+        likerId = k;
+        i++;
+
+        Firestore.instance
+            .collection('users')
+            .document(likerId)
+            .get()
+            .then((value) {
+          setState(() {
+            likerName.add(value['username']);
+          });
+        });
+      }
+    }
+  }
+
   getUsernameAndProfileURl() async {
-    Firestore.instance.collection('users').document(widget._documentSnapshot.userId).get().then((value) {
+    Firestore.instance
+        .collection('users')
+        .document(widget._documentSnapshot.userId)
+        .get()
+        .then((value) {
       setState(() {
         profileImageURL = value['profileImageURL'].toString();
         username = value['username'];
-
       });
-
-
     });
-
-//    print('ds["username"] : ' + ds['profileImageURL'].toString());
-//    print('usename : ' + ds['username'] );
-    setState(() {});
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -137,65 +148,140 @@ class _PostWidgetState extends State<PostWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child:
-                      CircleAvatar(
-                  backgroundImage: profileImageURL == null || profileImageURL == '' ? AssetImage('assets/images/profile.jpeg') : NetworkImage(profileImageURL),
-                  backgroundColor: Colors.grey,
-                  )
-           ),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                     username == null ? Text('') :Text(username),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5.0, top: 4),
-                      child: Text(
-                        widget._documentSnapshot.location,
-                        style: TextStyle(color: Colors.grey, fontSize: 11),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.more_vert),
-            ),
-          ],
+        ListTile(
+          leading: CircleAvatar(
+            backgroundImage: profileImageURL == null || profileImageURL == ''
+                ? AssetImage('assets/images/profile.jpeg')
+                : NetworkImage(profileImageURL),
+            backgroundColor: Colors.grey,
+          ),
+          title: username == null ? Text('') : Text(username),
+          subtitle: Text(
+            widget._documentSnapshot.location,
+            // style: TextStyle(color: Colors.grey, fontSize: 11),
+          ),
+          trailing: Icon(Icons.more_vert),
         ),
+
+//        Row(
+//          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//          children: <Widget>[
+//            Row(
+//              children: <Widget>[
+//                Padding(
+//                    padding: const EdgeInsets.all(8.0),
+//                    child: CircleAvatar(
+//                      backgroundImage:
+//                          profileImageURL == null || profileImageURL == ''
+//                              ? AssetImage('assets/images/profile.jpeg')
+//                              : NetworkImage(profileImageURL),
+//                      backgroundColor: Colors.grey,
+//                    )),
+//                Column(
+//                  crossAxisAlignment: CrossAxisAlignment.start,
+//                  children: <Widget>[
+//                    username == null ? Text('') : Text(username),
+//                    Padding(
+//                      padding: const EdgeInsets.only(left: 5.0, top: 4),
+//                      child: Text(
+//                        widget._documentSnapshot.location,
+//                        style: TextStyle(color: Colors.grey, fontSize: 11),
+//                      ),
+//                    ),
+//                  ],
+//                ),
+//              ],
+//            ),
+//            Padding(
+//              padding: const EdgeInsets.all(8.0),
+//              child: Icon(Icons.more_vert),
+//            ),
+//          ],
+//        ),
         Divider(
           color: Colors.white,
         ),
         InkWell(
-          onDoubleTap: () {
-            setState(() {
-              isLiked = !isLiked;
-            });
+          onDoubleTap: () async {
+            currentUser =
+                Provider.of<UserInformation>(context, listen: false).user;
+
+            if (isLiked) {
+              if (currentUser.userId == null) {
+                setState(() {
+                  isLiked = !isLiked;
+                });
+                return;
+              }
+              setState(() {
+                isLiked = !isLiked;
+              });
+              //Firestore.instance.collection('posts').document(widget._documentSnapshot.postId).get();
+              Provider.of<PostList>(context, listen: false).unlikePost(
+                  widget._documentSnapshot.postId,
+                  widget._documentSnapshot.likesCount,
+                  currentUser.userId,
+                  posterId: widget._documentSnapshot.userId);
+              likesThings();
+            } else {
+              if (currentUser.userId == null) {
+                setState(() {
+                  isLiked = !isLiked;
+                });
+                return;
+              }
+              setState(() {
+                isLiked = !isLiked;
+                showHeart = true;
+              });
+
+              Timer(Duration(milliseconds: 1000), () {
+                setState(() {
+                  showHeart = false;
+                });
+              });
+
+              Provider.of<PostList>(context, listen: false).likePost(
+                  widget._documentSnapshot.postId,
+                  widget._documentSnapshot.likesCount,
+                  currentUser.userId);
+              likesThings();
+            }
           },
-          child: Container(
-            width: double.infinity,
-            height: 300,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(widget._documentSnapshot.postURL),
-                fit: BoxFit.fill,
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                height: 300,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(widget._documentSnapshot.postURL),
+                    fit: BoxFit.fill,
+                  ),
+                  border: Border.all(
+                    color: Colors.white,
+                  ),
+                ),
               ),
-              border: Border.all(
-                color: Colors.white,
-              ),
-            ),
-//          child: Center(
-//            child: Text('Image/Video'),
-//          ),
+              showHeart
+                  ? Animator(
+                      duration: Duration(milliseconds: 1000),
+                      tween: Tween(begin: 0.8, end: 1.2),
+                      curve: Curves.easeInOutCubic,
+                      cycles: 0,
+                      builder: (ctx, anim, child) => Transform.scale(
+                        scale: anim.value,
+                        child: Icon(
+                          Icons.favorite,
+                          size: 80,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    )
+                  : Text(""),
+              //showHeart ? Icon(Icons.favorite , size: 80, color:  Colors.red,) : Text(""),
+            ],
           ),
         ),
         Row(
@@ -207,9 +293,44 @@ class _PostWidgetState extends State<PostWidget> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      setState(() {
-                        isLiked = !isLiked;
-                      });
+                      currentUser =
+                          Provider.of<UserInformation>(context, listen: false)
+                              .user;
+
+                      if (isLiked) {
+                        if (currentUser.userId == null) {
+                          setState(() {
+                            isLiked = !isLiked;
+                          });
+                          return;
+                        }
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                        //Firestore.instance.collection('posts').document(widget._documentSnapshot.postId).get();
+                        Provider.of<PostList>(context, listen: false)
+                            .unlikePost(
+                                widget._documentSnapshot.postId,
+                                widget._documentSnapshot.likesCount,
+                                currentUser.userId,
+                                posterId: widget._documentSnapshot.userId);
+                        likesThings();
+                      } else {
+                        if (currentUser.userId == null) {
+                          setState(() {
+                            isLiked = !isLiked;
+                          });
+                          return;
+                        }
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                        Provider.of<PostList>(context, listen: false).likePost(
+                            widget._documentSnapshot.postId,
+                            widget._documentSnapshot.likesCount,
+                            currentUser.userId);
+                        likesThings();
+                      }
                     },
                     child: isLiked
                         ? Icon(
@@ -241,7 +362,7 @@ class _PostWidgetState extends State<PostWidget> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
-                    onTap: (){
+                    onTap: () {
                       widget.sendPost(widget._documentSnapshot.postURL);
                     },
                     child: Icon(
@@ -279,56 +400,121 @@ class _PostWidgetState extends State<PostWidget> {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .pushNamed(LikesScreen.routeName, arguments: {
+                'postId': widget._documentSnapshot.postId,
+                'user': currentUser,
+              });
+            },
+            child: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.supervised_user_circle,
+                  size: 20,
+                ),
+                //Text('aiiuhdiahi'),
+                widget._documentSnapshot.likesCount == 0
+                    ? Text('  0 likes ')
+                    : likerName.isEmpty
+                        ? Flexible(
+                            child: Text(
+                            'safsdafasdfs',
+                            softWrap: true,
+                          ))
+                        : widget._documentSnapshot.likesCount == 1
+                            ? Flexible(
+                                child: Text(
+                                " Liked by ${likerName[0]}",
+                                softWrap: true,
+                              ))
+                            : widget._documentSnapshot.likesCount > 1
+                                ? Flexible(
+                                    child: Text(
+                                    " Liked by ${likerName[0]} and ${widget._documentSnapshot.likesCount - 1} others ",
+                                    softWrap: true,
+                                  ))
+                                : Text('')
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 13, top: 6),
           child: Row(
             children: <Widget>[
-              Icon(
-                Icons.supervised_user_circle,
-                size: 20,
+              Flexible(
+                child: Text(
+                  widget._documentSnapshot.caption,
+                  softWrap: true,
+                  style: TextStyle(color: Colors.grey),
+                ),
               ),
-              Text('  Liked by Tejas and 8,768 others'),
             ],
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 13, top: 6),
-          child: Text(
-            widget._documentSnapshot.caption,
-            style: TextStyle(color: Colors.grey),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 13, top: 6),
-          child: Text(
-            'View all 200 comments ',
-            style: TextStyle(color: Colors.grey),
-          ),
+          child: widget._documentSnapshot.commentsCount == 0
+              ? Text(
+                  'No comments',
+                  style: TextStyle(color: Colors.grey),
+                )
+              : GestureDetector(
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushNamed(CommentsScreen.routeName, arguments: {
+                      'postId': widget._documentSnapshot.postId,
+                      'user': currentUser,
+                      'ownerId': widget._documentSnapshot.userId,
+                    });
+                  },
+                  child: Text(
+                    'View all ${widget._documentSnapshot.commentsCount} comments ',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
         ),
         Row(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 5, bottom: 8),
-              child: Icon(
-                Icons.supervised_user_circle,
-                size: 35,
-              ),
-            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
+                  controller: commentController,
                   decoration: InputDecoration(
-                      labelText: 'Add a comment....',
-                      labelStyle: TextStyle(
-                        color: Colors.white,
+                    prefixIcon: Icon(
+                      Icons.supervised_user_circle,
+                      size: 30,
+                    ),
+                    hintText: 'Add a comment....',
+                    labelStyle: TextStyle(
+                      color: Colors.white,
+                    ),
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        if (commentController.text != '') {
+                          Provider.of<PostList>(context, listen: false)
+                              .addComment(widget._documentSnapshot.postId,
+                                  currentUser.userId, commentController.text);
+                          commentController.text = '';
+                        }
+                      },
+                      child: Icon(
+                        Icons.send,
+                        size: 25,
                       ),
-                      border: InputBorder.none
-                      // focusedBorder: OutlineInputBorder(
-                      //   borderSide: BorderSide(color: Colors.grey, width: 0.0),
-                      // ),
-                      // enabledBorder: OutlineInputBorder(
-                      //   borderSide: BorderSide(color: Colors.grey, width: 0),
-                      // ),
-                      ),
+                    ),
+                    border: InputBorder.none,
+
+                    // focusedBorder: OutlineInputBorder(
+                    //   borderSide: BorderSide(color: Colors.grey, width: 0.0),
+                    // ),
+                    // enabledBorder: OutlineInputBorder(
+                    //   borderSide: BorderSide(color: Colors.grey, width: 0),
+                    // ),
+                  ),
                 ),
               ),
             ),

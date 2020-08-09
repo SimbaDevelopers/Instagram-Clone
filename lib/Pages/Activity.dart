@@ -1,64 +1,69 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/model/user.dart';
+import 'package:instagram/provider/UserInfo.dart';
+import 'package:provider/provider.dart';
+import '../widgets/ActivityListTile.dart';
 
-import 'Add.dart';
-import 'Home.dart';
-import 'Profile.dart';
-import 'Search.dart';
 import 'bottom_nav.dart';
 
 void main() => runApp(ActivityPage());
 
-class ActivityPage extends StatelessWidget {
+class ActivityPage extends StatefulWidget {
   static const routeName = '/ActivityPage';
+
+  @override
+  _ActivityPageState createState() => _ActivityPageState();
+}
+
+class _ActivityPageState extends State<ActivityPage> {
+
+  UserModel currentUser;
+  var stream;
+  @override
+  void initState() {
+    // TODO: implement initState
+    currentUser = Provider.of<UserInformation>(context , listen:  false ).user;
+    stream = Firestore.instance.collection('feeds').document(currentUser.userId).collection('feedItems').orderBy('timeStamp' , descending: true).limit(20).snapshots();
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
         appBar: AppBar(
           title: Text('Activity'),
+        ),
+        body: currentUser== null ? LinearProgressIndicator() : StreamBuilder(
+          stream: stream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) return Center( child: CircularProgressIndicator(),);
+//            List<Map> activityList = [];
+//            snapshot.data.documents.forEach((doc) {
+//              print(snapshot.data.documents[0].data);
+//              activityList.add(doc.data);
+//            });
+            return ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (ctx, index) {
 
+                  return ActivityListTile(
+                      activityMap: snapshot.data.documents[index].data, user: currentUser , key: UniqueKey(),);
+                });
+          },
         ),
         bottomNavigationBar: BottomNavigation('ActivityPage' , context),
-//        bottomNavigationBar:Padding(
-//          padding: const EdgeInsets.symmetric(horizontal: 10 , vertical: 5),
-//          child: Row(
-//            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//            children: <Widget>[
-//
-//              GestureDetector(
-//                onTap: (){
-//                  Navigator.of(context).pushNamed(HomePage.routeName);
-//                },
-//                child: Icon(Icons.home , size: 35, color: Colors.white,),
-//              ),
-//              GestureDetector(
-//                onTap: (){
-//                  Navigator.of(context).pushNamed(SearchPage.routeName);
-//                },
-//                child: Icon(Icons.search, size: 35, color: Colors.grey,),
-//              ),
-//              GestureDetector(
-//                onTap: (){
-//                  Navigator.of(context).pushNamed(AddPage.routeName);
-//                },
-//                child: Icon(Icons.add, size: 35,color: Colors.grey,),
-//              ),
-//              GestureDetector(
-//                onTap: (){
-//                  Navigator.of(context).pushNamed(ActivityPage.routeName);
-//                },
-//                child: Icon(Icons.favorite_border, size: 35,color: Colors.grey,),
-//              ),
-//              GestureDetector(
-//                onTap: (){
-//                  Navigator.of(context).pushNamed(ProfilePage.routeName);
-//                },
-//                child: Icon(Icons.supervised_user_circle, size: 35,color: Colors.grey,),
-//              ),
-//
-//            ],
-//          ),
-//        ),
-    //  ),
     );
+
+
+  }
+
+  @override
+  void dispose() {
+    stream =null;
+    // TODO: implement dispose
+    super.dispose();
   }
 }
+
+

@@ -72,7 +72,8 @@ class BottomNavigationState extends State<BottomNavigation> {
               if(!widget.isActivityPage)
                 Navigator.of(widget.context).pushNamed(ActivityPage.routeName);
             },
-            child: Icon(Icons.favorite_border, size: 35,color:widget.isActivityPage ? Colors.white : Colors.grey,),
+            child: widget.isActivityPage ? Icon(Icons.favorite , color: Colors.white, size: 35,) :
+            Icon(Icons.favorite_border, size: 33,color: Colors.grey,),
           ),
           GestureDetector(
             onTap: (){
