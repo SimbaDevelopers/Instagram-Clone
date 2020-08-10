@@ -30,6 +30,7 @@ class _LikesTileState extends State<LikesTile> {
 
   getUserInfo() async {
     await Firestore.instance.collection('users').document(likerId).get().then((value) {
+      if(this.mounted)
       setState(() {
         profileImageURL = value['profileImageURL'];
         username = value['username'];

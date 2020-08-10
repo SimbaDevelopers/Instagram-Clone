@@ -14,39 +14,40 @@ class _LikesScreenState extends State<LikesScreen> {
   UserModel currentUser;
   String postId;
   List<String> likersList = [];
-  var likesCount;
-
-  getLikersList( postId , currentUser) async {
-    await Firestore.instance.collection('posts').document(postId).get().then((value) {
-      likesCount = value['likesCount'];
-      var likesMap = value['likesMap'];
-      likesMap.keys.forEach((k) {
-        likersList.add(k);
-      });
-      setState(() {
-
-      });
-    });
-
-  }
+  var stream;
 
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context).settings.arguments as Map;
     postId = arguments['postId'];
     currentUser = arguments['user'];
-    if(likersList.isEmpty )
-        getLikersList(postId , currentUser);
+    stream = Firestore.instance.collection('posts').document(postId).snapshots();
     return Scaffold(
       appBar: AppBar(
         title: Text('Likes'),
       ),
-      body: likersList.isEmpty || arguments == null || currentUser == null ? Center(child : CircularProgressIndicator())
-          : ListView.builder( itemCount : likersList == null ? 0 : likersList.length ,
-          itemBuilder: (ctx , index){
-            print(likersList);
-            return LikesTile(likerId: likersList[index], user: currentUser,) ;
-          } ) ,
+      body: StreamBuilder(
+        stream: stream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) return Center( child: CircularProgressIndicator(),);
+          snapshot.data['likesMap'].keys.forEach((k) {
+            likersList.add(k);
+          });
+          return ListView.builder(
+              itemCount: snapshot.data['likesMap'].length,
+              itemBuilder: (ctx, index) {
+                return LikesTile(likerId: likersList[index], user: currentUser,);
+              });
+        },
+      ),
     );
+
   }
+  @override
+  void dispose() {
+    stream =null;
+    // TODO: implement dispose
+    super.dispose();
+  }
+
 }

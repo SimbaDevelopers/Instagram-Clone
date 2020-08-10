@@ -25,9 +25,6 @@ class PostWidget extends StatefulWidget {
   PostWidget(doc, sendPost) {
     _documentSnapshot = doc;
     this.sendPost = sendPost;
-
-    // print(_documentSnapshot.profileImageURL);
-    // print(_documentSnapshot['createdAt'].toDate());
     time = displayTimeAgoFromTimestamp(
         _documentSnapshot.timeStamp.toDate().toString());
   }
@@ -87,6 +84,7 @@ class _PostWidgetState extends State<PostWidget> {
   List<String> likerName = [];
   UserModel currentUser;
   bool showHeart = false;
+  var likeStream;
 
   TextEditingController commentController = TextEditingController();
 
@@ -98,36 +96,37 @@ class _PostWidgetState extends State<PostWidget> {
       isLiked =
           widget._documentSnapshot.likesMap.containsKey(currentUser.userId);
     });
-    likesThings();
+//    likesThings();
 
+    likeStream = Firestore.instance.collection('posts').document(widget._documentSnapshot.postId).snapshots();
     // TODO: implement initState
     super.initState();
   }
 
-  likesThings() async {
-    if (widget._documentSnapshot.likesMap == null) {
-      isLiked = false;
-    } else {
-      print('============================================');
-      int i = 0;
-      String likerId;
-      for (var k in widget._documentSnapshot.likesMap.keys) {
-        if (i >= 1) return;
-        likerId = k;
-        i++;
-
-        Firestore.instance
-            .collection('users')
-            .document(likerId)
-            .get()
-            .then((value) {
-          setState(() {
-            likerName.add(value['username']);
-          });
-        });
-      }
-    }
-  }
+//  likesThings() async {
+//    if (widget._documentSnapshot.likesMap == null) {
+//      isLiked = false;
+//    } else {
+//      print('============================================');
+//      int i = 0;
+//      String likerId;
+//      for (var k in widget._documentSnapshot.likesMap.keys) {
+//        if (i >= 1) return;
+//        likerId = k;
+//        i++;
+//
+//        Firestore.instance
+//            .collection('users')
+//            .document(likerId)
+//            .get()
+//            .then((value) {
+//          setState(() {
+//            likerName.add(value['username']);
+//          });
+//        });
+//      }
+//    }
+//  }
 
   getUsernameAndProfileURl() async {
     Firestore.instance
@@ -222,7 +221,7 @@ class _PostWidgetState extends State<PostWidget> {
                   widget._documentSnapshot.likesCount,
                   currentUser.userId,
                   posterId: widget._documentSnapshot.userId);
-              likesThings();
+//              likesThings();
             } else {
               if (currentUser.userId == null) {
                 setState(() {
@@ -235,7 +234,7 @@ class _PostWidgetState extends State<PostWidget> {
                 showHeart = true;
               });
 
-              Timer(Duration(milliseconds: 1000), () {
+              Timer(Duration(milliseconds: 1300), () {
                 setState(() {
                   showHeart = false;
                 });
@@ -245,7 +244,7 @@ class _PostWidgetState extends State<PostWidget> {
                   widget._documentSnapshot.postId,
                   widget._documentSnapshot.likesCount,
                   currentUser.userId);
-              likesThings();
+
             }
           },
           child: Stack(
@@ -266,15 +265,15 @@ class _PostWidgetState extends State<PostWidget> {
               ),
               showHeart
                   ? Animator(
-                      duration: Duration(milliseconds: 1000),
-                      tween: Tween(begin: 0.8, end: 1.2),
+                      duration: Duration(milliseconds: 900),
+                      tween: Tween(begin: 1.0, end: 1.4),
                       curve: Curves.easeInOutCubic,
                       cycles: 0,
                       builder: (ctx, anim, child) => Transform.scale(
                         scale: anim.value,
                         child: Icon(
                           Icons.favorite,
-                          size: 80,
+                          size: 60,
                           color: Colors.redAccent,
                         ),
                       ),
@@ -314,7 +313,6 @@ class _PostWidgetState extends State<PostWidget> {
                                 widget._documentSnapshot.likesCount,
                                 currentUser.userId,
                                 posterId: widget._documentSnapshot.userId);
-                        likesThings();
                       } else {
                         if (currentUser.userId == null) {
                           setState(() {
@@ -329,7 +327,7 @@ class _PostWidgetState extends State<PostWidget> {
                             widget._documentSnapshot.postId,
                             widget._documentSnapshot.likesCount,
                             currentUser.userId);
-                        likesThings();
+
                       }
                     },
                     child: isLiked
@@ -415,27 +413,44 @@ class _PostWidgetState extends State<PostWidget> {
                   size: 20,
                 ),
                 //Text('aiiuhdiahi'),
-                widget._documentSnapshot.likesCount == 0
-                    ? Text('  0 likes ')
-                    : likerName.isEmpty
-                        ? Flexible(
-                            child: Text(
-                            'safsdafasdfs',
-                            softWrap: true,
-                          ))
-                        : widget._documentSnapshot.likesCount == 1
-                            ? Flexible(
-                                child: Text(
-                                " Liked by ${likerName[0]}",
-                                softWrap: true,
-                              ))
-                            : widget._documentSnapshot.likesCount > 1
-                                ? Flexible(
-                                    child: Text(
-                                    " Liked by ${likerName[0]} and ${widget._documentSnapshot.likesCount - 1} others ",
-                                    softWrap: true,
-                                  ))
-                                : Text('')
+                StreamBuilder(
+                  stream: likeStream,
+                  builder: (context , snapshot) {
+                    if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) return Text("");
+                    List<String> likersList =[] ;
+                    int i = 0;
+                    snapshot.data['likesMap'].keys.forEach((k) {
+                      likersList.add(k);
+                    });
+
+                    return Text(" ${snapshot.data['likesCount']} Likes");
+
+
+//                    Text("Liked By ${snapshot.data['likesCount']} and  ${snapshot.data['likesCount']-1 <=  0 ? "" : snapshot.data['likesCount']-1 } others")
+//                      Text(" Liked by ${snapshot.data['likesMap'].length} users");
+                  },
+                ),
+//                widget._documentSnapshot.likesCount == 0
+//                    ? Text('  0 likes ')
+//                    : likerName.isEmpty
+//                        ? Flexible(
+//                            child: Text(
+//                            'safsdafasdfs',
+//                            softWrap: true,
+//                          ))
+//                        : widget._documentSnapshot.likesCount == 1
+//                            ? Flexible(
+//                                child: Text(
+//                                " Liked by ${likerName[0]}",
+//                                softWrap: true,
+//                              ))
+//                            : widget._documentSnapshot.likesCount > 1
+//                                ? Flexible(
+//                                    child: Text(
+//                                    " Liked by ${likerName[0]} and ${widget._documentSnapshot.likesCount - 1} others ",
+//                                    softWrap: true,
+//                                  ))
+//                                : Text('')
               ],
             ),
           ),
@@ -528,29 +543,15 @@ class _PostWidgetState extends State<PostWidget> {
           ),
         ),
         Divider(),
-//        widget.isLast ? Column(
-//          children: <Widget>[
-//            Divider(
-//              height: 20,
-//              color: Colors.white,
-//            ),
-//            SizedBox(height: 20,),
-//            InkWell(
-//              onTap: widget.refreshPosts,
-//              child: Column(
-//                crossAxisAlignment: CrossAxisAlignment.center,
-//                children: <Widget>[
-//                  Icon(Icons.refresh ,
-//                    size: 40,),
-//                  Text('refresh Posts')
-//
-//                ],
-//              ),
-//            ),
-//            SizedBox(height: 20,),
-//          ],
-//        ) : Container(),
       ],
     );
   }
+
+  @override
+  void dispose() {
+    likeStream =null;
+    // TODO: implement dispose
+    super.dispose();
+  }
+
 }
