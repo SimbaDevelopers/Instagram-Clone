@@ -38,11 +38,6 @@ class _ActivityPageState extends State<ActivityPage> {
           stream: stream,
           builder: (context, snapshot) {
             if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) return Center( child: CircularProgressIndicator(),);
-//            List<Map> activityList = [];
-//            snapshot.data.documents.forEach((doc) {
-//              print(snapshot.data.documents[0].data);
-//              activityList.add(doc.data);
-//            });
             return ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (ctx, index) {
