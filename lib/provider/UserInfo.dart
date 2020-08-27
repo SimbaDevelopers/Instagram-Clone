@@ -46,11 +46,11 @@ class UserInformation with ChangeNotifier{
       docSnapshot =  await Firestore.instance.collection('users').document(userId).get();
       if(docSnapshot.data != null)
       {
-        print(docSnapshot['followersCount'].toString());
+     //   print(docSnapshot['followersCount'].toString());
         user = UserModel.fromMap(snapshot: docSnapshot , followersList: followersList , followingsList:  followingsList , closeFriendsList: closeFriendsList);
       }
       else{
-        print("docSnapshot is null");
+      //  print("docSnapshot is null");
       }
       notifyListeners();
 
@@ -105,7 +105,7 @@ class UserInformation with ChangeNotifier{
 
     }catch(error)
     {
-      print('error : => ' + error.toString());
+     // print('error : => ' + error.toString());
     }
   }
 
@@ -145,7 +145,7 @@ class UserInformation with ChangeNotifier{
 
     }catch(error)
     {
-      print('error : => ' + error.toString());
+    //  print('error : => ' + error.toString());
     }
   }
 
@@ -179,7 +179,7 @@ class UserInformation with ChangeNotifier{
       notifyListeners();
     }
     catch(err){
-      print("Error in addClose Friend : " + err);
+   //   print("Error in addClose Friend : " + err);
     }
   }
 

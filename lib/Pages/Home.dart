@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/Chats/all_users.dart';
+import 'package:instagram/Chats/database_chat.dart';
 import 'package:instagram/provider/PostList.dart';
 import 'package:instagram/provider/UserInfo.dart';
+import 'package:instagram/widgets/CameraPage.dart';
+import 'package:instagram/widgets/CameraView.dart';
 import 'package:instagram/widgets/PostHomeScreen.dart';
 import 'package:instagram/widgets/storybar.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +22,11 @@ class HomePage extends StatefulWidget {
   }
 }
 
-class MyAppState extends State<HomePage> {
+class MyAppState extends State<HomePage> with WidgetsBindingObserver{
+  final controller = PageController(initialPage: 1);
+
   AuthMethod authMethod = new AuthMethod();
+  DataBaseService dataBaseService = new DataBaseService();
   void initState() {
     Future.delayed(Duration.zero).then((value) async {
       await Provider.of<UserInformation>(context ,listen: false).getUserInfo().then((value)  async{
@@ -29,8 +35,21 @@ class MyAppState extends State<HomePage> {
 
     });
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state){
+    if(state == AppLifecycleState.resumed){
+      Map<String, Object> userInfoMap = {
+        "isOnline": "1",
+      };                  dataBaseService.isTyping(userInfoMap);
+    }else{
+      Map<String, Object> userInfoMap = {
+        "isOnline": "0",
+      };                  dataBaseService.isTyping(userInfoMap);
+    }
+  }
 
   File _image;
   Future getImage(bool isCamera) async {
@@ -77,7 +96,12 @@ class MyAppState extends State<HomePage> {
               IconButton(
                 icon: Icon(Icons.camera_alt),
                 onPressed: () {
-                  getImage(true);
+                 // getImage(true);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>CameraView(controller: this.controller)
+                    ),
+                  );
                 },
               ),
               SizedBox(

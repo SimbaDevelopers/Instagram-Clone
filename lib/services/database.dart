@@ -54,4 +54,5 @@ class DatabaseMethod {
        'postId' : docRef.documentID,
      });
   }
+
 }

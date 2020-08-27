@@ -11,6 +11,7 @@ import 'package:instagram/model/Post.dart';
 import 'package:instagram/model/user.dart';
 import 'package:instagram/provider/PostList.dart';
 import 'package:instagram/provider/UserInfo.dart';
+import 'package:instagram/services/database.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart';
@@ -85,7 +86,6 @@ class _PostWidgetState extends State<PostWidget> {
   UserModel currentUser;
   bool showHeart = false;
   var likeStream;
-
   TextEditingController commentController = TextEditingController();
 
   @override
@@ -93,16 +93,14 @@ class _PostWidgetState extends State<PostWidget> {
     getUsernameAndProfileURl();
     currentUser = Provider.of<UserInformation>(context, listen: false).user;
     setState(() {
-      isLiked =
-          widget._documentSnapshot.likesMap.containsKey(currentUser.userId);
+      isLiked = widget._documentSnapshot.likesMap.containsKey(currentUser.userId);
+
     });
 //    likesThings();
-
     likeStream = Firestore.instance.collection('posts').document(widget._documentSnapshot.postId).snapshots();
     // TODO: implement initState
     super.initState();
   }
-
 //  likesThings() async {
 //    if (widget._documentSnapshot.likesMap == null) {
 //      isLiked = false;
@@ -293,8 +291,7 @@ class _PostWidgetState extends State<PostWidget> {
                   child: GestureDetector(
                     onTap: () {
                       currentUser =
-                          Provider.of<UserInformation>(context, listen: false)
-                              .user;
+                          Provider.of<UserInformation>(context, listen: false).user;
 
                       if (isLiked) {
                         if (currentUser.userId == null) {
@@ -375,9 +372,41 @@ class _PostWidgetState extends State<PostWidget> {
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 onTap: () {
-                  setState(() {
-                    isBookmarked = !isBookmarked;
-                  });
+
+                  currentUser =
+                      Provider.of<UserInformation>(context, listen: false).user;
+
+                  if (isBookmarked) {
+                    if (currentUser.userId == null) {
+                      setState(() {
+                        isBookmarked = !isBookmarked;
+                      });
+                      return;
+                    }
+                    setState(() {
+                      isBookmarked = !isBookmarked;
+                    });
+                    Firestore.instance.collection('posts').document(widget._documentSnapshot.postId).get();
+                    Provider.of<PostList>(context, listen: false)
+                        .unsave(
+                        widget._documentSnapshot.postId,
+                        currentUser.userId,
+                        widget._documentSnapshot.postURL);
+                  } else {
+                    if (currentUser.userId == null) {
+                      setState(() {
+                        isBookmarked = !isBookmarked;
+                      });
+                      return;
+                    }
+                    setState(() {
+                      isBookmarked = !isBookmarked;
+                    });
+                    Provider.of<PostList>(context, listen: false).saved(
+                        widget._documentSnapshot.postId,
+                        currentUser.userId,
+                        widget._documentSnapshot.postURL);
+                  }
                 },
                 child: isBookmarked
                     ? Icon(
