@@ -46,6 +46,13 @@ dependencies:
 
   pull_to_refresh: ^1.6.1
   animator: ^2.0.1
+  flutter_instagram_stories: ^0.1.4+2
+  page_transition: ^1.1.6
+  video_trimmer: ^0.2.7
+  flutter_ffmpeg: ^0.2.10
+  video_player: ^0.10.12+2
+  file_picker: ^1.13.3
+  audioplayers: ^0.16.0
 
 
 

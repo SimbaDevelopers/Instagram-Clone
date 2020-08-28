@@ -11,8 +11,7 @@ import 'package:provider/provider.dart';
 import './SendPostBottomSheet.dart';
 
 class PostHome extends StatefulWidget {
-  Function sendPost;
-  PostHome({this.sendPost});
+
   @override
   _PostHomeState createState() => _PostHomeState();
 }
@@ -69,7 +68,7 @@ class _PostHomeState extends State<PostHome> {
 
 
   // print(postList[0].userName);
-    return postList == null || user == null  ?  Center(child: CircularProgressIndicator()) : ListView.builder(
+    return postList == null || user == null  ?  LinearProgressIndicator(): ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: postList == null ? 0 : postList.length,

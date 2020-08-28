@@ -1,12 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:instagram/Screens/AddStory.dart';
 import 'package:instagram/Screens/FollowersFollowingsScreen.dart';
 import 'package:instagram/Screens/MainScreen.dart';
+import 'package:instagram/Screens/StoryScreen.dart';
+import 'package:instagram/Screens/TrimmerView.dart';
 import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
 import 'package:instagram/provider/PostList.dart';
 import 'package:instagram/widgets/EditProfile.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import 'Pages/Activity.dart';
@@ -95,11 +99,29 @@ class MyAppState extends State<MyApp> {
             if (routeSettings.name == ProfilePage.routeName)
               return PageRouteBuilder(settings : routeSettings ,  pageBuilder:(_, __, ___) => ProfilePage() , transitionDuration: Duration(seconds: 0),);
 
-
-
             if (routeSettings.name == ActivityPage.routeName)
               return PageRouteBuilder(settings : routeSettings,pageBuilder:(_, __, ___) => ActivityPage() , transitionDuration: Duration(seconds: 0),);
 
+            if (routeSettings.name == StoryScreen.routeName + 'Right Swipe')
+            return PageTransition(
+              child: StoryScreen(),
+              type: PageTransitionType.leftToRight,
+              settings: routeSettings,
+            );
+
+            if (routeSettings.name == StoryScreen.routeName + 'Left Swipe')
+              return PageTransition(
+                child: StoryScreen(),
+                type: PageTransitionType.rightToLeft,
+                settings: routeSettings,
+              );
+
+            if (routeSettings.name == StoryScreen.routeName )
+              return PageTransition(
+                child: StoryScreen(),
+                type: PageTransitionType.fade,
+                settings: routeSettings,
+              );
             return null;
           },
 
@@ -120,6 +142,9 @@ class MyAppState extends State<MyApp> {
             CloseFriendsScreen.routeName: (ctx) => CloseFriendsScreen(),
             LikesScreen.routeName: (ctx) => LikesScreen(),
             CommentsScreen.routeName: (ctx) => CommentsScreen(),
+            AddStory.routeName: (ctx) => AddStory(),
+            TrimmerView.routeName: (ctx) => TrimmerView(),
+//            StoryScreen.routeName: (ctx) => StoryScreen(key: UniqueKey(),),
           },
         ),
       );
