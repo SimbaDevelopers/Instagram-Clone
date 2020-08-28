@@ -52,7 +52,7 @@ class _SignUpState extends State<SignUpScreen> {
 
         String _userId;
          FirebaseAuth.instance.currentUser().then((user) {
-          print('uid' + user.uid);
+       //   print('uid' + user.uid);
           _userId = user.uid;
 
           Map<String, Object> userInfoMap = {
@@ -72,6 +72,7 @@ class _SignUpState extends State<SignUpScreen> {
             'closeFriendsMap'  : {},
             'whoAddedUinCFsMap': {},
             'closeFriendsCount': 0,
+            'Onvideocall': 0,
           };
 
           HelperFunction.saveuserIDinSharedPreferecne(_userId);

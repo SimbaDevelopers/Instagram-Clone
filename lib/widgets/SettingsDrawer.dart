@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:instagram/Settings/Saved.dart';
 //import 'file:///D:/Personal/Personal/Instagram-clone/Instagram-Clone/lib/Settings/SettingScreen.dart';
 import '../Settings/SettingScreen.dart';
 import 'package:instagram/model/user.dart';
@@ -98,7 +99,10 @@ class SettingsDrawer extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (ctx) => Saved()));
+              },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 7),
                 child: Row(

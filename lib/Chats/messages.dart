@@ -3,13 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Chats/image_bubble.dart';
+import 'package:instagram/Chats/title_bubble.dart';
 
 import 'message_bubble.dart';
 
 class Messages extends StatelessWidget {
-Messages(this.onlyuser,this.userimg);
+Messages(this.onlyuser,this.userimg,this.username);
   final String onlyuser;
-  final String userimg;
+  final String userimg,username;
   @override
   Widget build(BuildContext context) {
     return  FutureBuilder(
@@ -27,11 +28,11 @@ Messages(this.onlyuser,this.userimg);
           .snapshots(),
       builder: (ctx,chatSnapshot){
 
-        if(chatSnapshot.connectionState==ConnectionState.waiting){
-
-          return Center(child: CircularProgressIndicator(),
-          );
-        }
+//        if(chatSnapshot.connectionState==ConnectionState.waiting){
+//
+//          return Center(child: CircularProgressIndicator(),
+//          );
+//        }
         final documents=chatSnapshot.data.documents;
         return ListView.builder(
             reverse: true,
@@ -39,24 +40,22 @@ Messages(this.onlyuser,this.userimg);
             itemBuilder: (ctx,index) {
               if(documents[index]['senderId']==onlyuser && documents[index]['toUserId']== futureSnapshot.data.uid){
 
-                   if(documents[index]['text']!=null) {
-                  return  MessageBubble(
-                        documents[index]['text'],
-                        documents[index]['senderId'] == futureSnapshot.data.uid,
-                        userimg);
-                  }else{
-                    return ImageBubble(context, documents[index]['imgurl'],documents[index]['senderId'] == futureSnapshot.data.uid,userimg);
-                  }
-
-//              }else if(documents[index]['toUserId']==futureSnapshot.data.uid){
-//
-//              return MessageBubble(
-//              documents[index]['text'],
-//              documents[index]['senderId'] == futureSnapshot.data.uid,
-//              );
-//
+                if(documents[index]['tovideocall']==null) {
+                 if (documents[index]['text'] != null) {
+                  return MessageBubble(
+                    documents[index]['text'],
+                    documents[index]['senderId'] == futureSnapshot.data.uid,
+                     userimg,);
+                       } else {
+                       return ImageBubble(context, documents[index]['imgurl'],
+                        documents[index]['senderId'] == futureSnapshot.data.uid, userimg);
+                         }
+                       }else{
+                      return TitleBubble(documents[index]['senderId'] == futureSnapshot.data.uid,username);
+                        }
               }
               else if(documents[index]['toUserId']==onlyuser && documents[index]['senderId']== futureSnapshot.data.uid){
+              if(documents[index]['tovideocall']==null) {
                if(documents[index]['text']!=null) {
                  return MessageBubble(
                      documents[index]['text'],
@@ -65,6 +64,9 @@ Messages(this.onlyuser,this.userimg);
                }else{
                  return ImageBubble(context, documents[index]['imgurl'],documents[index]['senderId'] == futureSnapshot.data.uid,userimg);
                }
+    }else{
+      return TitleBubble(documents[index]['senderId'] == futureSnapshot.data.uid,username);
+    }
               }else{
                 return Column();
               }

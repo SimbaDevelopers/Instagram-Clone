@@ -88,7 +88,23 @@ class PostList with ChangeNotifier {
       notifyListeners();
     });
   }
+saved(String postId,String currentuserid,String posturl)async{
+  Firestore.instance
+      .collection('users')
+      .document(currentuserid)
+      .collection("saved").document(postId)
+      .setData({
+    "postId" : postId,
+    "imgurl": posturl,
+  });
 
+}
+unsave(String postId,String currentuserid,String posturl)async{
+  Firestore.instance.collection('users').document(currentuserid).collection("saved").document(postId).updateData({
+    'imgurl': "",
+    'postId':"",
+  });
+}
   likePost(String postId, int likesCount, String likerId) async {
     Firestore.instance
         .collection('posts')

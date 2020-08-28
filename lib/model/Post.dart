@@ -12,7 +12,7 @@ class Post{
   String postType;
   int likesCount;
   int commentsCount;
-  Map likesMap;
+  Map likesMap,saved;
 
   Post({
     this.caption,
@@ -25,6 +25,7 @@ class Post{
     this.likesCount,
     this.commentsCount,
     this.likesMap,
+    this.saved,
 });
 
   static Post fromMap(snapshot) {
@@ -38,6 +39,7 @@ class Post{
       likesCount: snapshot['likesCount'],
       commentsCount: snapshot['commentsCount'],
       likesMap: snapshot['likesMap'],
+      saved: snapshot['saved'],
       postId: snapshot['postId'],
     );
   }

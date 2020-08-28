@@ -6,14 +6,6 @@ class DataBaseService {
 
 
   getChatMessages(String senderId, String receiverId) async{
-    print("qauwednjksd");
-  //  return await Firestore.instance.collection("chat_room")
-//            .where('senderId', isEqualTo: receiverId)
-//        .where('toUserId', isEqualTo: senderId)
-      //  .orderBy('timestamp', descending: true)
-      //  .getDocuments();
-      //  .snapshots();
-
         QuerySnapshot messagestoQuerySnapshot = await Firestore.instance.collection("chat_room")
         .where('senderId', isEqualTo: receiverId)
         .where('toUserId', isEqualTo: senderId)
@@ -21,8 +13,7 @@ class DataBaseService {
         .getDocuments();
 
         messagestoQuerySnapshot.documents.forEach((doc) {
-      print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"+doc.documentID);
-      print(doc.documentID);
+   //   print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"+doc.documentID);
    //   messages.add(Message.fromDoc(doc));
     });
   }
@@ -39,6 +30,16 @@ class DataBaseService {
     });
 
   }
+  isTyping(usermap){
+    FirebaseAuth.instance.currentUser().then((user) {
+      Firestore.instance
+          .collection("users")
+          .document(user.uid)
+          .updateData(usermap);
+    });
+  }
+
+
 }
 
 
