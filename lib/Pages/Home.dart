@@ -1,10 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/Chats/all_users.dart';
+import 'package:instagram/Screens/AddStory.dart';
+import 'package:instagram/model/chatuser.dart';
+import 'package:instagram/model/user.dart';
+
 import 'package:instagram/Chats/database_chat.dart';
+
 import 'package:instagram/provider/PostList.dart';
 import 'package:instagram/provider/UserInfo.dart';
 import 'package:instagram/widgets/CameraPage.dart';
@@ -51,18 +58,9 @@ class MyAppState extends State<HomePage> with WidgetsBindingObserver{
     }
   }
 
-  File _image;
-  Future getImage(bool isCamera) async {
-    File image;
-    if (isCamera) {
-      image = await ImagePicker.pickImage(source: ImageSource.camera);
-    } else {
-      image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    }
-    setState(() {
-      _image = image;
-    });
-  }
+
+
+
 
 //  refreshPage() async {
 //    Provider.of<PostList>(context , listen: false).clearPostList();
@@ -77,6 +75,8 @@ class MyAppState extends State<HomePage> with WidgetsBindingObserver{
 
     Provider.of<PostList>(context, listen: false).getAndSetAllPost(5);
     _refreshController.refreshCompleted();
+    setState(() {
+    });
 
   }
 
@@ -96,12 +96,17 @@ class MyAppState extends State<HomePage> with WidgetsBindingObserver{
               IconButton(
                 icon: Icon(Icons.camera_alt),
                 onPressed: () {
+
+                //  getImage(false);
+                  Navigator.of(context).pushNamed( AddStory.routeName);
+
                  // getImage(true);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>CameraView(controller: this.controller)
-                    ),
-                  );
+//                   Navigator.push(
+//                     context,
+//                     MaterialPageRoute(builder: (context) =>CameraView(controller: this.controller)
+//                     ),
+//                   );
+
                 },
               ),
               SizedBox(
@@ -166,15 +171,16 @@ class MyAppState extends State<HomePage> with WidgetsBindingObserver{
             physics: ScrollPhysics(),
             child: Column(
               children: <Widget>[
+              //  isUploading ? LinearProgressIndicator() : SizedBox(),
                 StoryBar(),
                 Divider(
                   color: Colors.white,
                 ),
                 PostHome(),
-                Divider(
-                  height: 20,
-                  color: Colors.white,
-                ),
+//                Divider(
+//                  height: 20,
+//                  color: Colors.white,
+//                ),
               ],
             ),
           ),
@@ -182,61 +188,6 @@ class MyAppState extends State<HomePage> with WidgetsBindingObserver{
 
 
         bottomNavigationBar: BottomNavigation('HomePage' , context),
-//        bottomNavigationBar: BottomNavigation('HomePage' , context),
-//        bottomNavigationBar: Padding(
-//          padding: const EdgeInsets.symmetric(horizontal: 10 , vertical: 5),
-//          child: Row(
-//            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//            children: <Widget>[
-//
-//              GestureDetector(
-//
-//                  child: Icon(Icons.home , size: 35, color: Colors.white,),
-//              ),
-//              GestureDetector(
-//                onTap: (){
-//                    Navigator.of(context).pushNamed(SearchPage.routeName);
-//                },
-//                child: Icon(Icons.search, size: 35, color: Colors.grey,),
-//              ),
-//              GestureDetector(
-//                onTap: (){
-//                  Navigator.of(context).pushNamed(AddPage.routeName);
-//                },
-//                child: Icon(Icons.add, size: 35,color: Colors.grey,),
-//              ),
-//              GestureDetector(
-//                onTap: (){
-//                  Navigator.of(context).pushNamed(ActivityPage.routeName);
-//
-//                },
-//                child: Icon(Icons.favorite_border, size: 35,color: Colors.grey,),
-//              ),
-//              GestureDetector(
-//                onTap: (){
-//                  Navigator.of(context).pushNamed(ProfilePage.routeName);
-//                },
-//                child: Icon(Icons.supervised_user_circle, size: 35,color: Colors.grey,),
-//              ),
-//
-//            ],
-//          ),
-//        ),
-   //   ),
     );
   }
 }
-
-
-
-// ListView.builder(
-//                   physics: NeverScrollableScrollPhysics(),
-//                   shrinkWrap: true,
-//                   itemCount: 60,
-//                   itemBuilder: (context, index) {
-//                     return Text('Some text');
-//                   })
-
-
-
-//this is for testing.....

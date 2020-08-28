@@ -1,6 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/Screens/StoryScreen.dart';
 import 'package:instagram/helper/constants.dart';
 import 'package:instagram/helper/helpfunction.dart';
+import 'package:flutter_instagram_stories/flutter_instagram_stories.dart';
+import 'package:instagram/model/user.dart';
+import 'package:instagram/provider/UserInfo.dart';
+import 'package:provider/provider.dart';
 
 class StoryBar extends StatefulWidget {
 
@@ -11,71 +19,178 @@ class StoryBar extends StatefulWidget {
 
 class _StoryBarState extends State<StoryBar> {
 
-  String _profileImage;
+   UserModel currentUser;
 
-  getUserInfo() async {
+  List<String> followingsUserId = [];
+  var currentUsersStory;
+  bool currentUsersStoryExist;
 
-     HelperFunction.getProfileImageUrlSharedPreference().then((value) {
+  storyExist() async {
 
-       setState(() {
-         _profileImage = value;
-       });
-     });
+     currentUsersStory = await Firestore.instance.collection('stories').document(currentUser.userId).get();
+    currentUsersStoryExist = currentUsersStory.exists;
+    return currentUsersStoryExist;
   }
 
-  @override
-  void initState() {
-    getUserInfo();
-    // TODO: implement initState
-    super.initState();
+
+  getStories() async {
+    followingsUserId.clear();
+    currentUser.followingsMap.forEach((k, v) {
+      if(k != currentUser.userId)
+       followingsUserId.add(k);
+    });
+
+    return  await Firestore.instance.collection('stories')
+    //    .where("userId" , whereIn:  followingsUserId) //followingsUserId = List of Followings Users
+        .where("timeStamp", isGreaterThanOrEqualTo: new DateTime.now().subtract(new Duration(days: 1)))
+        .orderBy('timeStamp' , descending: true)
+        .getDocuments();
+    
+
+    return null;
+
   }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-      width: double.infinity,
-      height: 100,
-      child: Row(
+  //  currentUser = Provider.of<UserInformation>(context , listen:  false) .user;
+    return
+      Consumer<UserInformation>(
+            builder: (context , userInfo , child) {
+              if(userInfo.user == null)
+                 return SizedBox();
+              currentUser = userInfo.user;
+             return
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          SizedBox(
-            width: 10,
+
+          GestureDetector(
+            onTap: () async  {
+              await storyExist();
+              if(currentUsersStoryExist){
+                List<Map> stories = [];
+                stories.add(currentUsersStory.data);
+                Navigator.of(context).pushNamed(StoryScreen.routeName , arguments: {
+                  'storyMap' : stories[0],
+                  'storyIndex' : 0,
+                  'stories' : stories,
+                  'maxIndex' : stories.length
+                });
+              }
+            },
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    border: Border.all(
+                        width: 2,
+                        color: Colors.blue
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(40),
+                    child: Image(
+                      image: NetworkImage(currentUser.profileImageURL),
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Text(currentUser.username),
+              ],
+            ),
           ),
-          CircleAvatar(
-            radius: 30.0,
-            backgroundImage: _profileImage == null || _profileImage== '' ?  AssetImage('assets/images/profile.jpeg') :NetworkImage(_profileImage), //AssetImage('assets/images/profile.jpeg'),
-            backgroundColor: Colors.transparent,
+           Flexible(
+            child:
+                  Column(
+                  children: <Widget>[
+                    SizedBox( // Horizontal ListView
+                      height: 100,
+                      child:FutureBuilder(
+                        future: getStories(),
+                        builder: (context , snapshot){
+                          if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) return Center( child: CircularProgressIndicator(),);
+
+                          List<Map> stories = [];
+                          stories.clear();
+                          for(DocumentSnapshot documentSnapshot in snapshot.data.documents){
+                            if(currentUser.followingsMap.containsKey(documentSnapshot.data["userId"])  && currentUser.userId != documentSnapshot.data["userId"] )
+                              stories.add(documentSnapshot.data);
+                          }
+                          return ListView.builder(
+                            itemCount: stories.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              //       print(snapshot.data.documents[index].data['File'].length.toString());
+
+//                              if(snapshot.data.documents[index].data['userId'] == currentUser.userId)
+//                                return SizedBox();
+                              return GestureDetector(
+                                onTap: (){
+                                  Navigator.of(context).pushNamed(StoryScreen.routeName , arguments: {
+                                    'storyMap' : stories[index],
+                                    'storyIndex' : index,
+                                    'stories' : stories,
+                                    'maxIndex' : stories.length
+                                  });
+                                },
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      margin: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(40),
+                                        border: Border.all(
+                                            width: 2,
+                                            color: Colors.blue
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(40),
+                                        child: Image(
+                                          image: NetworkImage(stories[index]['profileImageURL']),
+                                          width: 60,
+                                          height: 60,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(stories[index]['username']),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
           ),
-          SizedBox(
-            width: 10,
-          ),
-          CircleAvatar(
-            backgroundColor: Colors.brown.shade50,
-            radius: 30.0,
-            child: Text('TA'),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          CircleAvatar(
-            radius: 30.0,
-            backgroundColor: Colors.brown.shade50,
-            child: Text('TA'),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          CircleAvatar(
-            radius: 30.0,
-            backgroundColor: Colors.brown.shade50,
-            child: Text('TA'),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          CircleAvatar(
-            radius: 30.0,
-            backgroundColor: Colors.brown.shade50,
-            child: Text('TA'),
+        ],
+      )  ;
+             },
+          );
+  }
+
+  _backFromStoriesAlert() {
+    showDialog(
+      context: context,
+      child: SimpleDialog(
+        title: Text(
+          "User have looked stories and closed them.",
+          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18.0),
+        ),
+        children: <Widget>[
+          SimpleDialogOption(
+            child: Text("Dismiss"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
         ],
       ),
