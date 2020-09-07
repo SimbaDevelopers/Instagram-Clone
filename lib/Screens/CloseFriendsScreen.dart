@@ -14,8 +14,6 @@ class _CloseFriendsScreenState extends State<CloseFriendsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var  arguments = ModalRoute.of(context).settings.arguments as Map;
-    UserModel user = arguments['user'];
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -36,8 +34,8 @@ class _CloseFriendsScreenState extends State<CloseFriendsScreen> {
         ),
         body:  TabBarView(
           children: <Widget>[
-            CloseFriendsTab( user : user),
-            CloseFriendsSearchTab(user : user),
+            CloseFriendsTab(),
+            CloseFriendsSearchTab(),
           ],
         ),
       ),

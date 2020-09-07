@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:instagram/model/user.dart';
 import 'package:instagram/provider/UserInfo.dart';
+import 'package:instagram/widgets/seenByList.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -20,6 +21,7 @@ class StoryScreen extends StatefulWidget {
 
 class _StoryScreenState extends State<StoryScreen>
     with SingleTickerProviderStateMixin {
+  var arguments;
   var docSnap;
   var storyIndex;
   var stories;
@@ -36,12 +38,11 @@ class _StoryScreenState extends State<StoryScreen>
   VideoPlayerController _videoPlayerController;
 
   Future<Null> setAnimationController() {
-    if (k && !(currentUser==null) ) {
+    if (k && !(currentUser == null)) {
       setState(() {
-
-        addToStoryList(timeStamp , storyUrl , storyType , imageOrVideo , duration) {
-          String timestamp =
-          timeStamp.toDate().toString();
+        addToStoryList(timeStamp, storyUrl, storyType, imageOrVideo, duration,
+            fileSnapIndex, storyId) {
+          String timestamp = timeStamp.toDate().toString();
           final year = int.parse(timestamp.substring(0, 4));
           final month = int.parse(timestamp.substring(5, 7));
           final day = int.parse(timestamp.substring(8, 10));
@@ -65,23 +66,42 @@ class _StoryScreenState extends State<StoryScreen>
               timeUnit = 'h';
             }
             timeAgo = timeValue.toString() + timeUnit;
-        //    print(storyList[i]);
+            //    print(storyList[i]);
             storyList.add({
               'timeAgo': timeAgo,
               'storyURL': storyUrl,
-              "storyType" : storyType,
-              'imageOrVideo' : imageOrVideo,
-              'duration' : duration
+              "storyType": storyType,
+              'imageOrVideo': imageOrVideo,
+              'duration': duration,
+              'fileSnapIndex': fileSnapIndex,
+              'timeStamp': timeStamp,
+              'storyId': storyId
             });
           }
         }
 
         for (int i = 0; i < docSnap['File'].length; i++) {
-          if(docSnap['File'][i]['storyType'] == "CloseFriends" && currentUser.whoAddedUinCFsMap.containsKey(docSnap['userId']) ){
-            addToStoryList(docSnap['File'][i]['timeStamp'] , docSnap['File'][i]['storyURL'], docSnap['File'][i]['storyType'], docSnap['File'][i]['imageOrVideo'] ,docSnap['File'][i]['duration']);
-          }
-          else if(docSnap['File'][i]['storyType'] == "story"){
-            addToStoryList(docSnap['File'][i]['timeStamp'] ,docSnap['File'][i]['storyURL'], docSnap['File'][i]['storyType'],  docSnap['File'][i]['imageOrVideo'],docSnap['File'][i]['duration']);
+          if (docSnap['File'][i]['storyType'] == "CloseFriends" &&
+              currentUser.whoAddedUinCFsMap.containsKey(docSnap['userId'])) {
+            addToStoryList(
+              docSnap['File'][i]['timeStamp'],
+              docSnap['File'][i]['storyURL'],
+              docSnap['File'][i]['storyType'],
+              docSnap['File'][i]['imageOrVideo'],
+              docSnap['File'][i]['duration'],
+              i,
+              docSnap['File'][i]['storyId'],
+            );
+          } else if (docSnap['File'][i]['storyType'] == "story") {
+            addToStoryList(
+              docSnap['File'][i]['timeStamp'],
+              docSnap['File'][i]['storyURL'],
+              docSnap['File'][i]['storyType'],
+              docSnap['File'][i]['imageOrVideo'],
+              docSnap['File'][i]['duration'],
+              i,
+              docSnap['File'][i]['storyId'],
+            );
           }
         }
       });
@@ -108,7 +128,7 @@ class _StoryScreenState extends State<StoryScreen>
                       'storyMap': stories[storyIndex + 1],
                       'storyIndex': storyIndex + 1,
                       'stories': stories,
-                      'maxIndex': maxIndex
+                      'maxIndex': maxIndex,
                     });
               } else {
                 Navigator.of(context).pop();
@@ -124,7 +144,7 @@ class _StoryScreenState extends State<StoryScreen>
   void initState() {
     _pageController = PageController();
     _animationController = AnimationController(vsync: this);
-  //  currentUser = Provider.of<UserInformation>(context , listen: false).user;
+    //  currentUser = Provider.of<UserInformation>(context , listen: false).user;
     super.initState();
   }
 
@@ -132,212 +152,297 @@ class _StoryScreenState extends State<StoryScreen>
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    final arguments = ModalRoute.of(context).settings.arguments as Map;
+    arguments = ModalRoute.of(context).settings.arguments as Map;
     docSnap = arguments['storyMap'];
     storyIndex = arguments['storyIndex'];
     stories = arguments['stories'];
     maxIndex = arguments['maxIndex'];
-    if(currentUser== null){
-        currentUser = Provider.of<UserInformation>(context , listen: true).user;
+    if (currentUser == null) {
+      currentUser = Provider.of<UserInformation>(context, listen: true).user;
     }
 
     return Scaffold(
-        backgroundColor: Colors.black,
-        body: /*Consumer <UserInformation>(
+      backgroundColor: Colors.black,
+      body:
+          /*Consumer <UserInformation>(
           builder: (context , userInfo , child){
             if(userInfo.user == null)
               return SizedBox();
             currentUser = userInfo.user;
 
-            return */FutureBuilder(
-            future: setAnimationController(),
-            builder: (context, snap) {
-              return GestureDetector(
-                onHorizontalDragUpdate: (details) {
-                  if (details.delta.dx > 0) {
-                    // Right Swipe
-                    if (storyIndex > 0)
-                      Navigator.pushReplacementNamed(
-                          context, StoryScreen.routeName + 'Right Swipe',
-                          arguments: {
-                            'storyMap': stories[storyIndex - 1],
-                            'storyIndex': storyIndex - 1,
-                            'stories': stories,
-                            'maxIndex': maxIndex
-                          });
-                  } else if (details.delta.dx < 0) {
-                    //Left Swipe
-                    if (storyIndex < maxIndex - 1)
-                      Navigator.pushReplacementNamed(
-                          context, StoryScreen.routeName + 'Left Swipe',
-                          arguments: {
-                            'storyMap': stories[storyIndex + 1],
-                            'storyIndex': storyIndex + 1,
-                            'stories': stories,
-                            'maxIndex': maxIndex
-                          });
-                    else
-                      Navigator.of(context).pop();
-                  }
-                },
-                onLongPressEnd: (details) {
-                  if (isStoped) {
-                    setState(() {
-                      _animationController.forward();
-                      isStoped = !isStoped;
-                    });
-                  } else {
-                    setState(() {
-                      _animationController.stop();
-                      isStoped = !isStoped;
-                    });
-                  }
-                },
-                onTapDown: (details) => _onTapDown(details, docSnap),
-                child: Stack(
-                  children: <Widget>[
-                    PageView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      controller: _pageController,
-                      itemCount: storyList.length,
-                      itemBuilder: (context, i) {
-                        switch(storyList[i]['imageOrVideo']){
-                          case "Image" :
-                            return CachedNetworkImage(
-                                placeholder: (context, url) {
-                                  return Center(child: Text('dasdsadsadasd'));
-                                },
-                                imageUrl: storyList[i]['storyURL'],
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) {
-                                  if (downloadProgress.progress != null) {
-                                    print(downloadProgress.progress);
-                                    downloadProgress.progress < 1
-                                        ? _animationController.stop()
-                                        : _animationController.forward();
-                                  }
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                                  );
-                                });
-                          case 'Video' :
-                            if(videoLoading){
-                              return Center(child:  CircularProgressIndicator(),);
-                            }
-                            if(_videoPlayerController !=null  && _videoPlayerController.value.initialized){
-                              return FittedBox(
-                                fit: BoxFit.cover,
-                                child: SizedBox(
-                                  width: _videoPlayerController.value.size.width,
-                                  height: _videoPlayerController.value.size.height,
-                                  child: VideoPlayer(_videoPlayerController),
+            return */
+          FutureBuilder(
+        future: setAnimationController(),
+        builder: (context, snap) {
+          return GestureDetector(
+            onHorizontalDragUpdate: (details) {
+              if (details.delta.dx > 0) {
+                // Right Swipe
+                if (storyIndex > 0)
+                  Navigator.pushReplacementNamed(
+                      context, StoryScreen.routeName + 'Right Swipe',
+                      arguments: {
+                        'storyMap': stories[storyIndex - 1],
+                        'storyIndex': storyIndex - 1,
+                        'stories': stories,
+                        'maxIndex': maxIndex,
+                      });
+              } else if (details.delta.dx < 0) {
+                //Left Swipe
+                if (storyIndex < maxIndex - 1)
+                  Navigator.pushReplacementNamed(
+                      context, StoryScreen.routeName + 'Left Swipe',
+                      arguments: {
+                        'storyMap': stories[storyIndex + 1],
+                        'storyIndex': storyIndex + 1,
+                        'stories': stories,
+                        'maxIndex': maxIndex,
+                      });
+                else
+                  Navigator.of(context).pop();
+              }
+            },
+            onLongPressEnd: (details) {
+              if (isStoped) {
+                setState(() {
+                  _animationController.forward();
+                  isStoped = !isStoped;
+                });
+              } else {
+                setState(() {
+                  _animationController.stop();
+                  isStoped = !isStoped;
+                });
+              }
+            },
+            onTapDown: (details) => _onTapDown(details, docSnap),
+            child: Stack(
+              children: <Widget>[
+                PageView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: _pageController,
+                  itemCount: storyList.length,
+                  itemBuilder: (context, i) {
+                    switch (storyList[i]['imageOrVideo']) {
+                      case "Image":
+                        return CachedNetworkImage(
+                            placeholder: (context, url) {
+                              return Center(child: Text('dasdsadsadasd'));
+                            },
+                            imageUrl: storyList[i]['storyURL'],
+                            fit: BoxFit.cover,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) {
+                              if (downloadProgress.progress != null) {
+                                print(downloadProgress.progress);
+                                downloadProgress.progress < 1
+                                    ? _animationController.stop()
+                                    : _animationController.forward();
+                              }
+                              return Center(
+                                child: CircularProgressIndicator(
+                                    value: downloadProgress.progress),
+                              );
+                            });
+                      case 'Video':
+                        if (videoLoading) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (_videoPlayerController != null &&
+                            _videoPlayerController.value.initialized) {
+                          return FittedBox(
+                            fit: BoxFit.cover,
+                            child: SizedBox(
+                              width: _videoPlayerController.value.size.width,
+                              height: _videoPlayerController.value.size.height,
+                              child: VideoPlayer(_videoPlayerController),
+                            ),
+                          );
+                        }
+                    }
+                    return SizedBox.shrink();
+                  },
+                ),
+                Positioned(
+                  top: 20,
+                  left: 10,
+                  right: 10,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: storyList
+                            .asMap()
+                            .map((i, e) {
+                              return MapEntry(
+                                i,
+                                AnimatedBar(
+                                  animationController: _animationController,
+                                  position: i,
+                                  currentIndex: _currentIndex,
                                 ),
                               );
-                            }
-
-                        }
-                        return SizedBox.shrink();
-
-                      },
-                    ),
-                    Positioned(
-                      top: 20,
-                      left: 10,
-                      right: 10,
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            children: storyList
-                                .asMap()
-                                .map((i, e) {
-                                  return MapEntry(
-                                    i,
-                                    AnimatedBar(
-                                      animationController: _animationController,
-                                      position: i,
-                                      currentIndex: _currentIndex,
-                                    ),
-                                  );
-                                })
-                                .values
-                                .toList(),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 1.5, vertical: 10),
-                            child: Row(
-                              children: <Widget>[
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.grey[300],
-                                  backgroundImage: CachedNetworkImageProvider(
-                                      docSnap['profileImageURL']),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  docSnap['username'] + "  ",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    storyList[_currentIndex]['timeAgo'] != null
-                                        ? storyList[_currentIndex]['timeAgo']
-                                        : "",
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize:
-                                            15 /*, fontWeight: FontWeight.w600*/),
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 30,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () => Navigator.of(context).pop(),
-                                )
-                              ],
+                            })
+                            .values
+                            .toList(),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 1.5, vertical: 10),
+                        child: Row(
+                          children: <Widget>[
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.grey[300],
+                              backgroundImage: CachedNetworkImageProvider(
+                                  docSnap['profileImageURL']),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    storyList[_currentIndex]['storyType'] == "CloseFriends" ? Positioned(
-                      bottom: 10 ,
-                      left: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.stars , size: 30,  color: Colors.white,),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Close Friends //<-only for Testing",
-                            style: TextStyle(
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              docSnap['username'] + "  ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            Expanded(
+                              child: Text(
+                                storyList[_currentIndex]['timeAgo'] != null
+                                    ? storyList[_currentIndex]['timeAgo']
+                                    : "",
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize:
+                                        15 /*, fontWeight: FontWeight.w600*/),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                size: 30,
                                 color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                    ) : SizedBox(),
-                  ],
+                              ),
+                              onPressed: () => Navigator.of(context).pop(),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              );
-            },
-          ),
+                storyList[_currentIndex]['storyType'] == "CloseFriends"
+                    ? Positioned(
+                        bottom: 10,
+                        left: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.stars,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Close Friends //<-only for Testing",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      )
+                    : SizedBox(),
+                currentUser.userId != docSnap['userId']
+                    ? Positioned(
+                  bottom: 20,
+                        left: 0,
+                        right: 0,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Center(
+                            child: IconButton(
+                              tooltip: 'SeenBy',
+                              icon: Icon(
+                                Icons.remove_red_eye,
+                                color: Colors.blue,
+                              ),
+                              iconSize: 30,
+                              onPressed: () {
+                                if (!isStoped) {
+                                  setState(() {
+                                    _animationController.stop();
+                                    isStoped = !isStoped;
+                                    if (_videoPlayerController != null)
+                                      _videoPlayerController.pause();
+                                  });
+                                }
+                                popSeenBy();
+
+                                if (!isStoped) {
+                                  setState(() {
+                                    _animationController.forward();
+                                    isStoped = !isStoped;
+                                    if (_videoPlayerController != null)
+                                      _videoPlayerController.play();
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      )
+                    : SizedBox(),
+                currentUser.userId == docSnap['userId']
+                    ? Positioned(
+                  bottom: 20,
+                  left: 15,
+                  right: 15,
+                  child: TextField(
+
+                    decoration: new InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white, width: 1.0),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white, width: 1.0),
+                          borderRadius: BorderRadius.circular(50)
+
+                      ),
+                      suffixIcon: Icon(Icons.send , color: Colors.white, size: 30,) ,
+                      hintText: ' send message ',
+                    ),
+                  ),
+
+                )
+                    :SizedBox()
+
+              ],
+            ),
+          );
+        },
+      ),
 
 //      ),
-        );
+    );
+  }
+
+  popSeenBy() {
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return seenByBottomSheet(
+            storyId: storyList[_currentIndex]['storyId'],
+            userId: docSnap['userId'],
+          );
+        });
   }
 
   _onTapDown(TapDownDetails details, _onTapDown) {
@@ -366,7 +471,7 @@ class _StoryScreenState extends State<StoryScreen>
                   'storyMap': stories[storyIndex + 1],
                   'storyIndex': storyIndex + 1,
                   'stories': stories,
-                  'maxIndex': maxIndex
+                  'maxIndex': maxIndex,
                 });
           else
             Navigator.of(context).pop();
@@ -377,13 +482,13 @@ class _StoryScreenState extends State<StoryScreen>
       if (isStoped) {
         setState(() {
           _animationController.forward();
-          _videoPlayerController.play();
+          if (_videoPlayerController != null) _videoPlayerController.play();
           isStoped = !isStoped;
         });
       } else {
         setState(() {
           _animationController.stop();
-          _videoPlayerController.pause();
+          if (_videoPlayerController != null) _videoPlayerController.pause();
           isStoped = !isStoped;
         });
       }
@@ -393,26 +498,44 @@ class _StoryScreenState extends State<StoryScreen>
   void _loadStory({story, bool animateToPage = true}) {
     _animationController.stop();
     _animationController.reset();
-    if(_videoPlayerController!=null)
-    _videoPlayerController.pause();
+    if (_videoPlayerController != null) _videoPlayerController.pause();
 
-    if(story['imageOrVideo'] == 'Image') {
+    if (story['imageOrVideo'] == 'Image') {
       _animationController.duration = Duration(seconds: 5);
       _animationController.forward();
-    }
-    else {
+
+      Firestore.instance
+          .collection('stories')
+          .document(docSnap['userId'])
+          .collection('userStories')
+          .document(story['storyId'])
+          .updateData({'seenBy.${currentUser.userId}': true});
+
+      if (_currentIndex == storyList.length - 1) {
+        var snap = Firestore.instance
+            .collection('stories')
+            .document(docSnap['userId']);
+        snap.updateData({'seenBy.${currentUser.userId}': true});
+      }
+    } else {
       setState(() {
         videoLoading = true;
       });
-    _animationController.duration = Duration(milliseconds: story['duration'].toInt());
-       _videoPlayerController = VideoPlayerController.network(story['storyURL'])..initialize().then((value) => setState((){
-        videoLoading = false;
-         _animationController.forward();
-       }))..play();
+      _animationController.duration =
+          Duration(milliseconds: story['duration'].toInt());
+      _videoPlayerController = VideoPlayerController.network(story['storyURL'])
+        ..initialize().then((value) => setState(() {
+              videoLoading = false;
+              _animationController.forward();
+              if (_currentIndex == storyList.length) {
+                var snap = Firestore.instance
+                    .collection('stories')
+                    .document(docSnap['userId']);
+                snap.updateData({'seenBy.${currentUser.userId}': true});
+              }
+            }))
+        ..play();
     }
-
-
-
     if (animateToPage) {
       _pageController.animateToPage(_currentIndex,
           duration: const Duration(milliseconds: 1), curve: Curves.easeInOut);
@@ -424,7 +547,7 @@ class _StoryScreenState extends State<StoryScreen>
     // TODO: implement dispose
     _pageController.dispose();
     _animationController.dispose();
-    _videoPlayerController.dispose();
+    if (_videoPlayerController != null) _videoPlayerController.dispose();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     super.dispose();
   }
@@ -477,13 +600,8 @@ class AnimatedBar extends StatelessWidget {
     return Container(
       height: 2,
       width: width,
-      decoration: BoxDecoration(
-          color: color,
-//        border: Border.all(
-//          color: Colors.black26,
-//          width: 0.8,
-//        ),
-          borderRadius: BorderRadius.circular(3.0)),
+      decoration:
+          BoxDecoration(color: color, borderRadius: BorderRadius.circular(3.0)),
     );
   }
 }

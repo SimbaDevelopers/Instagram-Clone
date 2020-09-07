@@ -139,9 +139,9 @@ class SettingsDrawer extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: (){
-                        user.userId == null ? print('User == null') :
+
                         Navigator.of(context).pushNamed(CloseFriendsScreen.routeName , arguments: {
-                          'user' : user
+
                         });
                       },
                       child: Expanded(

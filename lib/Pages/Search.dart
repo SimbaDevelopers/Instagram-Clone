@@ -222,7 +222,7 @@ class Searchtile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      docSnap.data['name'],
+                      docSnap.data['name'] != null ? docSnap.data['name'] : "",
                     )
                   ],
                 ),

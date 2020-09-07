@@ -32,6 +32,14 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class BottomNavigationState extends State<BottomNavigation> {
+
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return  Padding(
@@ -86,50 +94,5 @@ class BottomNavigationState extends State<BottomNavigation> {
         ],
       ),
     );
-
-//      Scaffold(
-//      body: Text('tejas'),
-//      tabs[_currentIndex],
-//      bottomNavigationBar: BottomNavigationBar(
-//        currentIndex: _currentIndex,
-//        type: BottomNavigationBarType.fixed,
-//        selectedItemColor: Colors.white,
-//        backgroundColor: Colors.black,
-//        iconSize: 30,
-//        items: [
-//          BottomNavigationBarItem(
-//              icon: Icon(
-//                Icons.home,
-//              ),
-//              title: Text(''),
-//              backgroundColor: Colors.white),
-//          BottomNavigationBarItem(
-//              icon: Icon(Icons.search),
-//              title: Text(''),
-//              backgroundColor: Colors.white),
-//          BottomNavigationBarItem(
-//              icon: Icon(Icons.add),
-//              title: Text(''),
-//              backgroundColor: Colors.white),
-//          BottomNavigationBarItem(
-//              icon: Icon(Icons.favorite),
-//              title: Text(''),
-//              backgroundColor: Colors.white),
-//          BottomNavigationBarItem(
-//              icon: Icon(Icons.supervised_user_circle),
-//              title: Text(''),
-//              backgroundColor: Colors.white),
-//        ],
-//        onTap: (index) {
-//          setState(() {
-//            if (index == 2) {
-//              Navigator.of(context).pushNamed(AddPage.routeName);
-//            } else {
-//              _currentIndex = index;
-//            }
-//          });
-//        },
-//      ),
- //   );
   }
 }

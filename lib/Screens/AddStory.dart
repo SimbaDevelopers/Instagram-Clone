@@ -161,37 +161,56 @@ class _AddStoryState extends State<AddStory> {
 
     await FirebaseAuth.instance.currentUser().then((user) async {
       final docSnap = await Firestore.instance.collection('stories').document(user.uid).get();
+      final timeStamp = DateTime.now();
+      var _uniqueKey = UniqueKey().toString();
       if(docSnap.exists){
-        final timeStamp = DateTime.now();
+
         Firestore.instance.collection('stories').document(user.uid).updateData({
           'timeStamp' : timeStamp,
+          'seenBy' : {},
           "File": FieldValue.arrayUnion([
             {
               'timeStamp': timeStamp,
               'storyURL' : _url,
               'storyType'  : type,
               'imageOrVideo' : _selectedType,
-              'duration' : _selectedType == "Video" && duration != null ? duration : 0
+              'duration' : _selectedType == "Video" && duration != null ? duration : 0,
+              'storyId' : _uniqueKey
+
             }
           ])});
       }else{
         await Firestore.instance.collection('stories').document(user.uid).setData({
-          'timeStamp' : DateTime.now(),
+          'timeStamp' : timeStamp,
           'File' : [
             {
-              'timeStamp': DateTime.now(),
+              'timeStamp':  timeStamp,
               'storyURL' : _url,
               'storyType'  : type,
               'imageOrVideo' : _selectedType,
-              'duration' : _selectedType == "Video" && duration != null ? duration : 0
+              'duration' : _selectedType == "Video" && duration != null ? duration : 0,
+              'storyId' : _uniqueKey
             }
           ],
           'profileImageURL' : currentUser.profileImageURL,
           'username' : currentUser.username,
           'userId' : user.uid,
+          'seenBy' : {}
         });
       }
+      await Firestore.instance.collection('stories').document(user.uid).collection('userStories').document(_uniqueKey).setData({
+        'seenBy' : {},
+        'timeStamp':  timeStamp,
+        'storyURL' : _url,
+        'storyType'  : type,
+        'imageOrVideo' : _selectedType,
+        'duration' : _selectedType == "Video" && duration != null ? duration : 0,
+        'storyId' : _uniqueKey
+      });
+
     });
+
+
     setState(() {
       isUploading = false;
       Navigator.of(context).pop();
@@ -311,5 +330,7 @@ class _AddStoryState extends State<AddStory> {
     super.dispose();
   }
 }
+
+
 
 
