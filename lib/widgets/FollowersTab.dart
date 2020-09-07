@@ -5,10 +5,8 @@ import 'package:instagram/model/user.dart';
 import './FollowerListTile.dart';
 
 class FollowersTab extends StatefulWidget {
-  final UserModel user;
-
-  FollowersTab({this.user});
-
+  String userId;
+  FollowersTab({ this.userId});
   @override
   _FollowersTabState createState() => _FollowersTabState();
 }
@@ -25,28 +23,24 @@ class _FollowersTabState extends State<FollowersTab>
     return StreamBuilder(
       stream: Firestore.instance
           .collection('users')
-          .document(widget.user.userId)
-          .collection('followersList')
+          .document(widget.userId)
           .snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return CircularProgressIndicator();
-        List<Map> followersList = [];
-        snapshot.data.documents.forEach((doc) {
-          followersList.add(doc.data);
+        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+        List<String> followersList = [];
+        snapshot.data['followersMap'].forEach((k,v) {
+          if(snapshot.data['userId'] != k)
+          followersList.add(k);
         });
         return ListView.builder(
             itemCount: followersList.length,
             itemBuilder: (ctx, index) {
               return FollowerListTile(
-                followersId: followersList[index]['userId'],
-                userId: widget.user.userId,
+                followersId: followersList[index],
+                userId: widget.userId,
               );
             });
       },
     );
-//      widget.user.followersCount == 0 ? Container() : ListView.builder(itemCount : widget.user.followersCount,
-//        itemBuilder: (ctx , index){
-//        return FollowerListTile(followersId: widget.user.followerList[index]['userId'], userId: widget.user.userId,);
-//        });
   }
 }

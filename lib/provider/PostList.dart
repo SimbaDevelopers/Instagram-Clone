@@ -134,36 +134,38 @@ unsave(String postId,String currentuserid,String posturl)async{
   }
 
   unlikePost(String postId, int likesCount, String likerId, {posterId}) async {
-    Firestore.instance.collection('posts').document(postId).updateData({
-      'likesMap.${likerId}': FieldValue.delete(),
-    });
-    final post = _postList.firstWhere((post) => post.postId == postId);
-    post.likesCount--;
-    Firestore.instance.collection('posts').document(postId).updateData({
-      'likesCount': post.likesCount,
-    });
-    post.likesMap.remove(likerId);
+    if(likesCount > 0) {
+      Firestore.instance.collection('posts').document(postId).updateData({
+        'likesMap.${likerId}': FieldValue.delete(),
+      });
+      final post = _postList.firstWhere((post) => post.postId == postId);
+      post.likesCount--;
+      Firestore.instance.collection('posts').document(postId).updateData({
+        'likesCount': post.likesCount,
+      });
+      post.likesMap.remove(likerId);
 
-    //===============Activity Feed =====================
+      //===============Activity Feed =====================
 //     if(post.userId != currentUserId) {
-    var _querySnapshot = await Firestore.instance
-        .collection('feeds')
-        .document(posterId)
-        .collection('feedItems')
-        .where('postId', isEqualTo: postId)
-        .where('type', isEqualTo: 'like')
-        .where('userId', isEqualTo: likerId)
-        .getDocuments();
-    if (_querySnapshot.documents.length > 0) {
-      Firestore.instance
+      var _querySnapshot = await Firestore.instance
           .collection('feeds')
           .document(posterId)
           .collection('feedItems')
-          .document(_querySnapshot.documents[0].documentID)
-          .delete();
+          .where('postId', isEqualTo: postId)
+          .where('type', isEqualTo: 'like')
+          .where('userId', isEqualTo: likerId)
+          .getDocuments();
+      if (_querySnapshot.documents.length > 0) {
+        Firestore.instance
+            .collection('feeds')
+            .document(posterId)
+            .collection('feedItems')
+            .document(_querySnapshot.documents[0].documentID)
+            .delete();
 //      }
+      }
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   addComment(postId, userId, comment) async {
@@ -214,6 +216,7 @@ unsave(String postId,String currentuserid,String posturl)async{
 
   deleteComment(commentID, postId, {ownerId}) async {
     //   print('-===============>>>>>>>> : '); print(commentID);
+
     if (currentUserId != null) {
       await Firestore.instance
           .collection('posts')
@@ -222,31 +225,34 @@ unsave(String postId,String currentuserid,String posturl)async{
           .document(commentID)
           .delete();
       final post = _postList.firstWhere((post) => post.postId == postId);
+      if(post.commentsCount > 0){
+        post.commentsCount--;
+        await Firestore.instance.collection('posts').document(postId).updateData({
+          'commentsCount': post.commentsCount,
+        }).then((value) async {
+          //===============Activity Feed =====================
+          if(post.userId != currentUserId) {
+            var _querySnapshot = await Firestore.instance
+                .collection('feeds')
+                .document(ownerId)
+                .collection('feedItems')
+                .where('commentId', isEqualTo: commentID)
+                .getDocuments();
+            if (_querySnapshot.documents.length > 0) {
+              Firestore.instance
+                  .collection('feeds')
+                  .document(ownerId)
+                  .collection('feedItems')
+                  .document(_querySnapshot.documents[0].documentID)
+                  .delete();
+            }
+          }
+          notifyListeners();
+        });
+      }
+      }
 
-      post.commentsCount--;
-      await Firestore.instance.collection('posts').document(postId).updateData({
-        'commentsCount': post.commentsCount,
-      }).then((value) async {
-        //===============Activity Feed =====================
-             if(post.userId != currentUserId) {
-        var _querySnapshot = await Firestore.instance
-            .collection('feeds')
-            .document(ownerId)
-            .collection('feedItems')
-            .where('commentId', isEqualTo: commentID)
-            .getDocuments();
-        if (_querySnapshot.documents.length > 0) {
-          Firestore.instance
-              .collection('feeds')
-              .document(ownerId)
-              .collection('feedItems')
-              .document(_querySnapshot.documents[0].documentID)
-              .delete();
-        }
-           }
-        notifyListeners();
-      });
-    }
+
   }
 
   undoComment(commentMap, postId) async {

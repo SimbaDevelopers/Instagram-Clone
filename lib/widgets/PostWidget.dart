@@ -23,7 +23,7 @@ class PostWidget extends StatefulWidget {
 
   var time = '';
 
-  PostWidget(doc, sendPost) {
+   PostWidget(doc, sendPost) {
     _documentSnapshot = doc;
     this.sendPost = sendPost;
     time = displayTimeAgoFromTimestamp(
@@ -159,42 +159,6 @@ class _PostWidgetState extends State<PostWidget> {
           ),
           trailing: Icon(Icons.more_vert),
         ),
-
-//        Row(
-//          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//          children: <Widget>[
-//            Row(
-//              children: <Widget>[
-//                Padding(
-//                    padding: const EdgeInsets.all(8.0),
-//                    child: CircleAvatar(
-//                      backgroundImage:
-//                          profileImageURL == null || profileImageURL == ''
-//                              ? AssetImage('assets/images/profile.jpeg')
-//                              : NetworkImage(profileImageURL),
-//                      backgroundColor: Colors.grey,
-//                    )),
-//                Column(
-//                  crossAxisAlignment: CrossAxisAlignment.start,
-//                  children: <Widget>[
-//                    username == null ? Text('') : Text(username),
-//                    Padding(
-//                      padding: const EdgeInsets.only(left: 5.0, top: 4),
-//                      child: Text(
-//                        widget._documentSnapshot.location,
-//                        style: TextStyle(color: Colors.grey, fontSize: 11),
-//                      ),
-//                    ),
-//                  ],
-//                ),
-//              ],
-//            ),
-//            Padding(
-//              padding: const EdgeInsets.all(8.0),
-//              child: Icon(Icons.more_vert),
-//            ),
-//          ],
-//        ),
         Divider(
           color: Colors.white,
         ),

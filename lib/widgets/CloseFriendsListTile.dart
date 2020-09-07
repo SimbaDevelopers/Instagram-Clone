@@ -22,8 +22,6 @@ class _CloseFriendsListTileState extends State<CloseFriendsListTile> {
 
   getUserInfo() async {
     Firestore.instance.collection('users').document(widget.closeFriendsId).get().then((value) {
-      print('value');
-      print(widget.closeFriendsId);
       setState(() {
         username = value['username'];
         name = value['name'];

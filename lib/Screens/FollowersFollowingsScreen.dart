@@ -1,8 +1,5 @@
-
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram/model/user.dart';
 import '../widgets/FollowersTab.dart';
 import '../widgets/FollowingsTab.dart';
 
@@ -11,29 +8,29 @@ class FollowersFollowingsScreen extends StatefulWidget {
   @override
   _FollowersFollowingsScreenState createState() => _FollowersFollowingsScreenState();
 }
-
-
 class _FollowersFollowingsScreenState extends State<FollowersFollowingsScreen> {
-  UserModel user;
-
-
+  String userId;
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
     if(arguments != null)
-      {
-        user = arguments['user'];
-
-      }
-
+        userId = arguments['userId'];
     return DefaultTabController(
-
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Container(
-            child: user == null ? Text('Username') : Text(user.username),
-          ),
+          title: FutureBuilder(
+            future: Firestore.instance.collection('users').document(userId).get(),
+            builder:(cotext , snapshot) {
+              if(snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData)
+                return Text("");
+              if(snapshot.data['username']==null || snapshot.data['username'] =='' )
+                return Text('');
+              return Container(
+                child:  Text(snapshot.data['username']),
+              );
+
+            }),
           bottom: TabBar(
             tabs: <Widget>[
               Container(
@@ -49,12 +46,11 @@ class _FollowersFollowingsScreenState extends State<FollowersFollowingsScreen> {
         ),
         body: TabBarView(
           children: <Widget>[
-            FollowersTab( user: user),
-            FollowingsTab(user : user),
+            FollowersTab(  userId:  userId,),
+            FollowingsTab( userId:  userId,),
           ],
         ),
       ),
     );
-
   }
 }
