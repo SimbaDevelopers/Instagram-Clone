@@ -88,21 +88,37 @@ class PostList with ChangeNotifier {
       notifyListeners();
     });
   }
-saved(String postId,String currentuserid,String posturl)async{
-  Firestore.instance
-      .collection('users')
-      .document(currentuserid)
-      .collection("saved").document(postId)
-      .setData({
-    "postId" : postId,
-    "imgurl": posturl,
-  });
+saved(String postId,String posturl)async{
+
+   await  FirebaseAuth.instance.currentUser().then((currentUser){
+     Firestore.instance
+         .collection('users')
+         .document(currentUser.uid)
+         .collection("saved").document(postId)
+         .setData({
+       "postId" : postId,
+       "imgurl": posturl,
+     });
+     Firestore.instance
+         .collection('posts')
+         .document(postId)
+         .updateData({'savedBy.${currentUser.uid}': true});
+   });
+
 
 }
-unsave(String postId,String currentuserid,String posturl)async{
-  Firestore.instance.collection('users').document(currentuserid).collection("saved").document(postId).updateData({
-    'imgurl': "",
-    'postId':"",
+unsave(String postId,String posturl)async{
+
+  await  FirebaseAuth.instance.currentUser().then((currentUser){
+    Firestore.instance
+        .collection('users')
+        .document(currentUser.uid)
+        .collection("saved").document(postId)
+        .delete();
+    Firestore.instance
+        .collection('posts')
+        .document(postId)
+        .updateData({'savedBy.${currentUser.uid}': FieldValue.delete()});
   });
 }
   likePost(String postId, int likesCount, String likerId) async {

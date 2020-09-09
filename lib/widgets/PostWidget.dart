@@ -336,41 +336,56 @@ class _PostWidgetState extends State<PostWidget> {
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 onTap: () {
-
-                  currentUser =
-                      Provider.of<UserInformation>(context, listen: false).user;
-
-                  if (isBookmarked) {
-                    if (currentUser.userId == null) {
-                      setState(() {
-                        isBookmarked = !isBookmarked;
-                      });
-                      return;
-                    }
+                  if(isBookmarked){
                     setState(() {
                       isBookmarked = !isBookmarked;
                     });
-                    Firestore.instance.collection('posts').document(widget._documentSnapshot.postId).get();
-                    Provider.of<PostList>(context, listen: false)
-                        .unsave(
+                    Provider.of<PostList>(context, listen: false).unsave(
                         widget._documentSnapshot.postId,
-                        currentUser.userId,
                         widget._documentSnapshot.postURL);
-                  } else {
-                    if (currentUser.userId == null) {
-                      setState(() {
-                        isBookmarked = !isBookmarked;
-                      });
-                      return;
-                    }
+                  }else if(!isBookmarked){
                     setState(() {
                       isBookmarked = !isBookmarked;
                     });
                     Provider.of<PostList>(context, listen: false).saved(
                         widget._documentSnapshot.postId,
-                        currentUser.userId,
                         widget._documentSnapshot.postURL);
                   }
+//
+//                  currentUser =
+//                      Provider.of<UserInformation>(context, listen: false).user;
+//
+//                  if (isBookmarked) {
+//                    if (currentUser.userId == null) {
+//                      setState(() {
+//                        isBookmarked = !isBookmarked;
+//                      });
+//                      return;
+//                    }
+//                    setState(() {
+//                      isBookmarked = !isBookmarked;
+//                    });
+//                    Firestore.instance.collection('posts').document(widget._documentSnapshot.postId).get();
+//                    Provider.of<PostList>(context, listen: false)
+//                        .unsave(
+//                        widget._documentSnapshot.postId,
+//                        currentUser.userId,
+//                        widget._documentSnapshot.postURL);
+//                  } else {
+//                    if (currentUser.userId == null) {
+//                      setState(() {
+//                        isBookmarked = !isBookmarked;
+//                      });
+//                      return;
+//                    }
+//                    setState(() {
+//                      isBookmarked = !isBookmarked;
+//                    });
+//                    Provider.of<PostList>(context, listen: false).saved(
+//                        widget._documentSnapshot.postId,
+//                        currentUser.userId,
+//                        widget._documentSnapshot.postURL);
+//                  }
                 },
                 child: isBookmarked
                     ? Icon(
