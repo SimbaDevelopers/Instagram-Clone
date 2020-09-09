@@ -108,7 +108,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           isMe: false,
                           userId: userId,
                         ),
-
               StoryHighights(),
               PostAtProfile(),
             ],

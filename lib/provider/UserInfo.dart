@@ -63,7 +63,7 @@ class UserInformation with ChangeNotifier{
 //      docSnap.collection('followingsList').document(searchedUserId).setData({
 //        'userId' : searchedUserId,
 //      });
-
+//
 //      user.followingList.add({
 //        'userId' : searchedUserId,
 //      });

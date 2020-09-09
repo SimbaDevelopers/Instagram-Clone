@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/model/user.dart';
 import 'package:instagram/provider/UserInfo.dart';
@@ -18,13 +19,18 @@ class ActivityPage extends StatefulWidget {
 
 class _ActivityPageState extends State<ActivityPage> {
 
-  UserModel currentUser;
+  var currentUserSnapshot;
   var stream;
   @override
   void initState() {
     // TODO: implement initState
-    currentUser = Provider.of<UserInformation>(context , listen:  false ).user;
-    stream = Firestore.instance.collection('feeds').document(currentUser.userId).collection('feedItems').orderBy('timeStamp' , descending: true).limit(20).snapshots();
+    FirebaseAuth.instance.currentUser().then((user) async {
+      currentUserSnapshot = await Firestore.instance.collection('users').document(user.uid).get();
+      setState(() {
+        stream = Firestore.instance.collection('feeds').document(user.uid).collection('feedItems').orderBy('timeStamp' , descending: true).limit(20).snapshots();
+      });
+
+    });
 
     super.initState();
   }
@@ -34,7 +40,7 @@ class _ActivityPageState extends State<ActivityPage> {
         appBar: AppBar(
           title: Text('Activity'),
         ),
-        body: currentUser== null ? LinearProgressIndicator() : StreamBuilder(
+        body: stream == null ? LinearProgressIndicator() : StreamBuilder(
           stream: stream,
           builder: (context, snapshot) {
             if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) return Center( child: CircularProgressIndicator(),);
@@ -43,7 +49,7 @@ class _ActivityPageState extends State<ActivityPage> {
                 itemBuilder: (ctx, index) {
 
                   return ActivityListTile(
-                      activityMap: snapshot.data.documents[index].data, user: currentUser , key: UniqueKey(),);
+                      activityMap: snapshot.data.documents[index].data, currentUserSnapshot: currentUserSnapshot , key: UniqueKey(),);
                 });
           },
         ),
