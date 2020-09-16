@@ -164,8 +164,11 @@ class _PreviewScreenState extends State<PreviewScreen>{
                      bottom: 25,
                      left: 20,
                      child: Row(children: <Widget>[
-                       Icon(
-                         Icons.account_circle,size: 35,
+                       GestureDetector(
+                         onTap: () {
+                         },
+                         child: Padding(padding: const EdgeInsets.all(10),
+                             child: Icon(Icons.account_circle,size: 33,)),
                        ),
                      ],
                      ),
@@ -223,4 +226,5 @@ class _PreviewScreenState extends State<PreviewScreen>{
       ),
     );
   }
+
 }

@@ -638,7 +638,7 @@ packages:
     source: hosted
     version: "2.0.8"
   video_player:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: video_player
       url: "https://pub.dartlang.org"

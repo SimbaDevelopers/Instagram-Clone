@@ -231,7 +231,7 @@ class _CameraViewState extends State<CameraView> {
       }
 
       if (_controller.value.hasError) {
-        print('Camera error ${_controller.value.errorDescription}');
+      //  print('Camera error ${_controller.value.errorDescription}');
       }
     });
 

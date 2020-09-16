@@ -98,14 +98,14 @@ class MyAppState extends State<HomePage> with WidgetsBindingObserver{
                 onPressed: () {
 
                 //  getImage(false);
-                  Navigator.of(context).pushNamed( AddStory.routeName);
+                //  Navigator.of(context).pushNamed( AddStory.routeName);
 
                  // getImage(true);
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(builder: (context) =>CameraView(controller: this.controller)
-//                     ),
-//                   );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>CameraView(controller: this.controller)
+                    ),
+                  );
 
                 },
               ),
