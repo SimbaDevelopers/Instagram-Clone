@@ -10,6 +10,7 @@ import 'package:instagram/Screens/UsernameScreen.dart';
 import 'package:instagram/authenticate.dart';
 import 'package:instagram/provider/PostList.dart';
 import 'package:instagram/widgets/EditProfile.dart';
+import 'package:instagram/widgets/Preview.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -144,6 +145,7 @@ class MyAppState extends State<MyApp> {
             CommentsScreen.routeName: (ctx) => CommentsScreen(),
             AddStory.routeName: (ctx) => AddStory(),
             TrimmerView.routeName: (ctx) => TrimmerView(),
+            PreviewScreen.routeName: (ctx) => PreviewScreen(),
 //            StoryScreen.routeName: (ctx) => StoryScreen(key: UniqueKey(),),
           },
         ),
