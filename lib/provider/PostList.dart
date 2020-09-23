@@ -135,16 +135,21 @@ unsave(String postId,String posturl)async{
 
     //======== Activity Feed =======
 //    if(post.userId != currentUserId) {
-    Firestore.instance
-        .collection('feeds')
-        .document(post.userId)
-        .collection('feedItems')
-        .add({
-      'type': 'like',
-      'userId': likerId,
-      'postId': postId,
-      'timeStamp': DateTime.now(),
+    Firestore.instance.collection('users').document(likerId).get().then((value) {
+      String username = value['username'];
+      Firestore.instance
+          .collection('feeds')
+          .document(post.userId)
+          .collection('feedItems')
+          .add({
+        'type': 'like',
+        'userId': likerId,
+        'postId': postId,
+        'timeStamp': DateTime.now(),
+        'username' : username
+      });
     });
+
 //    }
     notifyListeners();
   }
@@ -212,18 +217,22 @@ unsave(String postId,String posturl)async{
       }).then((value) {
         //======== Activity Feed =======
             if(post.userId != currentUserId) {
-        Firestore.instance
-            .collection('feeds')
-            .document(post.userId)
-            .collection('feedItems')
-            .add({
-          'type': 'comment',
-          'comment': comment,
-          'userId': currentUserId,
-          'postId': postId,
-          'commentId': snap.documentID,
-          'timeStamp': DateTime.now(),
-        });
+              Firestore.instance.collection('users').document(currentUserId).get().then((value) {
+                Firestore.instance
+                    .collection('feeds')
+                    .document(post.userId)
+                    .collection('feedItems')
+                    .add({
+                  'type': 'comment',
+                  'comment': comment,
+                  'userId': currentUserId,
+                  'postId': postId,
+                  'commentId': snap.documentID,
+                  'timeStamp': DateTime.now(),
+                  'username' : value['username'],
+                });
+              });
+
              }
         notifyListeners();
       });

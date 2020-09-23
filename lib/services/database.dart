@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class DatabaseMethod {
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   getUserByUsername(String username) async {
     return await Firestore.instance
         .collection("users")
@@ -24,8 +26,30 @@ class DatabaseMethod {
       Firestore.instance
           .collection("users")
           .document(user.uid)
-          .setData(userMap);
+          .setData(userMap).then((value) {
+        configureRealtimePushNotification(user);
+      });
     });
+
+  }
+
+  configureRealtimePushNotification(user){
+    _firebaseMessaging.getToken().then((token){
+      Firestore.instance.collection('users').document(user.uid).updateData({'androidNotificationToken' : token});
+    });
+
+    _firebaseMessaging.configure(
+        onMessage: (Map<String , dynamic> msg) async {
+          final String recipientId = msg['data']['recipient'];
+          final String body  = msg['notification']['body'];
+
+          if(recipientId == user.uid){
+            print("======================================== notification ====================================");
+            print(body);
+          }
+
+        }
+    );
 
   }
   editUserInfo(userMap , userId)  {
