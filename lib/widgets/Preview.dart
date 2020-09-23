@@ -55,7 +55,7 @@ class _PreviewScreenState extends State<PreviewScreen>{
    @override
   void initState() {
 //     Future.delayed(Duration.zero).then((value) async {
-       setFile();
+
 //     });
 
      print("init------------------------1;");
@@ -510,7 +510,6 @@ class _PreviewScreenState extends State<PreviewScreen>{
 
    void dispose() {
      if(playerController == null){
-
      }
      else{
        playerController.pause();
@@ -518,7 +517,6 @@ class _PreviewScreenState extends State<PreviewScreen>{
        playerController.dispose();
        print("siapose");
      }
-
      super.dispose();
    }
 }

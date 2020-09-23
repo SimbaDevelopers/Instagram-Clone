@@ -87,6 +87,7 @@ class UserInformation with ChangeNotifier{
         'type' : 'follower',
         'userId' : userId,
         'timeStamp' : DateTime.now(),
+        'username' : user.username
       });
       notifyListeners();
     }catch(error)

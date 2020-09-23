@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screens/SignInScreen.dart';
 import 'package:instagram/Screens/MainScreen.dart';
@@ -11,6 +12,8 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
+
+  FirebaseMessaging  _firebaseMessaging = FirebaseMessaging();
   final _auth = FirebaseAuth.instance;
   bool showSignIn = true;
   void toggleView() {
